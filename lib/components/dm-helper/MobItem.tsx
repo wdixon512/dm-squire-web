@@ -66,8 +66,11 @@ export const MobItem: React.FC<MobItemProps> = ({ mob, handleDrop, textColor, ..
             <Input
               type="number"
               fontWeight="800"
-              value={mob.health}
-              onChange={(e) => updateHealth(mob, parseInt(e.target.value))}
+              value={mob.health ?? ''}
+              onChange={(e) => {
+                const value = e.target.value === '' ? '' : parseInt(e.target.value);
+                updateHealth(mob, value);
+              }}
               w="90px"
               ml={2}
               data-testid={`${mob.id}-health`}

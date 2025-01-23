@@ -52,7 +52,7 @@ export const InviteOthersForm = () => {
         {/* User is signed in and in a room */}
         {joinRoomLink || room.syncWithFirebase ? (
           <Flex direction="column" alignItems="center">
-            <Input value={joinRoomLink} isReadOnly />
+            <Input value={joinRoomLink || ''} isReadOnly />
             <Button onClick={copyToClipboard} data-testid="copy-join-room-link-btn" mt="4" w="fit-content">
               Copy Join Room Link
             </Button>
