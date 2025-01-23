@@ -36,6 +36,7 @@ export const DMHelperContext = createContext({
   combatStarted: false,
   updateCombatStarted: (started: boolean): void => {},
   clearMobs: (): void => {},
+  clearMobFavorites: (): void => {},
   loadingFirebaseRoom: false,
   readOnlyRoom: false,
 });
@@ -324,7 +325,12 @@ export const DMHelperContextProvider = ({ children }) => {
     setJoinRoomLink(`${window.location.origin}/join/${dbRoom.id}`);
   };
 
-  const addMob = (name: string, health: number | undefined, initiative: number | undefined): boolean => {
+  const addMob = (
+    name: string,
+    health: number | undefined,
+    initiative: number | undefined,
+    isLibraryMob?: boolean
+  ): boolean => {
     if (!validateName(name, toast) || !validateMobHealth(health, toast)) return false;
 
     const mob: Mob = {
@@ -334,6 +340,7 @@ export const DMHelperContextProvider = ({ children }) => {
       number: getNextEntityNumber(entities, name),
       initiative,
       type: EntityType.MOB,
+      isLibraryMob,
     };
 
     const addMobFavorite = (mob: Mob) => {
@@ -405,6 +412,11 @@ export const DMHelperContextProvider = ({ children }) => {
     scheduleCommitRoomChanges();
   };
 
+  const clearMobFavorites = (): void => {
+    updateMobFavorites([]);
+    scheduleCommitRoomChanges();
+  };
+
   return (
     <DMHelperContext.Provider
       value={{
@@ -427,6 +439,7 @@ export const DMHelperContextProvider = ({ children }) => {
         combatStarted,
         updateCombatStarted,
         clearMobs,
+        clearMobFavorites,
         loadingFirebaseRoom,
         readOnlyRoom,
       }}
