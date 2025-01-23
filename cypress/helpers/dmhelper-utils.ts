@@ -202,5 +202,6 @@ export const goToInviteOthersPanel = () => {
 export const addMobWithTypeahead = (name: string) => {
   cy.get('[data-testid="mob-name-input"]').type(name);
   cy.get(`[data-testid="typeahead-mob-${toKebabCase(name.toLowerCase())}"]`).click();
+  cy.wait(200);
   cy.get('[data-testid="submit-mob-button"]').click();
 };
