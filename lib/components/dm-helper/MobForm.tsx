@@ -29,7 +29,7 @@ export const MobForm = () => {
     const parsedHealth = health === '' ? undefined : parseInt(health, 10);
     const parsedInitiative = initiative === '' ? undefined : parseInt(initiative, 10);
 
-    if (addMob(name, parsedHealth, parsedInitiative)) {
+    if (addMob(name, parsedHealth, parsedInitiative, !!selectedTypeaheadMob)) {
       setName('');
       setHealth('');
       setInitiative('');

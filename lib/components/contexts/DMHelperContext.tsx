@@ -324,7 +324,12 @@ export const DMHelperContextProvider = ({ children }) => {
     setJoinRoomLink(`${window.location.origin}/join/${dbRoom.id}`);
   };
 
-  const addMob = (name: string, health: number | undefined, initiative: number | undefined): boolean => {
+  const addMob = (
+    name: string,
+    health: number | undefined,
+    initiative: number | undefined,
+    isLibraryMob?: boolean
+  ): boolean => {
     if (!validateName(name, toast) || !validateMobHealth(health, toast)) return false;
 
     const mob: Mob = {
@@ -334,6 +339,7 @@ export const DMHelperContextProvider = ({ children }) => {
       number: getNextEntityNumber(entities, name),
       initiative,
       type: EntityType.MOB,
+      isLibraryMob,
     };
 
     const addMobFavorite = (mob: Mob) => {

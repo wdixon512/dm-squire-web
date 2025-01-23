@@ -1,5 +1,5 @@
 import { dmHelperBeforeEach, dmHelperAfter } from '../helpers/dmhelper-setup';
-import { deleteRooms, addMobWithTypeahead, verifyMobInEntityList } from '../helpers/dmhelper-utils';
+import { deleteRooms, addMobWithTypeahead, verifyMobInEntityList, addGoblin } from '../helpers/dmhelper-utils';
 
 describe('DMHelper E2E Tests', () => {
   before(() => {
@@ -65,6 +65,15 @@ describe('DMHelper E2E Tests', () => {
 
       cy.wait(500);
       cy.get(`[data-testid="detail-card-goblin"]`).should('exist');
+    });
+
+    it('should add mob without typeahead and verify the detail modal doesnt exist', () => {
+      addGoblin();
+      verifyMobInEntityList('Goblin');
+
+      cy.get('[data-testid="view-details-goblin-1"]').should('be.disabled');
+      cy.wait(500);
+      cy.get('[data-testid="detail-card-goblin"]').should('not.exist');
     });
   });
 });
