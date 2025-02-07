@@ -1,11 +1,13 @@
 // scripts/firebase-script-init.ts
-import { initializeApp } from 'firebase/app';
+import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getFirestore } from 'firebase/firestore';
 import * as dotenv from 'dotenv';
+import * as path from 'path';
 
-dotenv.config({ path: '.env.local' });
+// Correct path to the root directory's .env file
+dotenv.config({ path: path.resolve(__dirname, '../.env') });
 
-const firebaseConfig = {
+export const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
@@ -15,5 +17,8 @@ const firebaseConfig = {
   databaseURL: process.env.NEXT_PUBLIC_FIREBASE_RTDB_URL,
 };
 
-const firebaseApp = initializeApp(firebaseConfig);
-export const db = getFirestore(firebaseApp);
+const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+export const db = getFirestore(app);
+
+// Debugging: Confirm connection
+console.log(`✅ Connected to project: ${app.options.projectId}`);

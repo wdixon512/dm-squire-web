@@ -4,9 +4,10 @@ globalThis.Headers = Headers;
 globalThis.Response = Response;
 
 import { FirestoreDataConverter, doc, setDoc } from 'firebase/firestore';
-import { db } from './firebase-script-init';
+import { db, firebaseConfig } from './firebase-script-init';
 import * as fs from 'fs';
 import * as path from 'path';
+import { getApp } from 'firebase/app';
 
 // TODO: run this script using node
 // Define classes to represent your data
@@ -169,14 +170,27 @@ const detailedMobs: DetailedMob[] = jsonData.map((mobData) => {
 });
 
 // Store in Firestore
-detailedMobs
-  .filter(Boolean) // Removes null or undefined entries
-  .map(async (mob) => {
-    try {
-      const docRef = doc(db, 'mobs', mob.name).withConverter(detailedMobConverter);
-      await setDoc(docRef, mob, { merge: true });
-      console.log(`Added mob: ${mob.name}`);
-    } catch (error) {
-      console.error(`Failed to add mob: ${mob.name}`, error);
+Promise.all(
+  detailedMobs
+    .filter(Boolean) // Removes null or undefined entries
+    .map(async (mob) => {
+      try {
+        const docRef = doc(db, 'mobs', mob.name).withConverter(detailedMobConverter);
+        await setDoc(docRef, mob, { merge: true });
+        console.log(`Added mob: ${mob.name}`);
+      } catch (error) {
+        console.error(`Failed to add mob: ${mob.name}`, error);
+      }
+    })
+)
+  .then(() => console.log('✅ All mobs have been processed'))
+  .catch((error) => {
+    if (error.code === 'permission-denied') {
+      console.error('🚫 Security Rules are blocking access to Firestore.');
+    } else {
+      console.error('Error processing mobs:', error);
     }
   });
+
+console.log(`Connected to project: ${getApp().options.projectId}`);
+console.log('config:', firebaseConfig);
