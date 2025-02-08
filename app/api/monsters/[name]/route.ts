@@ -16,7 +16,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ name
     const snapshot = await docRef.get();
 
     if (!snapshot.exists) {
-      return new Response(`Monster ${name} not found.`, { status: 404 });
+      return new Response(`Monster ${mobId} not found.`, { status: 404 });
     }
 
     const monster = snapshot.data();
