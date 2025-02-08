@@ -1,8 +1,9 @@
 # My-Website
 
-The official DM Squire website, built with NextJS and ChakraUI!
+The official DM Squire website, built with NextJS, ChakraUI, and Firebase!
 
 # Initial Setup
+
 1. Clone the repo
 2. From the repo's root, run `npm install`
 3. Create a `.env.local` file, and add secrets
