@@ -3,7 +3,7 @@ import { sanitizeMonsterName } from '@lib/util/mobUtils';
 
 export const dynamic = 'force-static';
 
-export async function GET(request: Request, { params }: { params: { name: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ name: string }> }) {
   const name = (await params).name;
   const db = getServerFirestoreDb();
 
