@@ -90,7 +90,7 @@ export const MobItem: React.FC<MobItemProps> = ({ mob, handleDrop, textColor, ..
                 <Icon as={FaUserEdit} />
               </Button>
             </Tooltip>
-            {mob ? (
+            {mob.isLibraryMob ? (
               <Tooltip label="View Mob Details" aria-label="View Mob Details" hasArrow>
                 <Button
                   variant="primarySolid"
@@ -102,7 +102,12 @@ export const MobItem: React.FC<MobItemProps> = ({ mob, handleDrop, textColor, ..
               </Tooltip>
             ) : (
               <Tooltip label="Can't find details for mob">
-                <Button variant="primarySolid" onClick={(e) => handleMobDetailOpen(e)} _hover={{ bgColor: 'unset' }}>
+                <Button
+                  disabled
+                  variant="primarySolid"
+                  _hover={{ bgColor: 'unset' }}
+                  data-testid={`view-details-${mob.id}`}
+                >
                   <Icon as={FaEyeSlash} />
                 </Button>
               </Tooltip>

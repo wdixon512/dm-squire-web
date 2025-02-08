@@ -26,7 +26,8 @@ export const DMHelperContext = createContext({
   entities: [] as Entity[],
   updateEntities: (() => null) as React.Dispatch<React.SetStateAction<Entity[]>>,
   removeEntity: (entity: Entity): void => {},
-  addMob: (name: string, health: number | undefined, initiative: number | undefined): boolean => false,
+  addMob: (name: string, health: number | undefined, initiative: number | undefined, isLibraryMob?: boolean): boolean =>
+    false,
   addHero: (name: string, health: number | undefined, initiative: number | undefined): boolean => false,
   resetHeroInitiatives: (): void => {},
   mobFavorites: [] as Mob[],
@@ -324,7 +325,12 @@ export const DMHelperContextProvider = ({ children }) => {
     setJoinRoomLink(`${window.location.origin}/join/${dbRoom.id}`);
   };
 
-  const addMob = (name: string, health: number | undefined, initiative: number | undefined): boolean => {
+  const addMob = (
+    name: string,
+    health: number | undefined,
+    initiative: number | undefined,
+    isLibraryMob?: boolean
+  ): boolean => {
     if (!validateName(name, toast) || !validateMobHealth(health, toast)) return false;
 
     const mob: Mob = {
@@ -334,6 +340,7 @@ export const DMHelperContextProvider = ({ children }) => {
       number: getNextEntityNumber(entities, name),
       initiative,
       type: EntityType.MOB,
+      isLibraryMob,
     };
 
     const addMobFavorite = (mob: Mob) => {
