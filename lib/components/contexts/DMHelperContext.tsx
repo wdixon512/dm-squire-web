@@ -26,7 +26,8 @@ export const DMHelperContext = createContext({
   entities: [] as Entity[],
   updateEntities: (() => null) as React.Dispatch<React.SetStateAction<Entity[]>>,
   removeEntity: (entity: Entity): void => {},
-  addMob: (name: string, health: number | undefined, initiative: number | undefined): boolean => false,
+  addMob: (name: string, health: number | undefined, initiative: number | undefined, isLibraryMob?: boolean): boolean =>
+    false,
   addHero: (name: string, health: number | undefined, initiative: number | undefined): boolean => false,
   resetHeroInitiatives: (): void => {},
   mobFavorites: [] as Mob[],
