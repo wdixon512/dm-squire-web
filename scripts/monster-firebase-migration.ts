@@ -1,3 +1,4 @@
+import { sanitizeMonsterName } from './../lib/util/mobUtils';
 import { db } from '@lib/services/firebase';
 import { collection, doc, writeBatch } from '@firebase/firestore';
 import { DetailedMob } from '@lib/models/dnd5eapi/DetailedMob';
@@ -18,10 +19,7 @@ async function uploadMonsters() {
 
   try {
     jsonData.monsters.forEach((mob) => {
-      const safeDocId = mob.name
-        .replace(/[\/#?[\]*]/g, '') // Remove disallowed characters
-        .replace(/\s+/g, '_') // Replace spaces with underscores
-        .toLowerCase();
+      const safeDocId = sanitizeMonsterName(mob.name);
 
       const docRef = doc(collectionRef, safeDocId); // Use the monster name as the document ID
       batch.set(docRef, mob);

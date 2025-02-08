@@ -26,3 +26,10 @@ export const sortEntitiesByInitiative = (entities: Entity[]) => {
     }
   });
 };
+
+export const sanitizeMonsterName = (name: string) => {
+  return name
+    .replace(/[\/#?[\]*]/g, '') // Remove disallowed characters
+    .replace(/\s+/g, '_') // Replace spaces with underscores
+    .toLowerCase();
+};
