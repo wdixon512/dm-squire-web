@@ -45,11 +45,11 @@ export const useDndApi = (): UseDndApiHook => {
       try {
         const response = await fetch(`${BASE_URL}/${mobName.replace(' ', '_').toLowerCase()}`);
         if (!response.ok) {
-          throw new Error('Failed to fetch monster details');
+          throw new Error(`Failed to fetch monster details for \"${mobName}\"`);
         }
         return (await response.json()) as DetailedMob;
       } catch (error) {
-        console.error('Failed to fetch monster details:', error);
+        console.warn('Failed to fetch monster details:', error);
         return null;
       }
     });
