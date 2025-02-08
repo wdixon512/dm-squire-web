@@ -12,4 +12,5 @@ export type Entity = {
   number?: number;
   initiative?: number | undefined;
   type: EntityType;
+  isLibraryMob?: boolean;
 };
