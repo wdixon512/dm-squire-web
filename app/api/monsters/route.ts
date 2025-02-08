@@ -8,7 +8,7 @@ export async function GET(request: Request) {
 
   try {
     // Fetch all documents in the "monsters" collection
-    const monstersColl = await db.collection('monsters').get();
+    const monstersColl = await db.collection('monsters').select('name').get();
 
     if (monstersColl.empty) {
       return new Response('Could not find any monster data.', { status: 404 });

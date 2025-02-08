@@ -24,7 +24,8 @@ export const useDndApi = (): UseDndApiHook => {
         if (!response.ok) {
           throw new Error('Failed to fetch monsters');
         }
-        return (await response.json()) as SummaryMob[];
+        const responseJson = await response.json();
+        return responseJson as SummaryMob[];
       } catch (error) {
         console.error('Failed to fetch monsters:', error);
       }
