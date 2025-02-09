@@ -1,6 +1,7 @@
 import { initializeApp, getApps } from 'firebase/app';
 import { getDatabase } from 'firebase/database';
 import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 
 let firebaseApp;
 
@@ -17,6 +18,6 @@ if (!getApps().length) {
 }
 
 // Export Firestore, RTDB, and Auth instances
-// export const db = getFirestore(firebaseApp);
+export const db = getFirestore(firebaseApp);
 export const rtdb = getDatabase(firebaseApp);
 export const auth = getAuth(firebaseApp);

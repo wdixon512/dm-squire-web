@@ -1,6 +1,6 @@
+import { sanitizeMonsterName } from './../util/mobUtils';
 import { useClientCache } from '@lib/components/contexts/CacheContext';
 import { RollType, RollTypeMethods } from '@lib/models/dm-helper/RollType';
-import { AllMonstersResponse } from '@lib/models/dnd5eapi/AllMonstersResponse';
 import { DetailedMob, SummaryMob } from '@lib/models/dnd5eapi/DetailedMob';
 
 const BASE_URL = `/api/monsters`;
@@ -24,13 +24,10 @@ export const useDndApi = (): UseDndApiHook => {
         if (!response.ok) {
           throw new Error('Failed to fetch monsters');
         }
-        return (await response.json()) as AllMonstersResponse;
+        const responseJson = await response.json();
+        return responseJson as SummaryMob[];
       } catch (error) {
         console.error('Failed to fetch monsters:', error);
-      }
-    }).then((monsterData) => {
-      if (monsterData) {
-        return monsterData?.monsters;
       }
 
       return [];
@@ -39,11 +36,11 @@ export const useDndApi = (): UseDndApiHook => {
 
   // Fetch details of a specific monster by its index
   const getMobByName = async (mobName: string): Promise<DetailedMob | null> => {
-    const cacheKey = mobName.replace(' ', '_').toLowerCase();
+    const mobId = sanitizeMonsterName(mobName);
 
-    return cacheLoadAsync(cacheKey, async () => {
+    return cacheLoadAsync(mobId, async () => {
       try {
-        const response = await fetch(`${BASE_URL}/${mobName.replace(' ', '_').toLowerCase()}`);
+        const response = await fetch(`${BASE_URL}/${mobId}`);
         if (!response.ok) {
           throw new Error(`Failed to fetch monster details for \"${mobName}\"`);
         }
