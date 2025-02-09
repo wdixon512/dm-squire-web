@@ -37,6 +37,7 @@ export const DMHelperContext = createContext({
   combatStarted: false,
   updateCombatStarted: (started: boolean): void => {},
   clearMobs: (): void => {},
+  clearMobFavorites: (): void => {},
   loadingFirebaseRoom: false,
   readOnlyRoom: false,
 });
@@ -412,6 +413,11 @@ export const DMHelperContextProvider = ({ children }) => {
     scheduleCommitRoomChanges();
   };
 
+  const clearMobFavorites = (): void => {
+    updateMobFavorites([]);
+    scheduleCommitRoomChanges();
+  };
+
   return (
     <DMHelperContext.Provider
       value={{
@@ -434,6 +440,7 @@ export const DMHelperContextProvider = ({ children }) => {
         combatStarted,
         updateCombatStarted,
         clearMobs,
+        clearMobFavorites,
         loadingFirebaseRoom,
         readOnlyRoom,
       }}
