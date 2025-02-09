@@ -310,6 +310,16 @@ describe('DMHelper E2E Tests', () => {
       cy.get('[data-testid="clear-mobs-button"]').click();
       cy.wait(2000);
 
+      // Click outside the modal (on the overlay)
+      cy.get('body').type('{esc}');
+      cy.wait(2000);
+
+      // Ensure the modal is closed
+      cy.get('[data-testid="clear-mobs-modal"]').should('not.exist');
+
+      cy.get('[data-testid="clear-mobs-button"]').click();
+      cy.wait(2000);
+
       clearMobs();
 
       verifyDbRoom((room) => {
@@ -327,6 +337,16 @@ describe('DMHelper E2E Tests', () => {
 
       cy.get('[data-testid="cancel-edit-modal-btn"]').click();
       cy.wait(2000);
+      cy.get('[data-testid="clear-quickadd-modal"]').should('not.exist');
+
+      cy.get('[data-testid="quickadd-clear-btn"]').click();
+      cy.wait(2000);
+
+      // Click outside the modal (on the overlay)
+      cy.get('body').type('{esc}');
+      cy.wait(2000);
+
+      // Ensure the modal is closed
       cy.get('[data-testid="clear-quickadd-modal"]').should('not.exist');
 
       cy.get('[data-testid="quickadd-clear-btn"]').click();
