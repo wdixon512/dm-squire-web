@@ -20,7 +20,7 @@ export const ClearMobsModal: React.FC<ClearMobsModalProps> = ({ isOpen, onClose 
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={() => handleDone(true)} isCentered>
+    <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
       <ModalContent
         onKeyDown={(e) => {

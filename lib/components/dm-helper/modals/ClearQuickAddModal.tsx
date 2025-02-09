@@ -20,7 +20,7 @@ export const ClearQuickAddModal: React.FC<ClearQuickAddModalProps> = ({ isOpen, 
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={() => handleDone(true)} isCentered>
+    <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
       <ModalContent
         onKeyDown={(e) => {
