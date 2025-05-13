@@ -1,14 +1,16 @@
 'use client';
 
-import { Box, Button, Circle, Flex, Heading } from '@chakra-ui/react';
-import { useContext } from 'react';
+import { Box, Button, Circle, Flex, Heading, useDisclosure } from '@chakra-ui/react';
+import { MouseEvent, useContext } from 'react';
 import { DMHelperContext } from '../contexts/DMHelperContext';
 import { Mob } from '@lib/models/dm-helper/Mob';
 import { AnimatePresence } from 'framer-motion';
 import AnimatedFlex from '../global/AnimatedFlex';
+import ClearQuickAddModal from './modals/ClearQuickAddModal';
 
 export const MobQuickAdd = () => {
   const { mobFavorites, addMob, updateMobFavorites, isClient, readOnlyRoom } = useContext(DMHelperContext);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleAddMob = (mob: Mob) => {
     addMob(mob.name, mob.health, mob.initiative, mob.isLibraryMob);
@@ -18,8 +20,9 @@ export const MobQuickAdd = () => {
     updateMobFavorites(mobFavorites.filter((m) => m !== mob));
   };
 
-  const clearFavorites = () => {
-    updateMobFavorites([]);
+  const showClearQuickAddForm = (e) => {
+    e.preventDefault();
+    onOpen();
   };
 
   return (
@@ -88,7 +91,7 @@ export const MobQuickAdd = () => {
                   <Button
                     color="marioRed.700"
                     variant="redLink"
-                    onClick={clearFavorites}
+                    onClick={(e) => showClearQuickAddForm(e)}
                     data-testid={`quickadd-clear-btn`}
                   >
                     Clear Quick Add
@@ -98,6 +101,7 @@ export const MobQuickAdd = () => {
             </AnimatedFlex>
           )}
         </AnimatePresence>
+        <ClearQuickAddModal isOpen={isOpen} onClose={onClose} />
       </>
     )
   );
