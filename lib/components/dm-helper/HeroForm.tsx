@@ -25,7 +25,8 @@ export const HeroForm = () => {
     <Box
       as="form"
       p={4}
-      bg="gray.50"
+      bg="blackAlpha.900"
+      opacity=".95"
       borderWidth={1}
       borderRadius="md"
       shadow="md"
@@ -33,11 +34,11 @@ export const HeroForm = () => {
       onSubmit={handleAddHero}
     >
       <FormControl mb={4}>
-        <FormLabel color="blackAlpha.900">Hero Name</FormLabel>
+        <FormLabel color="white">Hero Name</FormLabel>
         <Input
           type="text"
           value={name}
-          color="blackAlpha.700"
+          textFillColor="whiteAlpha.800"
           onChange={(e) => setName(e.target.value)}
           placeholder="Enter hero name"
           required={true}

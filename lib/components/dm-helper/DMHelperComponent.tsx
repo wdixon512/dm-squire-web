@@ -1,20 +1,6 @@
 'use client';
 
-import {
-  Flex,
-  Tabs,
-  TabList,
-  TabPanels,
-  Tab,
-  TabPanel,
-  Text,
-  Button,
-  useDisclosure,
-  Heading,
-  Icon,
-  Image,
-  Box,
-} from '@chakra-ui/react';
+import { Flex, Tabs, TabList, TabPanels, Tab, TabPanel, Text, Heading, Icon, Image, Box } from '@chakra-ui/react';
 import { MobForm } from '@lib/components/dm-helper/MobForm';
 import { HeroForm } from '@lib/components/dm-helper/HeroForm';
 import { DMHelperContext } from '@lib/components/contexts/DMHelperContext';
@@ -22,34 +8,13 @@ import { EntityList } from '@lib/components/dm-helper/EntityList';
 import { MobQuickAdd } from '@lib/components/dm-helper/MobQuickAdd';
 import { HeroList } from '@lib/components/dm-helper/HeroList';
 import { useContext } from 'react';
-import { InitiativeModal } from '@lib/components/dm-helper/modals/InititativeModal';
-import EndCombatConfirmationModal from './modals/EndCombatConfirmationModal';
 import { InviteOthersForm } from './InviteOthersForm';
 import { UserRoomSettingsComponent } from './UserRoomSettingsComponent';
 import { FaUserCog } from 'react-icons/fa';
+import CombatManagementBar from './CombatManagementBar';
 
 export const DMHelperComponent = () => {
-  const { combatStarted, updateCombatStarted, heroes, resetHeroInitiatives, readOnlyRoom } =
-    useContext(DMHelperContext);
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const { isOpen: endCombatIsOpen, onOpen: onEndCombatModalOpen, onClose: onEndCombatModalClose } = useDisclosure();
-
-  const startCombat = () => {
-    if (heroes.length > 0) {
-      resetHeroInitiatives();
-      onOpen();
-    }
-    updateCombatStarted(true);
-  };
-
-  const endCombat = () => {
-    onEndCombatModalOpen();
-
-    if (!combatStarted) {
-      resetHeroInitiatives();
-      updateCombatStarted(false);
-    }
-  };
+  const { combatStarted, readOnlyRoom } = useContext(DMHelperContext);
 
   return (
     <>
@@ -130,29 +95,14 @@ export const DMHelperComponent = () => {
                 </Flex>
               )}
               <Flex direction="column" gap="4" flex="1">
-                {!readOnlyRoom ? (
-                  <>
-                    {combatStarted ? (
-                      <Button
-                        variant="redSolid"
-                        onClick={() => endCombat()}
-                        data-testid="end-combat-btn"
-                        px="8"
-                        alignSelf="center"
-                      >
-                        End Combat
-                      </Button>
-                    ) : (
-                      <Button onClick={() => startCombat()} data-testid="start-combat-button" px="8" alignSelf="center">
-                        Start Combat
-                      </Button>
-                    )}
-                  </>
-                ) : (
-                  <Box>
+                {readOnlyRoom && (
+                  <Box w="100%" p={4} bg="blackAlpha.900" opacity=".95" borderWidth="1px" borderRadius="md" shadow="md">
                     {combatStarted && (
                       <Heading variant="redSolid" data-testid="combat-started-heading" textAlign="center">
-                        Combat has started...
+                        <Box display="inline-flex" gap="4">
+                          <Image src="/static/images/sword.png" alt="sword-icon" w="2.25rem" h="2.25rem" mr="1" />
+                          Combat has started...
+                        </Box>
                       </Heading>
                     )}
                     {!combatStarted && (
@@ -164,6 +114,7 @@ export const DMHelperComponent = () => {
                 )}
 
                 <EntityList />
+                {!readOnlyRoom && <CombatManagementBar />}
               </Flex>
             </Flex>
           </TabPanel>
@@ -188,13 +139,6 @@ export const DMHelperComponent = () => {
           </TabPanel>
         </TabPanels>
       </Tabs>
-
-      <InitiativeModal isOpen={isOpen} heroes={heroes} onClose={onClose} />
-      <EndCombatConfirmationModal
-        isOpen={endCombatIsOpen}
-        updateCombatStarted={updateCombatStarted}
-        onClose={onEndCombatModalClose}
-      />
     </>
   );
 };

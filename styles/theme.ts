@@ -144,10 +144,10 @@ const theme = extendTheme({
         }),
         outline: (props) => ({
           border: '2px solid',
-          borderColor: props.colorMode === 'dark' ? 'accent.500' : 'primary.500',
-          color: props.colorMode === 'dark' ? 'accent.500' : 'primary.500',
+          borderColor: 'white',
+          color: 'white',
           _hover: {
-            bg: props.colorMode === 'dark' ? 'accent.500' : 'primary.500',
+            bg: 'whiteAlpha.200',
             color: 'white',
           },
         }),

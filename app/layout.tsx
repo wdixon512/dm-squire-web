@@ -1,6 +1,5 @@
 'use client';
 import { ChakraProvider, Container } from '@chakra-ui/react';
-import { NavigationBar } from '@lib/components/NavigationBar';
 import Fonts from '@lib/components/global/Fonts';
 import theme from '../styles/theme';
 import '@fontsource/rhodium-libre';
@@ -8,6 +7,8 @@ import '../styles/global.css';
 import Head from 'next/head';
 import { FirebaseGoogleAuthProvider } from '@lib/components/contexts/FirebaseGoogleAuthContext';
 import { CacheProvider } from '@lib/components/contexts/CacheContext';
+import { BackgroundImageContextProvider } from '@lib/components/contexts/BackgroundImageContext';
+import AppWrapper from '@lib/components/global/AppWrapper';
 
 export default function MyApp({ children }) {
   return (
@@ -21,10 +22,11 @@ export default function MyApp({ children }) {
           <Fonts />
           <CacheProvider>
             <FirebaseGoogleAuthProvider>
-              <Container width="100vw" maxW="100vw" px="0" mx="0" pb="20" minHeight="100vh" bgColor="lightSlate.500">
-                <NavigationBar />
-                {children}
-              </Container>
+              <BackgroundImageContextProvider>
+                <AppWrapper width="100vw" maxW="100vw" px="0" mx="0" pb="20" minHeight="100vh" bgSize="cover">
+                  {children}
+                </AppWrapper>
+              </BackgroundImageContextProvider>
             </FirebaseGoogleAuthProvider>
           </CacheProvider>
         </ChakraProvider>

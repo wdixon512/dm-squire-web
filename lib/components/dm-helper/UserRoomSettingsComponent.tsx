@@ -29,7 +29,7 @@ export const UserRoomSettingsComponent: React.FC = () => {
 
   return (
     isClient && (
-      <Card bgColor={'secondary.200'} p={'4'}>
+      <Card bgColor="blackAlpha.900" p={'4'}>
         <UserInfo mb="8" />
         <Flex direction={'column'} alignSelf="flex-start">
           {room?.id && <Text>Current Room Id: {room.id}</Text>}

@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Button, Flex, FormControl, FormLabel, Input, Text, useDisclosure } from '@chakra-ui/react';
+import { Box, Button, Flex, FormControl, FormLabel, Input } from '@chakra-ui/react';
 import { useContext, useState, useRef, useCallback } from 'react';
 import { DMHelperContext } from '../contexts/DMHelperContext';
 import useDndApi from '@lib/services/dnd5eapi-service';
@@ -9,7 +9,6 @@ import { MobTypeahead } from './MobTypeahead';
 import { DiceRoller } from './DiceRoller';
 import { RollType } from '@lib/models/dm-helper/RollType';
 import { debounce } from '@lib/util/js-utils';
-import ClearMobsModal from './modals/ClearMobsModal';
 
 export const MobForm = () => {
   const [name, setName] = useState('');
@@ -22,9 +21,7 @@ export const MobForm = () => {
   const typeaheadRef = useRef<HTMLUListElement | null>(null);
   const { getAllMobsAsync, getMobByName, rollDice, getMobHitPoints } = useDndApi();
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const { addMob, clearMobs, readOnlyRoom } = useContext(DMHelperContext);
+  const { addMob, readOnlyRoom } = useContext(DMHelperContext);
 
   const handleAddMob = (e) => {
     e.preventDefault();
@@ -118,24 +115,29 @@ export const MobForm = () => {
     }
   };
 
-  const showClearMobForm = (e) => {
-    e.preventDefault();
-    onOpen();
-  };
-
   return (
     !readOnlyRoom && (
-      <Box as="form" p={4} bg="gray.50" borderWidth={1} borderRadius="md" shadow="md" onSubmit={handleAddMob}>
+      <Box
+        as="form"
+        p={4}
+        bg="blackAlpha.900"
+        opacity=".95"
+        borderWidth={1}
+        borderRadius="md"
+        shadow="md"
+        onSubmit={handleAddMob}
+      >
         <FormControl mb={4} position="relative">
-          <FormLabel color="blackAlpha.900">Mob Name</FormLabel>
+          <FormLabel color="white">Mob Name</FormLabel>
           <Input
             type="text"
             value={name}
-            color="blackAlpha.700"
-            onChange={(e) => handleMobNameChange(e)}
+            color="white"
+            textFillColor={'whiteAlpha.800'}
             placeholder="Enter mob name"
             required={true}
             data-testid="mob-name-input"
+            onChange={(e) => handleMobNameChange(e)}
             onFocus={handleFocus}
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
@@ -152,7 +154,7 @@ export const MobForm = () => {
             <FormLabel
               fontSize="xs"
               fontStyle="italic"
-              color="blackAlpha.700"
+              color="whiteAlpha.700"
               mt="1"
               data-testid="selected-mob-typeahead-label"
             >
@@ -162,16 +164,17 @@ export const MobForm = () => {
         </FormControl>
 
         <FormControl mb={4}>
-          <FormLabel color="blackAlpha.900">Mob Initiative</FormLabel>
+          <FormLabel color="whtie">Mob Initiative</FormLabel>
           <Flex gap="2">
             <Input
               type="number"
-              color="blackAlpha.700"
-              value={initiative}
-              onChange={(e) => setInitiative(e.target.value)}
+              color="white"
+              textFillColor={'whiteAlpha.800'}
               placeholder="Enter mob initiative"
               required={false}
               data-testid="mob-initiative-input"
+              onChange={(e) => setInitiative(e.target.value)}
+              value={initiative}
             />
             <DiceRoller
               mob={selectedTypeaheadMob}
@@ -182,16 +185,17 @@ export const MobForm = () => {
         </FormControl>
 
         <FormControl mb={4}>
-          <FormLabel color="blackAlpha.900">Mob Health</FormLabel>
+          <FormLabel color="white">Mob Health</FormLabel>
           <Flex gap="2">
             <Input
               type="number"
-              color="blackAlpha.700"
-              value={health}
-              onChange={(e) => setHealth(e.target.value)}
+              color="white"
+              textFillColor={'whiteAlpha.800'}
               placeholder="Enter mob health"
               required={false}
               data-testid="mob-health-input"
+              onChange={(e) => setHealth(e.target.value)}
+              value={health}
             />
             <DiceRoller
               mob={selectedTypeaheadMob}
@@ -204,17 +208,6 @@ export const MobForm = () => {
         <Button type="submit" variant="solid" width="full" data-testid="submit-mob-button">
           Add Mob
         </Button>
-
-        <Button
-          variant="redLink"
-          width="full"
-          onClick={(e) => showClearMobForm(e)}
-          mt="4"
-          data-testid="clear-mobs-button"
-        >
-          Clear Mobs
-        </Button>
-        <ClearMobsModal isOpen={isOpen} onClose={onClose} />
       </Box>
     )
   );

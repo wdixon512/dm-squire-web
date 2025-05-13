@@ -31,11 +31,20 @@ export const MobQuickAdd = () => {
         <AnimatePresence initial={false}>
           {isClient && mobFavorites && mobFavorites.length > 0 && (
             <AnimatedFlex direction="column" gap="4">
-              <Flex direction="column" p={4} bg="gray.50" borderWidth={1} borderRadius="md" shadow="md" gap={2}>
-                <Heading size="md" textAlign="center" textColor="primary.700" borderBottom={'2px solid'}>
+              <Flex
+                direction="column"
+                p={4}
+                bg="blackAlpha.900"
+                opacity=".95"
+                borderWidth={1}
+                borderRadius="md"
+                shadow="md"
+                gap={2}
+              >
+                <Heading size="md" textAlign="center" textColor="white" borderBottom={'2px solid'}>
                   Quick Add
                 </Heading>
-                <Flex gap="4" justifyContent={'center'} flexWrap="wrap" data-testid="mob-favorites-list">
+                <Flex gap="4" justifyContent={'center'} flexWrap="wrap" data-testid="mob-favorites-list" pt="2">
                   {mobFavorites.map((mob, i) => (
                     <Box position="relative" key={i}>
                       <Button

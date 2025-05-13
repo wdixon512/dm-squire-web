@@ -13,7 +13,7 @@ export const EntityList = () => {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <Box p={4} bg="secondary.200" borderWidth={1} borderRadius="md" shadow="md" w="100%">
+      <Box p={4} bg="blackAlpha.900" borderWidth={1} borderRadius="md" shadow="md" w="100%" opacity=".95">
         {isClient &&
           (loadingFirebaseRoom ? (
             <Spinner size="lg" label="Loading entities..." />
