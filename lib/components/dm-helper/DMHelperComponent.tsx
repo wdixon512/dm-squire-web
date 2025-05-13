@@ -130,8 +130,28 @@ export const DMHelperComponent = () => {
                 </Flex>
               )}
               <Flex direction="column" gap="4" flex="1">
-                {!readOnlyRoom ? (
-                  <>
+                {readOnlyRoom && (
+                  <Box w="100%" p={4} bg="blackAlpha.900" borderRadius="md" shadow="md">
+                    {combatStarted && (
+                      <Heading variant="redSolid" data-testid="combat-started-heading" textAlign="center">
+                        <Box display="inline-flex" gap="4">
+                          <Image src="/static/images/sword.png" alt="sword-icon" w="2.25rem" h="2.25rem" mr="1" />
+                          Combat has started...
+                        </Box>
+                      </Heading>
+                    )}
+                    {!combatStarted && (
+                      <Heading data-testid="combat-ended-heading" textAlign="center">
+                        Combat has NOT started.
+                      </Heading>
+                    )}
+                  </Box>
+                )}
+
+                <EntityList />
+
+                {!readOnlyRoom && (
+                  <Box bgColor="blackAlpha.800" p={4} borderRadius="md" shadow="md">
                     {combatStarted ? (
                       <Button
                         variant="redSolid"
@@ -147,23 +167,8 @@ export const DMHelperComponent = () => {
                         Start Combat
                       </Button>
                     )}
-                  </>
-                ) : (
-                  <Box>
-                    {combatStarted && (
-                      <Heading variant="redSolid" data-testid="combat-started-heading" textAlign="center">
-                        Combat has started...
-                      </Heading>
-                    )}
-                    {!combatStarted && (
-                      <Heading data-testid="combat-ended-heading" textAlign="center">
-                        Combat has NOT started.
-                      </Heading>
-                    )}
                   </Box>
                 )}
-
-                <EntityList />
               </Flex>
             </Flex>
           </TabPanel>
