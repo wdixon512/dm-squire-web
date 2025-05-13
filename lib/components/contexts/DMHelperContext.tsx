@@ -15,7 +15,14 @@ import { ref, get, set, update, push, onValue } from 'firebase/database';
 import useLocalStorage from '@lib/hooks/useLocalStorage';
 import { getRoomByOwnerUID } from '@lib/services/dm-helper-firebase-service';
 import { toKebabCase } from '@lib/util/js-utils';
+import { Ally } from '@lib/models/dm-helper/Ally';
 
+/**
+ * This file defines the DMHelperContext and DMHelperContextProvider components.
+ * The DMHelperContext provides a way to share state and functions related to the DM Helper component across the application.
+ * The DMHelperContextProvider component manages the state and provides functions to create, join, and leave rooms,
+ * as well as manage entities, combat state, and mob favorites.
+ */
 export const DMHelperContext = createContext({
   room: {} as Room,
   setRoom: (() => null) as React.Dispatch<React.SetStateAction<Room | null>>,
@@ -34,6 +41,7 @@ export const DMHelperContext = createContext({
   updateMobFavorites: (mobs: Mob[]): void => {},
   isClient: false,
   heroes: [] as Hero[],
+  allies: [] as Ally[],
   combatStarted: false,
   updateCombatStarted: (started: boolean): void => {},
   clearMobs: (): void => {},
@@ -56,6 +64,8 @@ export const DMHelperContextProvider = ({ children }) => {
   const toast = useToast();
 
   const heroes = useMemo(() => entities.filter((entity) => entity.type === EntityType.HERO) as Hero[], [entities]);
+  const allies = useMemo(() => entities.filter((entity) => entity.type === EntityType.ALLY) as Ally[], [entities]);
+
   const readOnlyRoom = useMemo(() => isClient && joinedRoomId !== null, [isClient, joinedRoomId]);
 
   // Utilities to update Room context state & Realtime Database
@@ -437,6 +447,7 @@ export const DMHelperContextProvider = ({ children }) => {
         updateMobFavorites,
         isClient,
         heroes,
+        allies,
         combatStarted,
         updateCombatStarted,
         clearMobs,

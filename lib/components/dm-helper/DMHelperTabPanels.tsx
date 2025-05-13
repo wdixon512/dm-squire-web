@@ -8,6 +8,7 @@ import { InviteOthersForm } from './InviteOthersForm';
 import { MobForm } from './MobForm';
 import { MobQuickAdd } from './MobQuickAdd';
 import UserRoomSettingsComponent from './UserRoomSettingsComponent';
+import { AlliesList } from './AlliesList';
 
 export default function DMHelperTabPanels(props: { readOnlyRoom: boolean; combatStarted: boolean }) {
   const { readOnlyRoom, combatStarted } = props;
@@ -59,6 +60,7 @@ export default function DMHelperTabPanels(props: { readOnlyRoom: boolean; combat
           <Flex gap="4" justifyContent="center">
             <HeroForm />
             <HeroList />
+            <AlliesList />
           </Flex>
         </TabPanel>
       )}
