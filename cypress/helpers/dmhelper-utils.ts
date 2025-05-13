@@ -115,6 +115,18 @@ export const killMobAndVerify = (mobId: string) => {
   cy.get(`[data-testid="${mobId}-item"]`).should('not.exist');
 };
 
+export const clearMobs = () => {
+  cy.get(`[data-testid="done-edit-modal-btn"]`).click();
+
+  cy.get('[data-testid="entity-list"]').should('exist');
+  cy.get('[data-testid="entity-list"]').find('[data-testid="entity-item"]').should('not.exist');
+};
+
+export const clearQuickadd = () => {
+  cy.get(`[data-testid="done-edit-modal-btn"]`).click();
+  cy.get('[data-testid="mob-favorites-list"]').should('not.exist');
+};
+
 export const updateMobHealthInlineAndVerify = (mobId: string, health: number) => {
   cy.get(`[data-testid="${mobId}-health"]`).clear().type(health.toString());
   cy.get(`[data-testid="${mobId}-health"]`).should('have.value', health.toString());

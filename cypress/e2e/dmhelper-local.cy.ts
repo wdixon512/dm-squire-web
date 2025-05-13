@@ -18,6 +18,8 @@ import {
   endCombat,
   removeHeroAndVerify,
   killMobAndVerify,
+  clearMobs,
+  clearQuickadd,
   removeQuickAddByIdAndVerify,
   goToInviteOthersPanel,
   copyJoinRoomLink,
@@ -344,6 +346,67 @@ describe('DMHelper E2E Tests', () => {
         expect(room.mobFavorites).to.satisfy(
           (favorites: Mob[]) => favorites.length === 2 && !favorites.some((m) => m.id === 'goblin-1')
         );
+      });
+    });
+
+    it('should open modal and confirm to remove all mobs and verify it is removed from the database', () => {
+      cy.get('[data-testid="clear-mobs-button"]').click();
+      cy.wait(2000);
+
+      cy.get('[data-testid="cancel-edit-modal-btn"]').click();
+      cy.wait(2000);
+      cy.get('[data-testid="clear-mobs-modal"]').should('not.exist');
+
+      cy.get('[data-testid="clear-mobs-button"]').click();
+      cy.wait(2000);
+
+      // Click outside the modal (on the overlay)
+      cy.get('body').type('{esc}');
+      cy.wait(2000);
+
+      // Ensure the modal is closed
+      cy.get('[data-testid="clear-mobs-modal"]').should('not.exist');
+
+      cy.get('[data-testid="clear-mobs-button"]').click();
+      cy.wait(2000);
+
+      clearMobs();
+
+      verifyDbRoom((room) => {
+        expect(room).to.exist;
+        expect(room.combat).to.exist;
+
+        const mobs = room.combat.entities?.filter((entity) => entity.type === 'mob') || [];
+        expect(mobs.length).to.equal(0);
+      });
+    });
+
+    it('should open modal and confirm to remove all mobs from quick add and verify favorited mobs removed from the database', () => {
+      cy.get('[data-testid="quickadd-clear-btn"]').click();
+      cy.wait(2000);
+
+      cy.get('[data-testid="cancel-edit-modal-btn"]').click();
+      cy.wait(2000);
+      cy.get('[data-testid="clear-quickadd-modal"]').should('not.exist');
+
+      cy.get('[data-testid="quickadd-clear-btn"]').click();
+      cy.wait(2000);
+
+      // Click outside the modal (on the overlay)
+      cy.get('body').type('{esc}');
+      cy.wait(2000);
+
+      // Ensure the modal is closed
+      cy.get('[data-testid="clear-quickadd-modal"]').should('not.exist');
+
+      cy.get('[data-testid="quickadd-clear-btn"]').click();
+      cy.wait(2000);
+
+      clearQuickadd();
+
+      verifyDbRoom((room) => {
+        expect(room).to.exist;
+        expect(room.mobFavorites).to.be.undefined;
       });
     });
   });
