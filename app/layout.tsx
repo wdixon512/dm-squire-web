@@ -8,6 +8,7 @@ import Head from 'next/head';
 import { FirebaseGoogleAuthProvider } from '@lib/components/contexts/FirebaseGoogleAuthContext';
 import { CacheProvider } from '@lib/components/contexts/CacheContext';
 import { BackgroundImageContextProvider } from '@lib/components/contexts/BackgroundImageContext';
+import AppWrapper from '@lib/components/global/AppWrapper';
 
 export default function MyApp({ children }) {
   return (
@@ -22,18 +23,9 @@ export default function MyApp({ children }) {
           <CacheProvider>
             <FirebaseGoogleAuthProvider>
               <BackgroundImageContextProvider>
-                <Container
-                  width="100vw"
-                  maxW="100vw"
-                  px="0"
-                  mx="0"
-                  pb="20"
-                  minHeight="100vh"
-                  bgImage="static/images/backgrounds/demon-in-hell.jpg"
-                  bgSize="cover"
-                >
+                <AppWrapper width="100vw" maxW="100vw" px="0" mx="0" pb="20" minHeight="100vh" bgSize="cover">
                   {children}
-                </Container>
+                </AppWrapper>
               </BackgroundImageContextProvider>
             </FirebaseGoogleAuthProvider>
           </CacheProvider>

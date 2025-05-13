@@ -3,6 +3,7 @@
 import { Container, ContainerProps } from '@chakra-ui/react';
 import { useContext } from 'react';
 import { BackgroundImageContext } from '../contexts/BackgroundImageContext';
+import BackgroundSelector from './BackgroundSelector';
 
 export const AppWrapper = (props: ContainerProps) => {
   const { backgroundImageUrl } = useContext(BackgroundImageContext);
@@ -14,9 +15,10 @@ export const AppWrapper = (props: ContainerProps) => {
       mx="0"
       pb="20"
       minHeight="100vh"
-      bgImage={backgroundImageUrl ?? '/static/images/backgrounds/demon-in-hell.jpg'}
+      bgImage={backgroundImageUrl || '/static/images/backgrounds/demon-in-hell.jpg'}
       bgSize="cover"
     >
+      <BackgroundSelector />
       {props.children}
     </Container>
   );

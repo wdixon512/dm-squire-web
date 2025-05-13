@@ -41,7 +41,7 @@ export const MobQuickAdd = () => {
                 <Heading size="md" textAlign="center" textColor="white" borderBottom={'2px solid'}>
                   Quick Add
                 </Heading>
-                <Flex gap="4" justifyContent={'center'} flexWrap="wrap" data-testid="mob-favorites-list">
+                <Flex gap="4" justifyContent={'center'} flexWrap="wrap" data-testid="mob-favorites-list" pt="2">
                   {mobFavorites.map((mob, i) => (
                     <Box position="relative" key={i}>
                       <Button

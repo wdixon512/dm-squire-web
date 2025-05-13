@@ -131,7 +131,7 @@ export const DMHelperComponent = () => {
               )}
               <Flex direction="column" gap="4" flex="1">
                 {readOnlyRoom && (
-                  <Box w="100%" p={4} bg="blackAlpha.900" borderRadius="md" shadow="md">
+                  <Box w="100%" p={4} bg="blackAlpha.900" opacity=".95" borderWidth="1px" borderRadius="md" shadow="md">
                     {combatStarted && (
                       <Heading variant="redSolid" data-testid="combat-started-heading" textAlign="center">
                         <Box display="inline-flex" gap="4">

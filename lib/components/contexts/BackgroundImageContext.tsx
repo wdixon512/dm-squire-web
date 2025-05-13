@@ -5,7 +5,6 @@ export const BackgroundImageContext = createContext({
   setBackgroundImageUrl: (url: string) => {},
 });
 
-// create a backgroundimagecontext
 export const BackgroundImageContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [backgroundImageUrl, setBackgroundImageUrl] = useState<string>('');
 
