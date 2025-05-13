@@ -1,21 +1,27 @@
 'use client';
-import React, { useContext } from 'react';
-import { BackgroundImageContext } from '../contexts/BackgroundImageContext';
-import { Box, Button, useDisclosure } from '@chakra-ui/react';
+import React from 'react';
+import { Text, Box, Button, useDisclosure, Flex, Tooltip } from '@chakra-ui/react';
 import { FaImage } from 'react-icons/fa';
 import BackgroundSelectorModal from './BackgroundSelectorModal';
 
 export default function BackgroundSelector() {
-  const { setBackgroundImageUrl } = useContext(BackgroundImageContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
       <Box p="4">
-        <Button display="inline-flex" gap="2" onClick={onOpen}>
-          <FaImage />
-          Choose
-        </Button>
+        <Tooltip label="Select a background image" placement="right" hasArrow>
+          <Button gap="2" onClick={onOpen} bgColor="secondary.500" border="1px dotted white">
+            <Flex alignContent="center" flexDir="column" w="full">
+              <Text color="marioRed.100" fontSize="12px" fontWeight="bold">
+                New!
+              </Text>
+              <Flex justifyContent={'center'}>
+                <FaImage />
+              </Flex>
+            </Flex>
+          </Button>
+        </Tooltip>
       </Box>
       <BackgroundSelectorModal isOpen={isOpen} onClose={onClose} />
     </>

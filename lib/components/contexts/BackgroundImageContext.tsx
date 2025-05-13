@@ -1,4 +1,6 @@
-import { createContext, ReactNode, useState } from 'react';
+'use client';
+import useLocalStorage from '@lib/hooks/useLocalStorage';
+import { createContext, ReactNode } from 'react';
 
 export const BackgroundImageContext = createContext({
   backgroundImageUrl: '',
@@ -6,7 +8,10 @@ export const BackgroundImageContext = createContext({
 });
 
 export const BackgroundImageContextProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [backgroundImageUrl, setBackgroundImageUrl] = useState<string>('');
+  const [backgroundImageUrl, setBackgroundImageUrl] = useLocalStorage<string>(
+    'backgroundImageUrl',
+    '/static/images/backgrounds/demon-in-hell.jpg'
+  );
 
   return (
     <BackgroundImageContext.Provider value={{ backgroundImageUrl, setBackgroundImageUrl }}>
