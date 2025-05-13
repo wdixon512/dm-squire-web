@@ -93,7 +93,7 @@ export const EntityEditModal: React.FC<EntityEditModalProps> = ({ entity, isOpen
                     <Input
                       type="text"
                       color="blackAlpha.700"
-                      value={newHealth}
+                      value={newHealth ?? ''}
                       onChange={(e) => setNewHealth(e.target.value)}
                       placeholder="Enter mob health"
                       required={false}
@@ -110,7 +110,7 @@ export const EntityEditModal: React.FC<EntityEditModalProps> = ({ entity, isOpen
                   type="number"
                   textColor="primary.400"
                   placeholder="Enter initiative"
-                  value={newInitiaive}
+                  value={newInitiaive ?? ''}
                   onChange={(e) => setNewInitiative(e.target.value)}
                   required={true}
                   data-testid="initiative-edit-modal-input"

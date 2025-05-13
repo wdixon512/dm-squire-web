@@ -71,6 +71,56 @@ describe('DMHelper E2E Tests', () => {
         });
       });
     });
+
+    it('should only show mob numbers when there are multiple mobs with the same name', () => {
+      // First verify the current state of goblins
+      cy.get('[data-testid="entity-list"]').within(() => {
+        // Count how many goblins exist
+        cy.get('[data-testid="entity-item"]')
+          .filter(':contains("Goblin")')
+          .then(($goblins) => {
+            const goblinCount = $goblins.length;
+
+            if (goblinCount === 1) {
+              // If there's only one goblin, verify it shows without a number
+              cy.get('[data-testid="goblin-1-name"]').should('contain', 'Goblin').and('not.contain', '#1');
+            } else {
+              // If there are multiple goblins, verify they all show with numbers
+              for (let i = 1; i <= goblinCount; i++) {
+                cy.get(`[data-testid="goblin-${i}-name"]`).should('contain', `Goblin #${i}`);
+              }
+            }
+          });
+      });
+
+      // Add a new unique mob to test the single mob case
+      cy.get('[data-testid="combat-panel"]').click();
+      cy.get('[data-testid="mob-name-input"]').type('Unique Mob');
+      cy.get('[data-testid="mob-health-input"]').type('40');
+      cy.get('[data-testid="mob-initiative-input"]').type('12');
+      cy.get('[data-testid="submit-mob-button"]').click();
+
+      // Verify the unique mob shows without a number
+      cy.get('[data-testid="unique-mob-1-name"]').should('contain', 'Unique Mob').and('not.contain', '#1');
+
+      // Add a second unique mob
+      cy.get('[data-testid="mob-name-input"]').clear().type('Unique Mob');
+      cy.get('[data-testid="mob-health-input"]').clear().type('40');
+      cy.get('[data-testid="mob-initiative-input"]').clear().type('12');
+      cy.get('[data-testid="submit-mob-button"]').click();
+
+      // Verify both unique mobs now show with numbers
+      cy.get('[data-testid="unique-mob-1-name"]').should('contain', 'Unique Mob #1');
+      cy.get('[data-testid="unique-mob-2-name"]').should('contain', 'Unique Mob #2');
+
+      // Clean up: Remove both unique mobs
+      cy.get('[data-testid="unique-mob-1-kill"]').click();
+      cy.get('[data-testid="unique-mob-2-kill"]').click();
+
+      // Verify the unique mobs are gone
+      cy.get('[data-testid="unique-mob-1-name"]').should('not.exist');
+      cy.get('[data-testid="unique-mob-2-name"]').should('not.exist');
+    });
   });
 
   describe('Room Invite', () => {
@@ -292,7 +342,7 @@ describe('DMHelper E2E Tests', () => {
         expect(room).to.exist;
         expect(room.mobFavorites).to.exist;
         expect(room.mobFavorites).to.satisfy(
-          (favorites: Mob[]) => favorites.length === 1 && !favorites.some((m) => m.id === 'goblin-1')
+          (favorites: Mob[]) => favorites.length === 2 && !favorites.some((m) => m.id === 'goblin-1')
         );
       });
     });
