@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Button, Flex, FormControl, FormLabel, Input, Text, useDisclosure } from '@chakra-ui/react';
+import { Box, Button, Flex, FormControl, FormLabel, Input } from '@chakra-ui/react';
 import { useContext, useState, useRef, useCallback } from 'react';
 import { DMHelperContext } from '../contexts/DMHelperContext';
 import useDndApi from '@lib/services/dnd5eapi-service';
@@ -9,7 +9,6 @@ import { MobTypeahead } from './MobTypeahead';
 import { DiceRoller } from './DiceRoller';
 import { RollType } from '@lib/models/dm-helper/RollType';
 import { debounce } from '@lib/util/js-utils';
-import ClearMobsModal from './modals/ClearMobsModal';
 
 export const MobForm = () => {
   const [name, setName] = useState('');
@@ -22,9 +21,7 @@ export const MobForm = () => {
   const typeaheadRef = useRef<HTMLUListElement | null>(null);
   const { getAllMobsAsync, getMobByName, rollDice, getMobHitPoints } = useDndApi();
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const { addMob, clearMobs, readOnlyRoom } = useContext(DMHelperContext);
+  const { addMob, readOnlyRoom } = useContext(DMHelperContext);
 
   const handleAddMob = (e) => {
     e.preventDefault();
@@ -116,11 +113,6 @@ export const MobForm = () => {
         handleTypeaheadSelect(typeaheadMobs[highlightedIndex]);
       }
     }
-  };
-
-  const showClearMobForm = (e) => {
-    e.preventDefault();
-    onOpen();
   };
 
   return (
@@ -216,17 +208,6 @@ export const MobForm = () => {
         <Button type="submit" variant="solid" width="full" data-testid="submit-mob-button">
           Add Mob
         </Button>
-
-        <Button
-          variant="redLink"
-          width="full"
-          onClick={(e) => showClearMobForm(e)}
-          mt="4"
-          data-testid="clear-mobs-button"
-        >
-          Clear Mobs
-        </Button>
-        <ClearMobsModal isOpen={isOpen} onClose={onClose} />
       </Box>
     )
   );

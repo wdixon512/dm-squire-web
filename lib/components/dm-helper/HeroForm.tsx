@@ -38,8 +38,7 @@ export const HeroForm = () => {
         <Input
           type="text"
           value={name}
-          color="blackAlpha.700"
-          textFillColor={'whiteAlpha.800'}
+          textFillColor="whiteAlpha.800"
           onChange={(e) => setName(e.target.value)}
           placeholder="Enter hero name"
           required={true}
