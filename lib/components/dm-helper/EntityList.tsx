@@ -10,7 +10,6 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 
 export const EntityList = () => {
   const { entities, combatStarted, isClient, loadingFirebaseRoom, readOnlyRoom } = useContext(DMHelperContext);
-  const toast = useToast();
 
   return (
     <DndProvider backend={HTML5Backend}>

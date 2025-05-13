@@ -118,7 +118,7 @@ export const InitiativeModal: React.FC<InitiativeModalProps> = ({ isOpen, heroes
                 type="number"
                 textColor="primary.400"
                 placeholder="Enter initiative"
-                value={initiativeRolls[currentHeroIndex] || ''}
+                value={initiativeRolls[currentHeroIndex] ?? ''}
                 onChange={handleInitiativeChange}
                 required={true}
                 onKeyDown={(e) => {

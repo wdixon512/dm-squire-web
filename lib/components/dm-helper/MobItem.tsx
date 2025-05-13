@@ -9,6 +9,7 @@ import React from 'react';
 import { FaDemocrat, FaEye, FaEyeSlash, FaUserEdit } from 'react-icons/fa';
 import EntityEditModal from './modals/EntityEditModal';
 import EntityDetailModal from './modals/EntityDetailModal';
+import { EntityType } from '@lib/models/dm-helper/Entity';
 
 interface MobItemProps extends FlexProps {
   mob: Mob;
@@ -19,6 +20,10 @@ export const MobItem: React.FC<MobItemProps> = ({ mob, handleDrop, textColor, ..
   const { entities, removeEntity, updateEntities, readOnlyRoom } = useContext(DMHelperContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen: mobDetailIsOpen, onOpen: onMobDetailOpen, onClose: onMobDetailClose } = useDisclosure();
+
+  const hasMultipleMobsWithSameName = (mobName: string) => {
+    return entities.filter((e) => e.name === mobName && e.type === EntityType.MOB).length > 1;
+  };
 
   const updateHealth = (mob: Mob, newHealth) => {
     updateEntities(entities.map((m) => (m.id === mob.id ? { ...m, health: newHealth } : m)));
@@ -56,7 +61,7 @@ export const MobItem: React.FC<MobItemProps> = ({ mob, handleDrop, textColor, ..
               </Text>
             )}
             <Text as="span" fontWeight="800" textColor={textColor} data-testid={`${mob.id}-name`} color="marioRed.200">
-              &nbsp;{mob.name} {(mob.number ?? 0 > 1) ? `#${mob.number}` : ''}
+              &nbsp;{mob.name} {hasMultipleMobsWithSameName(mob.name) ? `#${mob.number}` : ''}
             </Text>
           </Text>
         </Flex>
@@ -66,8 +71,11 @@ export const MobItem: React.FC<MobItemProps> = ({ mob, handleDrop, textColor, ..
             <Input
               type="number"
               fontWeight="800"
-              value={mob.health}
-              onChange={(e) => updateHealth(mob, parseInt(e.target.value))}
+              value={mob.health ?? ''}
+              onChange={(e) => {
+                const val = e.target.value;
+                updateHealth(mob, val === '' ? '' : parseInt(val, 10));
+              }}
               w="90px"
               ml={2}
               data-testid={`${mob.id}-health`}
