@@ -5,7 +5,6 @@ import {
   ModalHeader,
   ModalBody,
   ModalFooter,
-  Text,
   Input,
   FormLabel,
   Button,
@@ -16,14 +15,16 @@ import { useContext, useState, useRef } from 'react';
 import { EntityType, Entity } from '@lib/models/dm-helper/Entity';
 import { DMHelperContext } from '../../contexts/DMHelperContext';
 import { validateInitiative } from '@lib/util/dm-helper-utils';
+import { capitalizeFirstLetter } from '@lib/util/js-utils';
 
 interface EntityEditModalProps {
   entity: Entity;
   isOpen: boolean;
+  showHealth?: boolean;
   onClose: () => void;
 }
 
-export const EntityEditModal: React.FC<EntityEditModalProps> = ({ entity, isOpen, onClose }) => {
+export const EntityEditModal: React.FC<EntityEditModalProps> = ({ entity, isOpen, showHealth = false, onClose }) => {
   const { updateEntities } = useContext(DMHelperContext);
   const [newInitiaive, setNewInitiative] = useState(entity.initiative?.toString());
   const [newName, setNewName] = useState<string>(entity.name);
@@ -47,7 +48,7 @@ export const EntityEditModal: React.FC<EntityEditModalProps> = ({ entity, isOpen
       updateEntities((prevEntities) =>
         prevEntities.map((e) => {
           if (e.id === entity.id) {
-            if (entity.type === EntityType.MOB) {
+            if (showHealth) {
               const sameName = newName === entity.name;
               const mobsWithSameName = prevEntities.filter((m) => m.name === newName);
               const newNumber = sameName ? entity.number : mobsWithSameName.length + 1;
@@ -84,28 +85,24 @@ export const EntityEditModal: React.FC<EntityEditModalProps> = ({ entity, isOpen
       >
         {entity && (
           <>
-            <ModalHeader textColor="primary.400">Update {entity.name}'s Initiative</ModalHeader>
+            <ModalHeader textColor="primary.400">Update {entity.name}</ModalHeader>
             <ModalBody>
-              {entity.type === EntityType.MOB && (
-                <>
-                  <FormControl mb={4}>
-                    <FormLabel color="blackAlpha.900">Mob Health</FormLabel>
-                    <Input
-                      type="text"
-                      color="blackAlpha.700"
-                      value={newHealth ?? ''}
-                      onChange={(e) => setNewHealth(e.target.value)}
-                      placeholder="Enter mob health"
-                      required={false}
-                      data-testid="health-edit-modal-input"
-                    />
-                  </FormControl>
-                </>
+              {showHealth && (
+                <FormControl mb={4}>
+                  <FormLabel color="blackAlpha.900">{capitalizeFirstLetter(entity.name)} Health</FormLabel>
+                  <Input
+                    type="text"
+                    color="blackAlpha.700"
+                    value={newHealth ?? ''}
+                    onChange={(e) => setNewHealth(e.target.value)}
+                    placeholder="Enter mob health"
+                    required={false}
+                    data-testid="health-edit-modal-input"
+                  />
+                </FormControl>
               )}
               <FormControl mb={4}>
-                <FormLabel color="blackAlpha.900">
-                  {entity.type === EntityType.MOB ? 'Mob' : 'Hero'} Initiative
-                </FormLabel>
+                <FormLabel color="blackAlpha.900">{capitalizeFirstLetter(entity.name)} Initiative</FormLabel>
                 <Input
                   type="number"
                   textColor="primary.400"

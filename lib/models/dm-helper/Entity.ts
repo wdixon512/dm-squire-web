@@ -1,6 +1,7 @@
 export enum EntityType {
   MOB = 'mob',
   HERO = 'hero',
+  ALLY = 'ally',
   ENTITY = 'entity',
 }
 

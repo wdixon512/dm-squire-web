@@ -100,7 +100,7 @@ describe('DMHelper E2E Tests', () => {
       cy.get('[data-testid="mob-name-input"]').type('Unique Mob');
       cy.get('[data-testid="mob-health-input"]').type('40');
       cy.get('[data-testid="mob-initiative-input"]').type('12');
-      cy.get('[data-testid="submit-mob-button"]').click();
+      cy.get('[data-testid="add-mob-button"]').click();
 
       // Verify the unique mob shows without a number
       cy.get('[data-testid="unique-mob-1-name"]').should('contain', 'Unique Mob').and('not.contain', '#1');
@@ -109,7 +109,7 @@ describe('DMHelper E2E Tests', () => {
       cy.get('[data-testid="mob-name-input"]').clear().type('Unique Mob');
       cy.get('[data-testid="mob-health-input"]').clear().type('40');
       cy.get('[data-testid="mob-initiative-input"]').clear().type('12');
-      cy.get('[data-testid="submit-mob-button"]').click();
+      cy.get('[data-testid="add-mob-button"]').click();
 
       // Verify both unique mobs now show with numbers
       cy.get('[data-testid="unique-mob-1-name"]').should('contain', 'Unique Mob #1');
@@ -213,7 +213,7 @@ describe('DMHelper E2E Tests', () => {
 
     it('should update a hero initiative and verify it in the database', () => {
       // Interact with the UI to update the hero initiative
-      cy.get('[data-testid="warrior-1-edit"]').click();
+      cy.get('[data-testid="warrior-1-edit"]').first().click();
       cy.get('[data-testid="initiative-edit-modal-input"]').clear().type('25');
       cy.get('[data-testid="done-edit-modal-btn"]').click();
 
@@ -351,24 +351,24 @@ describe('DMHelper E2E Tests', () => {
 
     it('should open modal and confirm to remove all mobs and verify it is removed from the database', () => {
       cy.get('[data-testid="clear-mobs-button"]').click();
-      cy.wait(2000);
+      cy.wait(500);
 
       cy.get('[data-testid="cancel-edit-modal-btn"]').click();
-      cy.wait(2000);
+      cy.wait(500);
       cy.get('[data-testid="clear-mobs-modal"]').should('not.exist');
 
       cy.get('[data-testid="clear-mobs-button"]').click();
-      cy.wait(2000);
+      cy.wait(500);
 
       // Click outside the modal (on the overlay)
       cy.get('body').type('{esc}');
-      cy.wait(2000);
+      cy.wait(500);
 
       // Ensure the modal is closed
       cy.get('[data-testid="clear-mobs-modal"]').should('not.exist');
 
       cy.get('[data-testid="clear-mobs-button"]').click();
-      cy.wait(2000);
+      cy.wait(500);
 
       clearMobs();
 
@@ -383,24 +383,24 @@ describe('DMHelper E2E Tests', () => {
 
     it('should open modal and confirm to remove all mobs from quick add and verify favorited mobs removed from the database', () => {
       cy.get('[data-testid="quickadd-clear-btn"]').click();
-      cy.wait(2000);
+      cy.wait(500);
 
       cy.get('[data-testid="cancel-edit-modal-btn"]').click();
-      cy.wait(2000);
+      cy.wait(500);
       cy.get('[data-testid="clear-quickadd-modal"]').should('not.exist');
 
       cy.get('[data-testid="quickadd-clear-btn"]').click();
-      cy.wait(2000);
+      cy.wait(500);
 
       // Click outside the modal (on the overlay)
       cy.get('body').type('{esc}');
-      cy.wait(2000);
+      cy.wait(500);
 
       // Ensure the modal is closed
       cy.get('[data-testid="clear-quickadd-modal"]').should('not.exist');
 
       cy.get('[data-testid="quickadd-clear-btn"]').click();
-      cy.wait(2000);
+      cy.wait(500);
 
       clearQuickadd();
 

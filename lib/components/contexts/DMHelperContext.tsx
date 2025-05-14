@@ -15,7 +15,14 @@ import { ref, get, set, update, push, onValue } from 'firebase/database';
 import useLocalStorage from '@lib/hooks/useLocalStorage';
 import { getRoomByOwnerUID } from '@lib/services/dm-helper-firebase-service';
 import { toKebabCase } from '@lib/util/js-utils';
+import { Ally } from '@lib/models/dm-helper/Ally';
 
+/**
+ * This file defines the DMHelperContext and DMHelperContextProvider components.
+ * The DMHelperContext provides a way to share state and functions related to the DM Helper component across the application.
+ * The DMHelperContextProvider component manages the state and provides functions to create, join, and leave rooms,
+ * as well as manage entities, combat state, and mob favorites.
+ */
 export const DMHelperContext = createContext({
   room: {} as Room,
   setRoom: (() => null) as React.Dispatch<React.SetStateAction<Room | null>>,
@@ -29,11 +36,18 @@ export const DMHelperContext = createContext({
   addMob: (name: string, health: number | undefined, initiative: number | undefined, isLibraryMob?: boolean): boolean =>
     false,
   addHero: (name: string, health: number | undefined, initiative: number | undefined): boolean => false,
+  addAlly: (
+    name: string,
+    health: number | undefined,
+    initiative: number | undefined,
+    characterSheetId?: string
+  ): boolean => false,
   resetHeroInitiatives: (): void => {},
   mobFavorites: [] as Mob[],
   updateMobFavorites: (mobs: Mob[]): void => {},
   isClient: false,
   heroes: [] as Hero[],
+  allies: [] as Ally[],
   combatStarted: false,
   updateCombatStarted: (started: boolean): void => {},
   clearMobs: (): void => {},
@@ -56,6 +70,8 @@ export const DMHelperContextProvider = ({ children }) => {
   const toast = useToast();
 
   const heroes = useMemo(() => entities.filter((entity) => entity.type === EntityType.HERO) as Hero[], [entities]);
+  const allies = useMemo(() => entities.filter((entity) => entity.type === EntityType.ALLY) as Ally[], [entities]);
+
   const readOnlyRoom = useMemo(() => isClient && joinedRoomId !== null, [isClient, joinedRoomId]);
 
   // Utilities to update Room context state & Realtime Database
@@ -90,6 +106,7 @@ export const DMHelperContextProvider = ({ children }) => {
                 } as Combat,
                 mobFavorites: mobFavorites,
                 heroes: heroes,
+                allies: allies,
               });
             }
           });
@@ -105,6 +122,7 @@ export const DMHelperContextProvider = ({ children }) => {
             } as Combat,
             mobFavorites: mobFavorites,
             heroes: heroes,
+            allies: allies,
           });
         }
       }
@@ -113,7 +131,7 @@ export const DMHelperContextProvider = ({ children }) => {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [joinedRoomId]);
 
   // Commit changes to the room to Realtime Database
   useEffect(() => {
@@ -130,6 +148,7 @@ export const DMHelperContextProvider = ({ children }) => {
       },
       mobFavorites: mobFavorites,
       heroes: heroes,
+      allies: allies,
     };
 
     // Firebase doesn't like `undefined` values, so we sanitize the data before updating Realtime Database
@@ -193,7 +212,7 @@ export const DMHelperContextProvider = ({ children }) => {
     }
 
     setCommitPending(false);
-  }, [commitPending, entities, mobFavorites, heroes, combatStarted, room]);
+  }, [commitPending, entities, mobFavorites, heroes, allies, combatStarted, room]);
 
   const createRoom = async (): Promise<string | undefined | null> => {
     const user = auth.currentUser;
@@ -378,6 +397,31 @@ export const DMHelperContextProvider = ({ children }) => {
     return true;
   };
 
+  const addAlly = (
+    name: string,
+    health: number | undefined,
+    initiative: number | undefined,
+    characterSheetId?: string
+  ): boolean => {
+    if (!validateName(name, toast)) return false;
+
+    const ally: Ally = {
+      id: `${toKebabCase(name.toLowerCase())}-${getNextEntityNumber(entities, name)}`,
+      name,
+      health,
+      number: getNextEntityNumber(entities, name),
+      initiative,
+      type: EntityType.ALLY,
+      characterSheetId,
+    };
+
+    const updatedEntities = [...entities, ally];
+    setEntities(updatedEntities);
+    scheduleCommitRoomChanges();
+
+    return true;
+  };
+
   const updateEntities = (entities: Entity[]) => {
     setEntities(entities);
     scheduleCommitRoomChanges();
@@ -432,11 +476,13 @@ export const DMHelperContextProvider = ({ children }) => {
         removeEntity,
         addMob,
         addHero,
+        addAlly,
         resetHeroInitiatives,
         mobFavorites,
         updateMobFavorites,
         isClient,
         heroes,
+        allies,
         combatStarted,
         updateCombatStarted,
         clearMobs,

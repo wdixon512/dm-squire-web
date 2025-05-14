@@ -3,10 +3,9 @@
 import { Box, List } from '@chakra-ui/react';
 import { useContext } from 'react';
 import { DMHelperContext } from '../contexts/DMHelperContext';
-import HeroItem from './HeroItem';
-
-export const HeroList = () => {
-  const { heroes, isClient } = useContext(DMHelperContext);
+import AllyItem from './AllyItem';
+export const AllyList = () => {
+  const { allies, isClient } = useContext(DMHelperContext);
 
   return (
     <Box
@@ -20,13 +19,22 @@ export const HeroList = () => {
       flex="1"
     >
       {isClient && (
-        <List data-testid="hero-list">
-          {heroes.length === 0 ? (
+        <List data-testid="ally-list">
+          {allies.length === 0 ? (
             <Box textAlign="left" color="white" fontStyle="italic">
-              No heroes added yet.
+              No allies added yet.
             </Box>
           ) : (
-            heroes.map((hero, i) => <HeroItem key={i} hero={hero} showInitiative={false} showRemove={true} />)
+            allies.map((ally, i) => (
+              <AllyItem
+                key={i}
+                ally={ally}
+                showInitiative={false}
+                showHealth={true}
+                showKill={true}
+                showDetails={true}
+              />
+            ))
           )}
         </List>
       )}

@@ -10,7 +10,7 @@ export const addGoblin = () => {
   cy.get('[data-testid="mob-name-input"]').type('Goblin');
   cy.get('[data-testid="mob-health-input"]').type('30');
   cy.get('[data-testid="mob-initiative-input"]').type('15');
-  cy.get('[data-testid="submit-mob-button"]').click();
+  cy.get('[data-testid="add-mob-button"]').click();
 };
 
 export const verifyMobInEntityList = (mobName: string) => {
@@ -27,7 +27,7 @@ export const addKobold = () => {
   cy.get('[data-testid="mob-name-input"]').type('Kobold');
   cy.get('[data-testid="mob-health-input"]').type('20');
   cy.get('[data-testid="mob-initiative-input"]').type('10');
-  cy.get('[data-testid="submit-mob-button"]').click();
+  cy.get('[data-testid="add-mob-button"]').click();
 };
 
 export const addKoboldAndVerify = () => {
@@ -40,7 +40,7 @@ export const addOrc = () => {
   cy.get('[data-testid="mob-name-input"]').type('Orc');
   cy.get('[data-testid="mob-health-input"]').type('50');
   cy.get('[data-testid="mob-initiative-input"]').type('10');
-  cy.get('[data-testid="submit-mob-button"]').click();
+  cy.get('[data-testid="add-mob-button"]').click();
 };
 
 export const addOrcAndVerify = () => {
@@ -62,7 +62,7 @@ export const removeQuickAddByIdAndVerify = (mobId: string) => {
 export const addHero = (name: string) => {
   cy.get('[data-testid="heroes-panel"]').click();
   cy.get('[data-testid="hero-name-input"]').type(name);
-  cy.get('[data-testid="add-hero-btn"]').click();
+  cy.get('[data-testid="add-hero-button"]').click();
 };
 
 export const addHeroAndVerify = (name: string) => {
@@ -71,7 +71,7 @@ export const addHeroAndVerify = (name: string) => {
 };
 
 export const updateHeroAndVerify = (heroId: string, initiative: number) => {
-  cy.get(`[data-testid="${heroId}-edit"]`).click();
+  cy.get(`[data-testid="${heroId}-edit"]`).first().click();
 
   // wait for modal to open
   cy.wait(1000);
@@ -215,5 +215,5 @@ export const addMobWithTypeahead = (name: string) => {
   cy.get('[data-testid="mob-name-input"]').type(name);
   cy.get(`[data-testid="typeahead-mob-${toKebabCase(name.toLowerCase())}"]`).click();
   cy.wait(200);
-  cy.get('[data-testid="submit-mob-button"]').click();
+  cy.get('[data-testid="add-mob-button"]').click();
 };

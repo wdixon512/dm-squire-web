@@ -1,58 +1,46 @@
 'use client';
 
-import { Box, Button, FormControl, FormLabel, Input } from '@chakra-ui/react';
-import { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { DMHelperContext } from '../contexts/DMHelperContext';
+import { EntityBaseForm } from './shared/EntityBaseForm';
+import { Box, FormControl, FormLabel, Heading, Input } from '@chakra-ui/react';
 
 export const HeroForm = () => {
-  const [name, setName] = useState('');
+  const { addHero } = React.useContext(DMHelperContext);
+  const [heroName, setHeroName] = useState('');
+  const [health, setHealth] = useState('');
+  const [initiative, setInitiative] = useState('');
 
-  const { updateEntities, addHero } = useContext(DMHelperContext);
-
-  const clearHeroes = () => {
-    updateEntities([]);
-  };
-
-  const handleAddHero = (e) => {
-    e.preventDefault();
-
-    if (addHero(name, undefined, undefined)) {
-      setName('');
+  const handleAddHero = () => {
+    if (heroName) {
+      addHero(heroName, health ? parseInt(health, 10) : undefined, initiative ? parseInt(initiative, 10) : undefined);
+      setHeroName('');
+      setHealth('');
+      setInitiative('');
     }
   };
 
   return (
-    <Box
-      as="form"
-      p={4}
-      bg="blackAlpha.900"
-      opacity=".95"
-      borderWidth={1}
-      borderRadius="md"
-      shadow="md"
-      h="fit-content"
-      onSubmit={handleAddHero}
-    >
-      <FormControl mb={4}>
+    <EntityBaseForm onFormSubmit={handleAddHero} label="Hero" addButtonTestId="add-hero-button" flex=".5">
+      <Heading as="h3" size="md" color="white" mb="0" borderBottom={'2px dotted'}>
+        Add a{' '}
+        <Box as="span" color="interactive.200">
+          Hero
+        </Box>
+      </Heading>
+      <FormControl>
         <FormLabel color="white">Hero Name</FormLabel>
         <Input
           type="text"
-          value={name}
-          textFillColor="whiteAlpha.800"
-          onChange={(e) => setName(e.target.value)}
+          value={heroName}
+          onChange={(e) => setHeroName(e.target.value)}
+          color="white"
+          textFillColor={'whiteAlpha.800'}
           placeholder="Enter hero name"
-          required={true}
+          required
           data-testid="hero-name-input"
         />
       </FormControl>
-
-      <Button type="submit" variant="solid" width="full" data-testid="add-hero-btn">
-        Add Hero
-      </Button>
-
-      <Button variant="redLink" width="full" onClick={clearHeroes} mt="4">
-        Clear Heroes
-      </Button>
-    </Box>
+    </EntityBaseForm>
   );
 };

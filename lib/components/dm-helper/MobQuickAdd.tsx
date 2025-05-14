@@ -1,14 +1,15 @@
 'use client';
 
-import { Box, Button, Circle, Flex, Heading, useDisclosure } from '@chakra-ui/react';
-import { MouseEvent, useContext } from 'react';
+import { Box, Button, Circle, Flex, FlexProps, Heading, useDisclosure } from '@chakra-ui/react';
+import { useContext } from 'react';
 import { DMHelperContext } from '../contexts/DMHelperContext';
 import { Mob } from '@lib/models/dm-helper/Mob';
 import { AnimatePresence } from 'framer-motion';
 import AnimatedFlex from '../global/AnimatedFlex';
 import ClearQuickAddModal from './modals/ClearQuickAddModal';
 
-export const MobQuickAdd = () => {
+export const MobQuickAdd = (props: FlexProps) => {
+  const { ...rest } = props;
   const { mobFavorites, addMob, updateMobFavorites, isClient, readOnlyRoom } = useContext(DMHelperContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -29,8 +30,25 @@ export const MobQuickAdd = () => {
     !readOnlyRoom && (
       <>
         <AnimatePresence initial={false}>
-          {isClient && mobFavorites && mobFavorites.length > 0 && (
-            <AnimatedFlex direction="column" gap="4">
+          {isClient && (
+            <AnimatedFlex
+              direction="column"
+              gap="4"
+              overflowY="auto"
+              sx={{
+                '&::-webkit-scrollbar': {
+                  width: '8px',
+                },
+                '&::-webkit-scrollbar-track': {
+                  width: '8px',
+                },
+                '&::-webkit-scrollbar-thumb': {
+                  backgroundColor: 'gray.500',
+                  borderRadius: '4px',
+                },
+              }}
+              {...rest}
+            >
               <Flex
                 direction="column"
                 p={4}
@@ -45,6 +63,11 @@ export const MobQuickAdd = () => {
                   Quick Add
                 </Heading>
                 <Flex gap="4" justifyContent={'center'} flexWrap="wrap" data-testid="mob-favorites-list" pt="2">
+                  {mobFavorites.length === 0 && (
+                    <Heading size="sm" textAlign="center" textColor="white" fontStyle="italic" fontWeight="normal">
+                      No enemies in Quick Add
+                    </Heading>
+                  )}
                   {mobFavorites.map((mob, i) => (
                     <Box position="relative" key={i}>
                       <Button
