@@ -213,7 +213,7 @@ describe('DMHelper E2E Tests', () => {
 
     it('should update a hero initiative and verify it in the database', () => {
       // Interact with the UI to update the hero initiative
-      cy.get('[data-testid="warrior-1-edit"]').click();
+      cy.get('[data-testid="warrior-1-edit"]').first().click();
       cy.get('[data-testid="initiative-edit-modal-input"]').clear().type('25');
       cy.get('[data-testid="done-edit-modal-btn"]').click();
 
@@ -351,24 +351,24 @@ describe('DMHelper E2E Tests', () => {
 
     it('should open modal and confirm to remove all mobs and verify it is removed from the database', () => {
       cy.get('[data-testid="clear-mobs-button"]').click();
-      cy.wait(2000);
+      cy.wait(500);
 
       cy.get('[data-testid="cancel-edit-modal-btn"]').click();
-      cy.wait(2000);
+      cy.wait(500);
       cy.get('[data-testid="clear-mobs-modal"]').should('not.exist');
 
       cy.get('[data-testid="clear-mobs-button"]').click();
-      cy.wait(2000);
+      cy.wait(500);
 
       // Click outside the modal (on the overlay)
       cy.get('body').type('{esc}');
-      cy.wait(2000);
+      cy.wait(500);
 
       // Ensure the modal is closed
       cy.get('[data-testid="clear-mobs-modal"]').should('not.exist');
 
       cy.get('[data-testid="clear-mobs-button"]').click();
-      cy.wait(2000);
+      cy.wait(500);
 
       clearMobs();
 
@@ -383,24 +383,24 @@ describe('DMHelper E2E Tests', () => {
 
     it('should open modal and confirm to remove all mobs from quick add and verify favorited mobs removed from the database', () => {
       cy.get('[data-testid="quickadd-clear-btn"]').click();
-      cy.wait(2000);
+      cy.wait(500);
 
       cy.get('[data-testid="cancel-edit-modal-btn"]').click();
-      cy.wait(2000);
+      cy.wait(500);
       cy.get('[data-testid="clear-quickadd-modal"]').should('not.exist');
 
       cy.get('[data-testid="quickadd-clear-btn"]').click();
-      cy.wait(2000);
+      cy.wait(500);
 
       // Click outside the modal (on the overlay)
       cy.get('body').type('{esc}');
-      cy.wait(2000);
+      cy.wait(500);
 
       // Ensure the modal is closed
       cy.get('[data-testid="clear-quickadd-modal"]').should('not.exist');
 
       cy.get('[data-testid="quickadd-clear-btn"]').click();
-      cy.wait(2000);
+      cy.wait(500);
 
       clearQuickadd();
 

@@ -20,7 +20,7 @@ export const AllyList = () => {
       {isClient && (
         <List data-testid="ally-list">
           {allies.map((ally, i) => (
-            <AllyItem key={i} ally={ally} showInitiative={false} showRemove={true} textColor="white" />
+            <AllyItem key={i} ally={ally} showInitiative={false} showHealth={true} showKill={true} showDetails={true} />
           ))}
         </List>
       )}

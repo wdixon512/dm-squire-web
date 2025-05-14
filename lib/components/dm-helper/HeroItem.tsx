@@ -26,7 +26,7 @@ export const HeroItem: React.FC<HeroItemProps> = ({ hero, showInitiative = true,
         showRemove={showRemove}
         onRemove={() => removeEntity(hero)}
         onEdit={onOpen}
-        textColor={textColor}
+        textColor={textColor ?? 'interactive.200'}
         readOnly={readOnlyRoom}
         editTooltipLabel="Update Hero Initiative"
       />

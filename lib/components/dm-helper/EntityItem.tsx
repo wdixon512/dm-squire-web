@@ -13,6 +13,7 @@ import { FaUserEdit } from 'react-icons/fa';
 import { DMHelperContext } from '../contexts/DMHelperContext';
 import AllyItem from './AllyItem';
 import { Ally } from '@lib/models/dm-helper/Ally';
+import { Infer } from 'next/dist/compiled/superstruct';
 
 type DraggedEntity = Entity & { index: number };
 
@@ -21,6 +22,11 @@ interface EntityItemProps extends FlexProps {
   index: number;
   combatStarted: boolean;
   draggable?: boolean;
+}
+
+interface EntityItemWrapperProps extends FlexProps {
+  entity: Entity;
+  combatStarted: boolean;
 }
 
 export const EntityItem: React.FC<EntityItemProps> = ({ entity, combatStarted, draggable, index }) => {
@@ -89,15 +95,7 @@ export const EntityItem: React.FC<EntityItemProps> = ({ entity, combatStarted, d
         <Box borderTop={isOver ? '2px' : '0px'}>
           {drag(
             <div>
-              <Box data-testid="entity-item">
-                {entity.type === EntityType.MOB && <MobItem mob={entity as Mob} />}
-                {entity.type === EntityType.HERO && combatStarted && (
-                  <HeroItem hero={entity as Hero} textColor={'interactive.200'} />
-                )}
-                {entity.type === EntityType.ALLY && combatStarted && (
-                  <AllyItem ally={entity as Ally} textColor={'interactive.200'} />
-                )}
-              </Box>
+              <EntityItemWrapper entity={entity} combatStarted={combatStarted} />
             </div>
           )}
         </Box>
@@ -105,15 +103,22 @@ export const EntityItem: React.FC<EntityItemProps> = ({ entity, combatStarted, d
     )
   ) : (
     <div>
-      <Box data-testid="entity-item">
-        {entity.type === EntityType.MOB ? (
-          <MobItem mob={entity as Mob} />
-        ) : (
-          combatStarted && <HeroItem hero={entity as Hero} textColor={'interactive.200'} />
-        )}
-      </Box>
+      <EntityItemWrapper entity={entity} combatStarted={combatStarted} />
     </div>
   );
 };
 
+const EntityItemWrapper: React.FC<EntityItemWrapperProps> = ({ entity, combatStarted }) => {
+  return (
+    <Box data-testid="entity-item">
+      {entity.type === EntityType.MOB && <MobItem mob={entity as Mob} textColor="marioRed.200" />}
+      {entity.type === EntityType.HERO && combatStarted && (
+        <HeroItem hero={entity as Hero} textColor={'interactive.200'} />
+      )}
+      {entity.type === EntityType.ALLY && combatStarted && (
+        <AllyItem ally={entity as Ally} showHealth={true} showKill={true} showDetails={true} />
+      )}
+    </Box>
+  );
+};
 export default EntityItem;
