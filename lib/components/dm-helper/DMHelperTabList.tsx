@@ -36,11 +36,11 @@ export default function DMHelperTabList(props: { readOnlyRoom: boolean }) {
               _selected={{ color: 'white', bg: 'primary.200' }}
               borderRadius="lg"
               fontWeight="bold"
-              data-testid="heroes-panel"
+              data-testid="characters-panel"
             >
               <Image src="/static/images/knight.png" alt="knight" w="20px" h="20px" mr="1" />
               <Text as="span" lineHeight="24px">
-                Heroes
+                Characters
               </Text>
             </Tab>
 

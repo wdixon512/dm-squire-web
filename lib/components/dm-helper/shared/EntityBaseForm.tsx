@@ -48,7 +48,7 @@ export const EntityBaseForm: React.FC<EntityBaseFormProps> = ({
       borderRadius="md"
       shadow="md"
       h="fit-content"
-      onFormSubmit={handleSubmit}
+      onSubmit={handleSubmit}
       {...boxProps}
     >
       <VStack spacing={4} align="stretch">

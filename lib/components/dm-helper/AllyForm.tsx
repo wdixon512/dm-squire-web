@@ -38,7 +38,7 @@ const AllyForm: React.FC = () => {
   };
 
   return (
-    <EntityBaseForm onFormSubmit={handleAddAlly} addButtonTestId="add-ally-button" flex="1">
+    <EntityBaseForm onFormSubmit={handleAddAlly} addButtonTestId="add-ally-button" flex=".5">
       <FormControl>
         <FormLabel color="white">Ally Name</FormLabel>
         <Input
