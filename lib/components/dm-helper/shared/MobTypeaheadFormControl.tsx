@@ -14,6 +14,7 @@ interface MobTypeaheadFormControlProps {
   selectedMob: DetailedMob | null;
   showSelectedLabel?: boolean;
   selectedLabelText?: string;
+  inputDataTestId: string;
 }
 
 export const MobTypeaheadFormControl: React.FC<MobTypeaheadFormControlProps> = ({
@@ -25,6 +26,7 @@ export const MobTypeaheadFormControl: React.FC<MobTypeaheadFormControlProps> = (
   selectedMob,
   showSelectedLabel = true,
   selectedLabelText = 'You have selected:',
+  inputDataTestId: dataTestId,
 }) => {
   const [typeaheadMobs, setTypeaheadMobs] = useState<SummaryMob[]>([]);
   const [isFocused, setIsFocused] = useState(false);
@@ -110,6 +112,7 @@ export const MobTypeaheadFormControl: React.FC<MobTypeaheadFormControlProps> = (
         onFocus={handleFocus}
         onBlur={handleBlur}
         onKeyDown={handleKeyDown}
+        data-testid={dataTestId}
       />
       <MobTypeahead
         ref={typeaheadRef}

@@ -100,7 +100,7 @@ describe('DMHelper E2E Tests', () => {
       cy.get('[data-testid="mob-name-input"]').type('Unique Mob');
       cy.get('[data-testid="mob-health-input"]').type('40');
       cy.get('[data-testid="mob-initiative-input"]').type('12');
-      cy.get('[data-testid="submit-mob-button"]').click();
+      cy.get('[data-testid="add-mob-button"]').click();
 
       // Verify the unique mob shows without a number
       cy.get('[data-testid="unique-mob-1-name"]').should('contain', 'Unique Mob').and('not.contain', '#1');
@@ -109,7 +109,7 @@ describe('DMHelper E2E Tests', () => {
       cy.get('[data-testid="mob-name-input"]').clear().type('Unique Mob');
       cy.get('[data-testid="mob-health-input"]').clear().type('40');
       cy.get('[data-testid="mob-initiative-input"]').clear().type('12');
-      cy.get('[data-testid="submit-mob-button"]').click();
+      cy.get('[data-testid="add-mob-button"]').click();
 
       // Verify both unique mobs now show with numbers
       cy.get('[data-testid="unique-mob-1-name"]').should('contain', 'Unique Mob #1');

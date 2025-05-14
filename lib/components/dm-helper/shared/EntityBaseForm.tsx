@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Box, Button, FormControl, FormLabel, Input, Flex, VStack } from '@chakra-ui/react';
+import { Box, Button, VStack } from '@chakra-ui/react';
 
 export interface EntityBaseFormProps {
   children: React.ReactNode;
@@ -10,7 +10,7 @@ export interface EntityBaseFormProps {
   placeholder?: string;
   addEntity?: (name: string) => boolean;
   clearEntities?: () => void;
-  addButtonTestId?: string;
+  addButtonTestId: string;
   inputTestId?: string;
   showClearButton?: boolean;
 }
@@ -19,11 +19,9 @@ export const EntityBaseForm: React.FC<EntityBaseFormProps> = ({
   children,
   onSubmit,
   label,
-  placeholder,
   addEntity,
   clearEntities,
   addButtonTestId,
-  inputTestId,
   showClearButton = true,
 }) => {
   const [name, setName] = React.useState('');

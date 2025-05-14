@@ -38,7 +38,7 @@ const AllyForm: React.FC = () => {
   };
 
   return (
-    <EntityBaseForm onSubmit={handleAddAlly}>
+    <EntityBaseForm onSubmit={handleAddAlly} addButtonTestId="add-ally-button">
       <FormControl>
         <FormLabel color="white">Ally Name</FormLabel>
         <Input
@@ -60,6 +60,7 @@ const AllyForm: React.FC = () => {
         label="Character Sheet"
         placeholder="Search the library..."
         selectedLabelText="Selected character sheet:"
+        inputDataTestId="ally-character-sheet-input"
       />
       <FormControl>
         <FormLabel color="white">Ally Health</FormLabel>

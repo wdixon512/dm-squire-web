@@ -41,7 +41,7 @@ const MobForm: React.FC = () => {
   };
 
   return (
-    <EntityBaseForm onSubmit={handleAddMob}>
+    <EntityBaseForm onSubmit={handleAddMob} addButtonTestId="add-mob-button">
       <MobTypeaheadFormControl
         value={mobName}
         onChange={setMobName}
@@ -49,6 +49,7 @@ const MobForm: React.FC = () => {
         selectedMob={selectedMob}
         label="Mob Name"
         placeholder="Search for a mob..."
+        inputDataTestId="mob-name-input"
       />
       <FormControl>
         <FormLabel color="white">Health</FormLabel>
@@ -60,6 +61,7 @@ const MobForm: React.FC = () => {
             color="white"
             textFillColor={'whiteAlpha.800'}
             placeholder="Enter health"
+            data-testid="mob-health-input"
           />
           <DiceRoller
             mob={selectedMob}
@@ -78,6 +80,7 @@ const MobForm: React.FC = () => {
             color="white"
             textFillColor={'whiteAlpha.800'}
             placeholder="Enter initiative"
+            data-testid="mob-initiative-input"
           />
           <DiceRoller
             mob={selectedMob}
