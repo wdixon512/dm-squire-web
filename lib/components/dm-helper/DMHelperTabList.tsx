@@ -11,9 +11,9 @@ export default function DMHelperTabList(props: { readOnlyRoom: boolean }) {
         alignSelf="center"
         border="2px solid"
         justifyContent="center"
-        mb="4"
-        p={2}
-        w="fit-content"
+        py="2"
+        display="flex"
+        w="100%"
         bgColor="secondary.500"
       >
         {/* Combat Tab*/}

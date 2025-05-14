@@ -1,11 +1,11 @@
 'use client';
 
 import React from 'react';
-import { Box, Button, VStack } from '@chakra-ui/react';
+import { Box, BoxProps, Button, VStack } from '@chakra-ui/react';
 
-export interface EntityBaseFormProps {
+export interface EntityBaseFormProps extends BoxProps {
   children: React.ReactNode;
-  onSubmit?: () => void;
+  onFormSubmit?: () => void;
   label?: string;
   placeholder?: string;
   addEntity?: (name: string) => boolean;
@@ -17,19 +17,20 @@ export interface EntityBaseFormProps {
 
 export const EntityBaseForm: React.FC<EntityBaseFormProps> = ({
   children,
-  onSubmit,
+  onFormSubmit,
   label,
   addEntity,
   clearEntities,
   addButtonTestId,
   showClearButton = true,
+  ...boxProps
 }) => {
   const [name, setName] = React.useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (onSubmit) {
-      onSubmit();
+    if (onFormSubmit) {
+      onFormSubmit();
     }
     if (addEntity) {
       addEntity(name);
@@ -47,7 +48,8 @@ export const EntityBaseForm: React.FC<EntityBaseFormProps> = ({
       borderRadius="md"
       shadow="md"
       h="fit-content"
-      onSubmit={handleSubmit}
+      onFormSubmit={handleSubmit}
+      {...boxProps}
     >
       <VStack spacing={4} align="stretch">
         {children}

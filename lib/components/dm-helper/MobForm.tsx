@@ -41,7 +41,7 @@ const MobForm: React.FC = () => {
   };
 
   return (
-    <EntityBaseForm onSubmit={handleAddMob} addButtonTestId="add-mob-button">
+    <EntityBaseForm onFormSubmit={handleAddMob} addButtonTestId="add-mob-button">
       <MobTypeaheadFormControl
         value={mobName}
         onChange={setMobName}

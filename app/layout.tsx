@@ -23,9 +23,7 @@ export default function MyApp({ children }) {
           <CacheProvider>
             <FirebaseGoogleAuthProvider>
               <BackgroundImageContextProvider>
-                <AppWrapper width="100vw" maxW="100vw" px="0" mx="0" pb="20" minHeight="100vh" bgSize="cover">
-                  {children}
-                </AppWrapper>
+                <AppWrapper>{children}</AppWrapper>
               </BackgroundImageContextProvider>
             </FirebaseGoogleAuthProvider>
           </CacheProvider>

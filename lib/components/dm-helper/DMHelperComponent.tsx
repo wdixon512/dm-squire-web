@@ -11,7 +11,14 @@ export const DMHelperComponent = () => {
 
   return (
     <>
-      <Tabs display="flex" flexDir="column" alignContent={'center'}>
+      <Tabs
+        display="grid"
+        gridTemplateRows="10% 90%"
+        alignContent={'center'}
+        height="100%"
+        overflowY={'hidden'}
+        w="100%"
+      >
         <DMHelperTabList readOnlyRoom={readOnlyRoom} />
         <DMHelperTabPanels readOnlyRoom={readOnlyRoom} combatStarted={combatStarted} />
       </Tabs>

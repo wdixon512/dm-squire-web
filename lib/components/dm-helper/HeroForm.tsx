@@ -21,7 +21,7 @@ export const HeroForm = () => {
   };
 
   return (
-    <EntityBaseForm onSubmit={handleAddHero} label="Hero" addButtonTestId="add-hero-button">
+    <EntityBaseForm onFormSubmit={handleAddHero} label="Hero" addButtonTestId="add-hero-button" flex="1">
       <FormControl>
         <FormLabel color="white">Hero Name</FormLabel>
         <Input

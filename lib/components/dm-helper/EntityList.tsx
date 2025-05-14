@@ -13,7 +13,28 @@ export const EntityList = () => {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <Box p={4} bg="blackAlpha.900" borderWidth={1} borderRadius="md" shadow="md" w="100%" opacity=".95">
+      <Box
+        p={4}
+        bg="blackAlpha.900"
+        borderWidth={1}
+        borderRadius="md"
+        shadow="md"
+        w="100%"
+        opacity=".95"
+        overflowY="auto"
+        sx={{
+          '&::-webkit-scrollbar': {
+            width: '8px',
+          },
+          '&::-webkit-scrollbar-track': {
+            width: '8px',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: 'gray.500',
+            borderRadius: '4px',
+          },
+        }}
+      >
         {isClient &&
           (loadingFirebaseRoom ? (
             <Spinner size="lg" label="Loading entities..." />

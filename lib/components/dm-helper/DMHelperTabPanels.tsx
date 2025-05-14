@@ -1,4 +1,4 @@
-import { TabPanels, TabPanel, Flex, Box, Heading, Image } from '@chakra-ui/react';
+import { TabPanels, TabPanel, Flex, Box, Heading, Image, TabPanelProps } from '@chakra-ui/react';
 import React from 'react';
 import CombatManagementBar from './CombatManagementBar';
 import { EntityList } from './EntityList';
@@ -15,14 +15,15 @@ export default function DMHelperTabPanels(props: { readOnlyRoom: boolean; combat
   const { readOnlyRoom, combatStarted } = props;
 
   return (
-    <TabPanels>
+    <TabPanels maxH="100%">
       {/* Combat Tab Panel*/}
-      <TabPanel justifyItems={'center'}>
+      <DMHelperTabPanel justifyItems={'center'} h="100%">
         <Flex
           direction={{ base: 'column', lg: 'row' }}
           justifyContent="center"
           gap="12"
           w={readOnlyRoom ? { base: '100%', lg: '65%' } : '100%'}
+          h="100%"
         >
           {!readOnlyRoom && (
             <Flex direction="column" gap="4" w={{ base: '100%', lg: '35%' }}>
@@ -30,7 +31,7 @@ export default function DMHelperTabPanels(props: { readOnlyRoom: boolean; combat
               <MobQuickAdd />
             </Flex>
           )}
-          <Flex direction="column" gap="4" flex="1">
+          <Flex direction="column" gap="4" flex="1" h="100%">
             {readOnlyRoom && (
               <Box w="100%" p={4} bg="blackAlpha.900" opacity=".95" borderWidth="1px" borderRadius="md" shadow="md">
                 {combatStarted && (
@@ -53,13 +54,13 @@ export default function DMHelperTabPanels(props: { readOnlyRoom: boolean; combat
             {!readOnlyRoom && <CombatManagementBar />}
           </Flex>
         </Flex>
-      </TabPanel>
+      </DMHelperTabPanel>
 
       {/* Heroes Tab Panel*/}
       {!readOnlyRoom && (
-        <TabPanel>
-          <Flex gap="4" justifyContent="center" flexDir={'column'}>
-            <Flex gap="4">
+        <DMHelperTabPanel>
+          <Flex gap="4" justifyContent="center" flexDir={'column'} w="100%">
+            <Flex gap="4" w="100%">
               <HeroForm />
               <HeroList />
             </Flex>
@@ -68,22 +69,31 @@ export default function DMHelperTabPanels(props: { readOnlyRoom: boolean; combat
               <AllyList />
             </Flex>
           </Flex>
-        </TabPanel>
+        </DMHelperTabPanel>
       )}
 
       {/* Invite Others Tab Panel*/}
       {!readOnlyRoom && (
-        <TabPanel>
+        <DMHelperTabPanel>
           <Flex gap="4" justifyContent="center">
             <InviteOthersForm />
           </Flex>
-        </TabPanel>
+        </DMHelperTabPanel>
       )}
 
       {/* "Manage" Tab Panel */}
-      <TabPanel>
+      <DMHelperTabPanel>
         <UserRoomSettingsComponent />
-      </TabPanel>
+      </DMHelperTabPanel>
     </TabPanels>
+  );
+}
+
+function DMHelperTabPanel(props: TabPanelProps) {
+  const { children, ...rest } = props;
+  return (
+    <TabPanel maxH="100%" px="0" {...rest}>
+      {children}
+    </TabPanel>
   );
 }

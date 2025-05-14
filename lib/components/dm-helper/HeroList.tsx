@@ -17,6 +17,7 @@ export const HeroList = () => {
       shadow="md"
       w={{ base: '100%', lg: '500px' }}
       opacity=".95"
+      flex="1"
     >
       {isClient && (
         <List data-testid="hero-list">
