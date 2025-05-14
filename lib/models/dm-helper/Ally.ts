@@ -1,5 +1,6 @@
 import { Entity, EntityType } from './Entity';
 
-export type Ally = Entity & {
+export interface Ally extends Entity {
   type: EntityType.ALLY;
-};
+  characterSheetId?: string;
+}

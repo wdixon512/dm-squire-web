@@ -44,13 +44,13 @@ const AllyItem: React.FC<AllyItemProps> = ({
         showRemove={showRemove}
         showHealth={showHealth}
         showKill={showKill}
-        showDetails={showDetails}
+        showDetails={showDetails ?? true}
         readOnly={readOnlyRoom}
         onEdit={onOpen}
         onRemove={onRemove || (() => removeEntity(ally))}
         onHealthChange={(value) => updateHealth(ally, value === '' ? '' : parseInt(value, 10))}
         onDetailsOpen={onDetailOpen}
-        canViewDetails={false}
+        canViewDetails={!!ally.characterSheetId}
         editTooltipLabel="Update Ally"
       />
       <EntityEditModal entity={ally} isOpen={isOpen} onClose={onClose} showHealth={showHealth} />

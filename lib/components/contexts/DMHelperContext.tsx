@@ -36,7 +36,12 @@ export const DMHelperContext = createContext({
   addMob: (name: string, health: number | undefined, initiative: number | undefined, isLibraryMob?: boolean): boolean =>
     false,
   addHero: (name: string, health: number | undefined, initiative: number | undefined): boolean => false,
-  addAlly: (name: string, health: number | undefined, initiative: number | undefined): boolean => false,
+  addAlly: (
+    name: string,
+    health: number | undefined,
+    initiative: number | undefined,
+    characterSheetId?: string
+  ): boolean => false,
   resetHeroInitiatives: (): void => {},
   mobFavorites: [] as Mob[],
   updateMobFavorites: (mobs: Mob[]): void => {},
@@ -392,7 +397,12 @@ export const DMHelperContextProvider = ({ children }) => {
     return true;
   };
 
-  const addAlly = (name: string, health: number | undefined, initiative: number | undefined): boolean => {
+  const addAlly = (
+    name: string,
+    health: number | undefined,
+    initiative: number | undefined,
+    characterSheetId?: string
+  ): boolean => {
     if (!validateName(name, toast)) return false;
 
     const ally: Ally = {
@@ -402,6 +412,7 @@ export const DMHelperContextProvider = ({ children }) => {
       number: getNextEntityNumber(entities, name),
       initiative,
       type: EntityType.ALLY,
+      characterSheetId,
     };
 
     const updatedEntities = [...entities, ally];

@@ -1,30 +1,40 @@
 'use client';
 
-import { Box, Button, FormControl, FormLabel, Input } from '@chakra-ui/react';
-import React, { useState, FormEvent } from 'react';
+import React from 'react';
+import { Box, Button, FormControl, FormLabel, Input, Flex, VStack } from '@chakra-ui/react';
 
-interface EntityBaseFormProps {
-  label: string;
-  placeholder: string;
-  addEntity: (name: string) => boolean;
-  clearEntities: () => void;
+export interface EntityBaseFormProps {
+  children: React.ReactNode;
+  onSubmit?: () => void;
+  label?: string;
+  placeholder?: string;
+  addEntity?: (name: string) => boolean;
+  clearEntities?: () => void;
   addButtonTestId?: string;
   inputTestId?: string;
+  showClearButton?: boolean;
 }
 
 export const EntityBaseForm: React.FC<EntityBaseFormProps> = ({
+  children,
+  onSubmit,
   label,
   placeholder,
   addEntity,
   clearEntities,
   addButtonTestId,
   inputTestId,
+  showClearButton = true,
 }) => {
-  const [name, setName] = useState('');
+  const [name, setName] = React.useState('');
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (addEntity(name)) {
+    if (onSubmit) {
+      onSubmit();
+    }
+    if (addEntity) {
+      addEntity(name);
       setName('');
     }
   };
@@ -41,26 +51,17 @@ export const EntityBaseForm: React.FC<EntityBaseFormProps> = ({
       h="fit-content"
       onSubmit={handleSubmit}
     >
-      <FormControl mb={4}>
-        <FormLabel color="white">{label}</FormLabel>
-        <Input
-          type="text"
-          value={name}
-          textFillColor="whiteAlpha.800"
-          onChange={(e) => setName(e.target.value)}
-          placeholder={placeholder}
-          required
-          data-testid={inputTestId}
-        />
-      </FormControl>
-
-      <Button type="submit" variant="solid" width="full" data-testid={addButtonTestId}>
-        Add {label}
-      </Button>
-
-      <Button variant="redLink" width="full" onClick={clearEntities} mt="4">
-        Clear All
-      </Button>
+      <VStack spacing={4} align="stretch">
+        {children}
+        <Button type="submit" colorScheme="blue" data-testid={addButtonTestId}>
+          Add {label}
+        </Button>
+        {showClearButton && clearEntities && (
+          <Button onClick={clearEntities} colorScheme="red">
+            Clear All
+          </Button>
+        )}
+      </VStack>
     </Box>
   );
 };

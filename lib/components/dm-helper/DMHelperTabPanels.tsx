@@ -5,11 +5,11 @@ import { EntityList } from './EntityList';
 import { HeroForm } from './HeroForm';
 import { HeroList } from './HeroList';
 import { InviteOthersForm } from './InviteOthersForm';
-import { MobForm } from './MobForm';
 import { MobQuickAdd } from './MobQuickAdd';
 import UserRoomSettingsComponent from './UserRoomSettingsComponent';
 import { AllyList } from './AllyList';
-import { AllyForm } from './AllyForm';
+import MobForm from './MobForm';
+import AllyForm from './AllyForm';
 
 export default function DMHelperTabPanels(props: { readOnlyRoom: boolean; combatStarted: boolean }) {
   const { readOnlyRoom, combatStarted } = props;
