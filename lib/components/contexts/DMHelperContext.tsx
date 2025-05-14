@@ -126,7 +126,7 @@ export const DMHelperContextProvider = ({ children }) => {
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [joinedRoomId]);
 
   // Commit changes to the room to Realtime Database
   useEffect(() => {
