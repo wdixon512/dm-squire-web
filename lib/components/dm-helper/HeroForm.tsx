@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { DMHelperContext } from '../contexts/DMHelperContext';
 import { EntityBaseForm } from './shared/EntityBaseForm';
-import { FormControl, FormLabel, Input } from '@chakra-ui/react';
+import { Box, FormControl, FormLabel, Heading, Input } from '@chakra-ui/react';
 
 export const HeroForm = () => {
   const { addHero } = React.useContext(DMHelperContext);
@@ -22,6 +22,12 @@ export const HeroForm = () => {
 
   return (
     <EntityBaseForm onFormSubmit={handleAddHero} label="Hero" addButtonTestId="add-hero-button" flex=".5">
+      <Heading as="h3" size="md" color="white" mb="0" borderBottom={'2px dotted'}>
+        Add a{' '}
+        <Box as="span" color="interactive.200">
+          Hero
+        </Box>
+      </Heading>
       <FormControl>
         <FormLabel color="white">Hero Name</FormLabel>
         <Input

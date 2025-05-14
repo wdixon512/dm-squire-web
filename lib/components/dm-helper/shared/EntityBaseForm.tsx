@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Box, BoxProps, Button, VStack } from '@chakra-ui/react';
+import { Box, BoxProps, Button, Heading, VStack } from '@chakra-ui/react';
 
 export interface EntityBaseFormProps extends BoxProps {
   children: React.ReactNode;

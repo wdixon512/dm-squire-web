@@ -30,7 +30,7 @@ export default function DMHelperTabPanels(props: { readOnlyRoom: boolean; combat
   return (
     <TabPanels maxH="100%">
       {/* Combat Tab Panel*/}
-      <DMHelperTabPanel>
+      <DMHelperTabPanel display="flex" justifyContent="center">
         <Flex
           direction={{ base: 'column', lg: 'row' }}
           justifyContent="center"
@@ -39,7 +39,8 @@ export default function DMHelperTabPanels(props: { readOnlyRoom: boolean; combat
           h="100%"
         >
           {!readOnlyRoom && (
-            <Flex direction="column" gap="4" w={{ base: '100%', lg: '35%' }}>
+            <Flex flexDir="column" gap="4" justifyContent={'start'} flex=".5">
+              <CombatManagementBar />
               <MobQuickAdd />
             </Flex>
           )}
@@ -63,7 +64,6 @@ export default function DMHelperTabPanels(props: { readOnlyRoom: boolean; combat
             )}
 
             <EntityList />
-            {!readOnlyRoom && <CombatManagementBar />}
           </Flex>
         </Flex>
       </DMHelperTabPanel>

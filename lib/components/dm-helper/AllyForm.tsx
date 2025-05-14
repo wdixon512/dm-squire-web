@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { FormControl, FormLabel, Input, VStack } from '@chakra-ui/react';
+import { Box, FormControl, FormLabel, Heading, Input, VStack } from '@chakra-ui/react';
 import { DMHelperContext } from '../contexts/DMHelperContext';
 import { EntityBaseForm } from './shared/EntityBaseForm';
 import { MobTypeaheadFormControl } from './shared/MobTypeaheadFormControl';
@@ -39,6 +39,12 @@ const AllyForm: React.FC = () => {
 
   return (
     <EntityBaseForm onFormSubmit={handleAddAlly} addButtonTestId="add-ally-button" flex=".5">
+      <Heading as="h3" size="md" color="white" mb="0" borderBottom={'2px dotted'}>
+        Add an{' '}
+        <Box as="span" color="yellow.200">
+          Ally
+        </Box>
+      </Heading>
       <FormControl>
         <FormLabel color="white">Ally Name</FormLabel>
         <Input

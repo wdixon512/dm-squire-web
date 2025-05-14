@@ -11,7 +11,7 @@ export default function BackgroundSelector() {
     <>
       <Box p="4">
         <Tooltip label="Select a background image" placement="right" hasArrow>
-          <Button gap="2" onClick={onOpen} bgColor="secondary.500" border="1px dotted white">
+          <Button gap="2" onClick={onOpen} bgColor="secondary.500" border="1px solid gold">
             <Flex alignContent="center" flexDir="column" w="full">
               <Text color="marioRed.100" fontSize="12px" fontWeight="bold">
                 New!

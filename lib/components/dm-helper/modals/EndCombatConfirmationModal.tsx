@@ -24,7 +24,7 @@ export const EndCombatConfirmationModal: React.FC<EndCombatConfirmationModalProp
       <ModalOverlay />
       <ModalContent>
         <ModalHeader textColor="primary.400">Are you sure you want to end combat?</ModalHeader>
-        <ModalFooter justifyContent="center">
+        <ModalFooter justifyContent="space-between">
           <Button variant="redLink" onClick={() => handleDone(false)} data-testid="end-combat-no-btn">
             No
           </Button>
