@@ -2,12 +2,13 @@
 
 import { Tabs } from '@chakra-ui/react';
 import { DMHelperContext } from '@lib/components/contexts/DMHelperContext';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import DMHelperTabList from './DMHelperTabList';
 import DMHelperTabPanels from './DMHelperTabPanels';
 
 export const DMHelperComponent = () => {
   const { combatStarted, readOnlyRoom } = useContext(DMHelperContext);
+  const [tabIndex, setTabIndex] = useState(0);
 
   return (
     <>
@@ -18,9 +19,11 @@ export const DMHelperComponent = () => {
         height="100%"
         overflowY={'hidden'}
         w="100%"
+        index={tabIndex}
+        onChange={setTabIndex}
       >
         <DMHelperTabList readOnlyRoom={readOnlyRoom} />
-        <DMHelperTabPanels readOnlyRoom={readOnlyRoom} combatStarted={combatStarted} />
+        <DMHelperTabPanels readOnlyRoom={readOnlyRoom} combatStarted={combatStarted} tabIndex={tabIndex} />
       </Tabs>
     </>
   );

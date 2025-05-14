@@ -18,9 +18,9 @@ export const MobList = () => {
       borderWidth={1}
       borderRadius="md"
       shadow="md"
-      w={{ base: '100%', lg: '500px' }}
       opacity=".95"
       flex="1"
+      h="100%"
       overflowY="auto"
       sx={{
         '&::-webkit-scrollbar': {
@@ -36,7 +36,7 @@ export const MobList = () => {
       }}
     >
       {isClient && (
-        <List data-testid="Mob-list">
+        <List data-testid="mob-list">
           {mobs.map((mob, i) => (
             <MobItem key={i} mob={mob} textColor="marioRed.200" />
           ))}
