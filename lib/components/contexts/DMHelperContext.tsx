@@ -36,6 +36,7 @@ export const DMHelperContext = createContext({
   addMob: (name: string, health: number | undefined, initiative: number | undefined, isLibraryMob?: boolean): boolean =>
     false,
   addHero: (name: string, health: number | undefined, initiative: number | undefined): boolean => false,
+  addAlly: (name: string, health: number | undefined, initiative: number | undefined): boolean => false,
   resetHeroInitiatives: (): void => {},
   mobFavorites: [] as Mob[],
   updateMobFavorites: (mobs: Mob[]): void => {},
@@ -100,6 +101,7 @@ export const DMHelperContextProvider = ({ children }) => {
                 } as Combat,
                 mobFavorites: mobFavorites,
                 heroes: heroes,
+                allies: allies,
               });
             }
           });
@@ -115,6 +117,7 @@ export const DMHelperContextProvider = ({ children }) => {
             } as Combat,
             mobFavorites: mobFavorites,
             heroes: heroes,
+            allies: allies,
           });
         }
       }
@@ -140,6 +143,7 @@ export const DMHelperContextProvider = ({ children }) => {
       },
       mobFavorites: mobFavorites,
       heroes: heroes,
+      allies: allies,
     };
 
     // Firebase doesn't like `undefined` values, so we sanitize the data before updating Realtime Database
@@ -203,7 +207,7 @@ export const DMHelperContextProvider = ({ children }) => {
     }
 
     setCommitPending(false);
-  }, [commitPending, entities, mobFavorites, heroes, combatStarted, room]);
+  }, [commitPending, entities, mobFavorites, heroes, allies, combatStarted, room]);
 
   const createRoom = async (): Promise<string | undefined | null> => {
     const user = auth.currentUser;
@@ -388,6 +392,25 @@ export const DMHelperContextProvider = ({ children }) => {
     return true;
   };
 
+  const addAlly = (name: string, health: number | undefined, initiative: number | undefined): boolean => {
+    if (!validateName(name, toast)) return false;
+
+    const ally: Ally = {
+      id: `${toKebabCase(name.toLowerCase())}-${getNextEntityNumber(entities, name)}`,
+      name,
+      health,
+      number: getNextEntityNumber(entities, name),
+      initiative,
+      type: EntityType.ALLY,
+    };
+
+    const updatedEntities = [...entities, ally];
+    setEntities(updatedEntities);
+    scheduleCommitRoomChanges();
+
+    return true;
+  };
+
   const updateEntities = (entities: Entity[]) => {
     setEntities(entities);
     scheduleCommitRoomChanges();
@@ -442,6 +465,7 @@ export const DMHelperContextProvider = ({ children }) => {
         removeEntity,
         addMob,
         addHero,
+        addAlly,
         resetHeroInitiatives,
         mobFavorites,
         updateMobFavorites,

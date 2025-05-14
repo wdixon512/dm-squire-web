@@ -1,3 +1,4 @@
+import { Ally } from './Ally';
 import { Combat, CombatState } from './Combat';
 import { Hero } from './Hero';
 import { Mob } from './Mob';
@@ -8,6 +9,7 @@ export type Room = {
   combat: Combat;
   mobFavorites?: Mob[];
   heroes?: Hero[];
+  allies?: Ally[];
   syncWithFirebase?: boolean;
 };
 
@@ -23,5 +25,6 @@ export const DEFAULT_ROOM: Room = {
   },
   mobFavorites: [],
   heroes: [],
+  allies: [],
   syncWithFirebase: false,
 };

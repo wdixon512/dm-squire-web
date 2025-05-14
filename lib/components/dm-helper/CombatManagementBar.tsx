@@ -21,6 +21,7 @@ export default function CombatManagementBar() {
       resetHeroInitiatives();
       onInitiativeModalOpen();
     }
+
     updateCombatStarted(true);
   };
 
