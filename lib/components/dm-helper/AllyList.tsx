@@ -4,7 +4,7 @@ import { Box, List } from '@chakra-ui/react';
 import { useContext } from 'react';
 import { DMHelperContext } from '../contexts/DMHelperContext';
 import AllyItem from './AllyItem';
-export const AlliesList = () => {
+export const AllyList = () => {
   const { allies, isClient } = useContext(DMHelperContext);
 
   return (

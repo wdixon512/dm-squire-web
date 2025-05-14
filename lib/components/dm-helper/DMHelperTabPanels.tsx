@@ -8,7 +8,7 @@ import { InviteOthersForm } from './InviteOthersForm';
 import { MobForm } from './MobForm';
 import { MobQuickAdd } from './MobQuickAdd';
 import UserRoomSettingsComponent from './UserRoomSettingsComponent';
-import { AlliesList } from './AlliesList';
+import { AllyList } from './AllyList';
 import { AllyForm } from './AllyForm';
 
 export default function DMHelperTabPanels(props: { readOnlyRoom: boolean; combatStarted: boolean }) {
@@ -65,7 +65,7 @@ export default function DMHelperTabPanels(props: { readOnlyRoom: boolean; combat
             </Flex>
             <Flex gap="4">
               <AllyForm />
-              <AlliesList />
+              <AllyList />
             </Flex>
           </Flex>
         </TabPanel>

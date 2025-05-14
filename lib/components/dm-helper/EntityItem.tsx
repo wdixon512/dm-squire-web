@@ -11,6 +11,8 @@ import { useDrag, useDrop } from 'react-dnd';
 import { sortEntitiesByInitiative } from '@lib/util/mobUtils';
 import { FaUserEdit } from 'react-icons/fa';
 import { DMHelperContext } from '../contexts/DMHelperContext';
+import AllyItem from './AllyItem';
+import { Ally } from '@lib/models/dm-helper/Ally';
 
 type DraggedEntity = Entity & { index: number };
 
@@ -88,10 +90,12 @@ export const EntityItem: React.FC<EntityItemProps> = ({ entity, combatStarted, d
           {drag(
             <div>
               <Box data-testid="entity-item">
-                {entity.type === EntityType.MOB ? (
-                  <MobItem mob={entity as Mob} />
-                ) : (
-                  combatStarted && <HeroItem hero={entity as Hero} textColor={'interactive.200'} />
+                {entity.type === EntityType.MOB && <MobItem mob={entity as Mob} />}
+                {entity.type === EntityType.HERO && combatStarted && (
+                  <HeroItem hero={entity as Hero} textColor={'interactive.200'} />
+                )}
+                {entity.type === EntityType.ALLY && combatStarted && (
+                  <AllyItem ally={entity as Ally} textColor={'interactive.200'} />
                 )}
               </Box>
             </div>

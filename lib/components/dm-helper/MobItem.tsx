@@ -1,12 +1,12 @@
 'use client';
 
-import { Text, Flex, FormControl, Input, Button, FlexProps, Tooltip, Icon, useDisclosure } from '@chakra-ui/react';
+import { Text, Flex, Input, Button, FlexProps, Tooltip, Icon, useDisclosure } from '@chakra-ui/react';
 import AnimatedFlex from '@components/global/AnimatedFlex';
 import { Mob } from '@lib/models/dm-helper/Mob';
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { DMHelperContext } from '../contexts/DMHelperContext';
 import React from 'react';
-import { FaDemocrat, FaEye, FaEyeSlash, FaUserEdit } from 'react-icons/fa';
+import { FaEye, FaEyeSlash, FaUserEdit } from 'react-icons/fa';
 import EntityEditModal from './modals/EntityEditModal';
 import EntityDetailModal from './modals/EntityDetailModal';
 import { EntityType } from '@lib/models/dm-helper/Entity';
