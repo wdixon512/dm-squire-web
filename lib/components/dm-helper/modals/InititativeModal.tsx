@@ -8,21 +8,19 @@ import {
   Input,
   Button,
   useToast,
-  ModalProps,
 } from '@chakra-ui/react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
 import { useContext, useState, useRef } from 'react';
-import { Hero } from '@lib/models/dm-helper/Hero';
 import { EntityType, Entity } from '@lib/models/dm-helper/Entity';
 import { DMHelperContext } from '../../contexts/DMHelperContext';
 
 interface InitiativeModalProps {
   isOpen: boolean;
-  heroes: Hero[];
+  entities: Entity[];
   onClose: () => void;
 }
 
-export const InitiativeModal: React.FC<InitiativeModalProps> = ({ isOpen, heroes, onClose }) => {
+export const InitiativeModal: React.FC<InitiativeModalProps> = ({ isOpen, entities, onClose }) => {
   const { updateEntities } = useContext(DMHelperContext);
   const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
   const [initiativeRolls, setInitiativeRolls] = useState<number[]>([]);
@@ -43,7 +41,7 @@ export const InitiativeModal: React.FC<InitiativeModalProps> = ({ isOpen, heroes
       return;
     }
 
-    if (currentHeroIndex < heroes.length - 1) {
+    if (currentHeroIndex < entities.length - 1) {
       setCurrentHeroIndex(currentHeroIndex + 1);
     }
   };
@@ -87,14 +85,16 @@ export const InitiativeModal: React.FC<InitiativeModalProps> = ({ isOpen, heroes
       return;
     }
 
-    const updatedHeroes = heroes.map((hero, index) => ({
+    const updatedEntities = entities.map((hero, index) => ({
       ...hero,
       initiative: initiativeRolls[index],
     }));
 
     updateEntities((prevEntities: Entity[]) =>
       prevEntities.map((entity) =>
-        entity.type === EntityType.HERO ? updatedHeroes.find((h) => h.id === entity.id) || entity : entity
+        entity.type === EntityType.HERO || entity.type === EntityType.ALLY
+          ? updatedEntities.find((h) => h.id === entity.id) || entity
+          : entity
       )
     );
 
@@ -107,10 +107,10 @@ export const InitiativeModal: React.FC<InitiativeModalProps> = ({ isOpen, heroes
     <Modal isOpen={isOpen} onClose={() => handleDone(true)} isCentered>
       <ModalOverlay />
       <ModalContent>
-        {heroes && heroes.length > 0 ? (
+        {entities && entities.length > 0 ? (
           <>
             <ModalHeader textColor="primary.400">
-              What did {heroes[currentHeroIndex]?.name} roll for initiative?
+              What did {entities[currentHeroIndex]?.name} roll for initiative?
             </ModalHeader>
             <ModalBody>
               <Input
@@ -123,7 +123,7 @@ export const InitiativeModal: React.FC<InitiativeModalProps> = ({ isOpen, heroes
                 required={true}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
-                    if (currentHeroIndex === heroes.length - 1) {
+                    if (currentHeroIndex === entities.length - 1) {
                       handleDone();
                     } else {
                       handleNextHero();
@@ -141,17 +141,17 @@ export const InitiativeModal: React.FC<InitiativeModalProps> = ({ isOpen, heroes
                   onClick={handlePreviousHero}
                   data-testid="init-modal-back-btn"
                 >
-                  Back ({heroes[currentHeroIndex - 1]?.name})
+                  Back ({entities[currentHeroIndex - 1]?.name})
                 </Button>
               )}
-              {currentHeroIndex < heroes.length - 1 ? (
+              {currentHeroIndex < entities.length - 1 ? (
                 <Button
                   rightIcon={<ChevronRightIcon />}
                   lineHeight={5}
                   onClick={handleNextHero}
                   data-testid="init-modal-next-btn"
                 >
-                  Next ({heroes[currentHeroIndex + 1]?.name})
+                  Next ({entities[currentHeroIndex + 1]?.name})
                 </Button>
               ) : (
                 <Button colorScheme="green" onClick={() => handleDone()} data-testid="init-modal-done-btn">

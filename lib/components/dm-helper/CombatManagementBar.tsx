@@ -1,9 +1,10 @@
 import { Box, Button, Flex, useDisclosure } from '@chakra-ui/react';
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import ClearMobsModal from './modals/ClearMobsModal';
 import { DMHelperContext } from '../contexts/DMHelperContext';
 import EndCombatConfirmationModal from './modals/EndCombatConfirmationModal';
 import InitiativeModal from './modals/InititativeModal';
+import { EntityType } from '@lib/models/dm-helper/Entity';
 
 export default function CombatManagementBar() {
   const { isOpen: isClearMonstersOpen, onOpen: onClearMonstersOpen, onClose: onClearMonstersClose } = useDisclosure();
@@ -14,10 +15,14 @@ export default function CombatManagementBar() {
     onClose: onInitiativeModalClose,
   } = useDisclosure();
 
-  const { combatStarted, updateCombatStarted, heroes, resetHeroInitiatives } = useContext(DMHelperContext);
+  const { combatStarted, updateCombatStarted, entities, resetHeroInitiatives } = useContext(DMHelperContext);
+  const heroesAndAllies = useMemo(
+    () => entities.filter((entity) => entity.type === EntityType.HERO || entity.type === EntityType.ALLY),
+    [entities]
+  );
 
   const startCombat = () => {
-    if (heroes.length > 0) {
+    if (heroesAndAllies.length > 0) {
       resetHeroInitiatives();
       onInitiativeModalOpen();
     }
@@ -67,7 +72,7 @@ export default function CombatManagementBar() {
         updateCombatStarted={updateCombatStarted}
         onClose={onEndCombatModalClose}
       />
-      <InitiativeModal isOpen={isInitiativeModalOpen} heroes={heroes} onClose={onInitiativeModalClose} />
+      <InitiativeModal isOpen={isInitiativeModalOpen} entities={heroesAndAllies} onClose={onInitiativeModalClose} />
     </Box>
   );
 }
