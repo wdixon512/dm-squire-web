@@ -41,6 +41,11 @@ export const EntityList = () => {
           ) : !readOnlyRoom ? (
             <Box>
               <List data-testid="entity-list">
+                {entities.length === 0 && (
+                  <Box textAlign="left" color="white" fontStyle="italic">
+                    No characters added yet.
+                  </Box>
+                )}
                 {sortEntitiesByInitiative(entities).map((entity: Entity, i) => (
                   <EntityItem entity={entity} index={i} key={i} combatStarted={combatStarted} draggable={true} />
                 ))}

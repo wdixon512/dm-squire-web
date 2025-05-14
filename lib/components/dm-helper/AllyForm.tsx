@@ -1,12 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Box, FormControl, FormLabel, Heading, Input, VStack } from '@chakra-ui/react';
+import { Box, FormControl, FormLabel, Heading, Input, Text, Tooltip } from '@chakra-ui/react';
 import { DMHelperContext } from '../contexts/DMHelperContext';
 import { EntityBaseForm } from './shared/EntityBaseForm';
 import { MobTypeaheadFormControl } from './shared/MobTypeaheadFormControl';
 import { DetailedMob } from '@lib/models/dnd5eapi/DetailedMob';
 import { sanitizeMonsterName } from '@lib/util/mobUtils';
+import { FaQuestion, FaQuestionCircle } from 'react-icons/fa';
 
 const AllyForm: React.FC = () => {
   const { addAlly } = React.useContext(DMHelperContext);
@@ -58,16 +59,6 @@ const AllyForm: React.FC = () => {
           data-testid="ally-name-input"
         />
       </FormControl>
-      <MobTypeaheadFormControl
-        value={allyCharacterSheetDisplayName}
-        onChange={setAllyCharacterSheetDisplayName}
-        onSelect={handleCharacterSheetSelect}
-        selectedMob={selectedMob}
-        label="Character Sheet"
-        placeholder="Search the library..."
-        selectedLabelText="Selected character sheet:"
-        inputDataTestId="ally-character-sheet-input"
-      />
       <FormControl>
         <FormLabel color="white">Ally Health</FormLabel>
         <Input
@@ -79,6 +70,27 @@ const AllyForm: React.FC = () => {
           placeholder="Enter health"
         />
       </FormControl>
+      <MobTypeaheadFormControl
+        value={allyCharacterSheetDisplayName}
+        onChange={setAllyCharacterSheetDisplayName}
+        onSelect={handleCharacterSheetSelect}
+        selectedMob={selectedMob}
+        label={
+          <Text display="inline-flex" gap="2">
+            Character Sheet{' '}
+            <Tooltip
+              label="Allies tend to have character sheets. Select one from the library for this Ally."
+              hasArrow
+              placement="right"
+            >
+              <FaQuestionCircle />
+            </Tooltip>
+          </Text>
+        }
+        placeholder="Search the library..."
+        selectedLabelText="Selected character sheet:"
+        inputDataTestId="ally-character-sheet-input"
+      />
     </EntityBaseForm>
   );
 };

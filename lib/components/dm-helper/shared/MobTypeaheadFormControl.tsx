@@ -1,12 +1,12 @@
 import { FormControl, FormLabel, Input } from '@chakra-ui/react';
-import { useRef, useState, useCallback } from 'react';
+import { useRef, useState, useCallback, ReactNode } from 'react';
 import { DetailedMob, SummaryMob } from '@lib/models/dnd5eapi/DetailedMob';
 import { MobTypeahead } from '../MobTypeahead';
 import useDndApi from '@lib/services/dnd5eapi-service';
 import { debounce } from '@lib/util/js-utils';
 
 interface MobTypeaheadFormControlProps {
-  label?: string;
+  label?: ReactNode;
   placeholder?: string;
   value: string;
   onChange: (value: string) => void;

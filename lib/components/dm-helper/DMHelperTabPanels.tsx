@@ -36,7 +36,7 @@ export default function DMHelperTabPanels(props: { readOnlyRoom: boolean; combat
       )}
 
       {/* Manage Tab Panel */}
-      <DMHelperTabPanel current={3} index={tabIndex}>
+      <DMHelperTabPanel current={readOnlyRoom ? 1 : 3} index={tabIndex}>
         <MotionBox {...fadeVariant} flex="1">
           <UserRoomSettingsComponent />
         </MotionBox>

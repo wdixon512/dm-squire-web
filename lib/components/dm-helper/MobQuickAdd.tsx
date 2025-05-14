@@ -65,7 +65,7 @@ export const MobQuickAdd = (props: FlexProps) => {
                 <Flex gap="4" justifyContent={'center'} flexWrap="wrap" data-testid="mob-favorites-list" pt="2">
                   {mobFavorites.length === 0 && (
                     <Heading size="sm" textAlign="center" textColor="white" fontStyle="italic" fontWeight="normal">
-                      No Mobs in Quick Add
+                      No enemies in Quick Add
                     </Heading>
                   )}
                   {mobFavorites.map((mob, i) => (

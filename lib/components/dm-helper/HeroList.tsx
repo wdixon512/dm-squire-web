@@ -21,9 +21,13 @@ export const HeroList = () => {
     >
       {isClient && (
         <List data-testid="hero-list">
-          {heroes.map((hero, i) => (
-            <HeroItem key={i} hero={hero} showInitiative={false} showRemove={true} />
-          ))}
+          {heroes.length === 0 ? (
+            <Box textAlign="left" color="white" fontStyle="italic">
+              No heroes added yet.
+            </Box>
+          ) : (
+            heroes.map((hero, i) => <HeroItem key={i} hero={hero} showInitiative={false} showRemove={true} />)
+          )}
         </List>
       )}
     </Box>

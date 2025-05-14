@@ -37,9 +37,13 @@ export const MobList = () => {
     >
       {isClient && (
         <List data-testid="mob-list">
-          {mobs.map((mob, i) => (
-            <MobItem key={i} mob={mob} textColor="marioRed.200" />
-          ))}
+          {mobs.length === 0 ? (
+            <Box textAlign="left" color="white" fontStyle="italic">
+              No enemies added yet.
+            </Box>
+          ) : (
+            mobs.map((mob, i) => <MobItem key={i} mob={mob} textColor="marioRed.200" />)
+          )}
         </List>
       )}
     </Box>

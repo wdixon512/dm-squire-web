@@ -187,6 +187,15 @@ const theme = extendTheme({
         }),
       },
     },
+    Tooltip: {
+      baseStyle: {
+        bg: 'gray.800',
+        color: 'white',
+        borderRadius: 'md',
+        padding: '4px 8px',
+        fontSize: 'sm',
+      },
+    },
   },
   styles: {
     global: {
