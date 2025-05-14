@@ -1,10 +1,11 @@
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { EntityItemBase } from './shared/EntityItemBase';
 import { Ally } from '@lib/models/dm-helper/Ally';
 import { DMHelperContext } from '../contexts/DMHelperContext';
 import { useDisclosure } from '@chakra-ui/react';
 import EntityEditModal from './modals/EntityEditModal';
 import EntityDetailModal from './modals/EntityDetailModal';
+import { sanitizeMonsterName } from '@lib/util/mobUtils';
 
 interface AllyItemProps {
   ally: Ally;
@@ -54,7 +55,9 @@ const AllyItem: React.FC<AllyItemProps> = ({
         editTooltipLabel="Update Ally"
       />
       <EntityEditModal entity={ally} isOpen={isOpen} onClose={onClose} showHealth={showHealth} />
-      <EntityDetailModal entity={ally} isOpen={detailIsOpen} onClose={onDetailClose} />
+      {ally.characterSheetId && (
+        <EntityDetailModal characterSheetId={ally.characterSheetId} isOpen={detailIsOpen} onClose={onDetailClose} />
+      )}
     </>
   );
 };

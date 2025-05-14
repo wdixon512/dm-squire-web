@@ -1,7 +1,7 @@
 'use client';
 
 import { FlexProps, useDisclosure } from '@chakra-ui/react';
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 import { DMHelperContext } from '../contexts/DMHelperContext';
 import React from 'react';
 import { Mob } from '@lib/models/dm-helper/Mob';
@@ -9,6 +9,7 @@ import EntityEditModal from './modals/EntityEditModal';
 import EntityDetailModal from './modals/EntityDetailModal';
 import { EntityItemBase } from './shared/EntityItemBase';
 import { EntityType } from '@lib/models/dm-helper/Entity';
+import { sanitizeMonsterName } from '@lib/util/mobUtils';
 
 interface MobItemProps extends FlexProps {
   mob: Mob;
@@ -19,6 +20,7 @@ export const MobItem: React.FC<MobItemProps> = ({ mob, handleDrop, textColor, ..
   const { entities, removeEntity, updateEntities, readOnlyRoom } = useContext(DMHelperContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen: mobDetailIsOpen, onOpen: onMobDetailOpen, onClose: onMobDetailClose } = useDisclosure();
+  const characterSheetId = useMemo(() => sanitizeMonsterName(mob.name), [mob.name]);
 
   const hasMultipleMobsWithSameName = (mobName: string) => {
     return entities.filter((e) => e.name === mobName && e.type === EntityType.MOB).length > 1;
@@ -48,7 +50,10 @@ export const MobItem: React.FC<MobItemProps> = ({ mob, handleDrop, textColor, ..
         {...props}
       />
       <EntityEditModal entity={mob} isOpen={isOpen} onClose={onClose} showHealth={true} />
-      <EntityDetailModal entity={mob} isOpen={mobDetailIsOpen} onClose={onMobDetailClose} />
+
+      {!readOnlyRoom && mob.isLibraryMob && characterSheetId && (
+        <EntityDetailModal characterSheetId={characterSheetId} isOpen={mobDetailIsOpen} onClose={onMobDetailClose} />
+      )}
     </>
   );
 };

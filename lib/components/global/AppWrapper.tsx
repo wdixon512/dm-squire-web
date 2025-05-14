@@ -14,6 +14,7 @@ export const AppWrapper = (props: ContainerProps) => {
       mx="0"
       pb="20"
       minHeight="100vh"
+      overflowX="hidden"
       bgImage={backgroundImageUrl || '/static/images/backgrounds/demon-in-hell.jpg'}
       bgSize="cover"
     >

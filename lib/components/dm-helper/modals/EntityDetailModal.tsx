@@ -1,18 +1,17 @@
 import { Modal, ModalOverlay, ModalContent, ModalHeader, ModalBody, ModalFooter, Button } from '@chakra-ui/react';
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { Entity } from '@lib/models/dm-helper/Entity';
 import { MobDetailCard } from '@lib/components/dm-helper/MobDetailCard';
 import useDndApi from '@lib/services/dnd5eapi-service';
 import { DetailedMob } from '@lib/models/dnd5eapi/DetailedMob';
 
 interface EntityDetailModalProps {
-  entity: Entity;
+  characterSheetId: string;
   isOpen: boolean;
   onClose: () => void;
 }
 
-export const EntityDetailModal: React.FC<EntityDetailModalProps> = ({ entity, isOpen, onClose }) => {
-  const { getMobByName } = useDndApi();
+export const EntityDetailModal: React.FC<EntityDetailModalProps> = ({ characterSheetId, isOpen, onClose }) => {
+  const { getMobById } = useDndApi();
   const [detailedMob, setDetailedMob] = useState<DetailedMob>();
 
   const handleDone = () => {
@@ -21,14 +20,12 @@ export const EntityDetailModal: React.FC<EntityDetailModalProps> = ({ entity, is
 
   // On component mount, fetch the detailed mob data
   useEffect(() => {
-    if (entity?.name) {
-      getMobByName(entity.name).then((mob) => {
-        if (mob) {
-          setDetailedMob(mob);
-        }
-      });
-    }
-  }, [entity?.name]);
+    getMobById(characterSheetId).then((mob) => {
+      if (mob) {
+        setDetailedMob(mob);
+      }
+    });
+  }, [characterSheetId]);
 
   return (
     <Modal isOpen={isOpen} onClose={() => handleDone()} isCentered>

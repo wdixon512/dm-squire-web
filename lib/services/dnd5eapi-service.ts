@@ -9,6 +9,7 @@ const BASE_URL = `/api/monsters`;
 interface UseDndApiHook {
   getAllMobsAsync: () => Promise<SummaryMob[]>;
   getMobByName: (mobName: string) => Promise<DetailedMob | null>;
+  getMobById: (mobId: string) => Promise<DetailedMob | null>;
   getMobHitPoints: (mob: DetailedMob) => number;
   rollDice: (mob: DetailedMob, rollType: RollType) => number;
 }
@@ -53,6 +54,22 @@ export const useDndApi = (): UseDndApiHook => {
     });
   };
 
+  // Fetch details of a specific monster by its index
+  const getMobById = async (mobId: string): Promise<DetailedMob | null> => {
+    return cacheLoadAsync(mobId, async () => {
+      try {
+        const response = await fetch(`${BASE_URL}/${mobId}`);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch monster details for \"${mobId}\"`);
+        }
+        return (await response.json()) as DetailedMob;
+      } catch (error) {
+        console.warn('Failed to fetch monster details:', error);
+        return null;
+      }
+    });
+  };
+
   const getMobHitPoints = (mob: DetailedMob): number => {
     return parseInt(mob.hp.split('(')[0], 10);
   };
@@ -78,6 +95,7 @@ export const useDndApi = (): UseDndApiHook => {
   return {
     getAllMobsAsync,
     getMobByName,
+    getMobById,
     rollDice,
     getMobHitPoints,
   };
