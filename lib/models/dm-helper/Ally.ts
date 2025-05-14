@@ -1,6 +1,7 @@
 import { Entity, EntityType } from './Entity';
+import { IProfile } from './IProfile';
 
-export interface Ally extends Entity {
+export interface Ally extends Entity, IProfile {
   type: EntityType.ALLY;
-  characterSheetId?: string;
+  mobLibraryId?: string;
 }

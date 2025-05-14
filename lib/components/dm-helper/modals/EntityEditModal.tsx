@@ -21,14 +21,22 @@ interface EntityEditModalProps {
   entity: Entity;
   isOpen: boolean;
   showHealth?: boolean;
+  showProfileUrl?: boolean;
   onClose: () => void;
 }
 
-export const EntityEditModal: React.FC<EntityEditModalProps> = ({ entity, isOpen, showHealth = false, onClose }) => {
+export const EntityEditModal: React.FC<EntityEditModalProps> = ({
+  entity,
+  isOpen,
+  showHealth = false,
+  showProfileUrl = false,
+  onClose,
+}) => {
   const { updateEntities } = useContext(DMHelperContext);
-  const [newInitiaive, setNewInitiative] = useState(entity.initiative?.toString());
   const [newName, setNewName] = useState<string>(entity.name);
+  const [newInitiaive, setNewInitiative] = useState(entity.initiative?.toString());
   const [newHealth, setNewHealth] = useState(entity.health?.toString());
+  const [newProfileUrl, setNewProfileUrl] = useState(entity.dndBeyondProfileUrl ?? '');
   const toast = useToast();
 
   const handleDone = (success: boolean) => {
@@ -48,22 +56,19 @@ export const EntityEditModal: React.FC<EntityEditModalProps> = ({ entity, isOpen
       updateEntities((prevEntities) =>
         prevEntities.map((e) => {
           if (e.id === entity.id) {
-            if (showHealth) {
-              const sameName = newName === entity.name;
-              const mobsWithSameName = prevEntities.filter((m) => m.name === newName);
-              const newNumber = sameName ? entity.number : mobsWithSameName.length + 1;
+            const sameName = newName === entity.name;
+            const mobsWithSameName = prevEntities.filter((m) => m.name === newName);
+            const newNumber = sameName ? entity.number : mobsWithSameName.length + 1;
 
-              return {
-                ...e,
-                name: newName,
-                health: newHealth ? parseInt(newHealth, 10) : 0,
-                initiative: newInitiaive ? parseInt(newInitiaive, 10) : 0,
-                number: newNumber,
-                id: `${newName.toLowerCase()}-${newNumber}`,
-              };
-            }
-
-            return { ...e, initiative: newInitiaive ? parseInt(newInitiaive, 10) : 0 };
+            return {
+              ...e,
+              name: newName,
+              health: newHealth ? parseInt(newHealth, 10) : 0,
+              initiative: newInitiaive ? parseInt(newInitiaive, 10) : 0,
+              number: newNumber,
+              id: `${newName.toLowerCase()}-${newNumber}`,
+              dndBeyondProfileUrl: newProfileUrl,
+            } as Entity;
           }
           return e;
         })
@@ -113,6 +118,19 @@ export const EntityEditModal: React.FC<EntityEditModalProps> = ({ entity, isOpen
                   data-testid="initiative-edit-modal-input"
                 />
               </FormControl>
+              {showProfileUrl && (
+                <FormControl mb={4}>
+                  <FormLabel color="blackAlpha.900">{capitalizeFirstLetter(entity.name)} Profile Url</FormLabel>
+                  <Input
+                    type="text"
+                    textColor="primary.400"
+                    placeholder="Enter profile URL"
+                    value={newProfileUrl ?? ''}
+                    onChange={(e) => setNewProfileUrl(e.target.value)}
+                    data-testid="profile-url-edit-modal-input"
+                  />
+                </FormControl>
+              )}
             </ModalBody>
             <ModalFooter justifyContent="space-between">
               <Button variant="redLink" onClick={() => handleDone(false)} data-testid="cancel-edit-modal-btn">

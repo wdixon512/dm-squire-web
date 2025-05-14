@@ -30,7 +30,7 @@ export const HeroItem: React.FC<HeroItemProps> = ({ hero, showInitiative = true,
         readOnly={readOnlyRoom}
         editTooltipLabel="Update Hero Initiative"
       />
-      <EntityEditModal entity={hero} isOpen={isOpen} onClose={onClose} />
+      <EntityEditModal entity={hero} isOpen={isOpen} onClose={onClose} showProfileUrl={true} />
     </>
   );
 };

@@ -35,7 +35,12 @@ export const DMHelperContext = createContext({
   removeEntity: (entity: Entity): void => {},
   addMob: (name: string, health: number | undefined, initiative: number | undefined, isLibraryMob?: boolean): boolean =>
     false,
-  addHero: (name: string, health: number | undefined, initiative: number | undefined): boolean => false,
+  addHero: (
+    name: string,
+    health: number | undefined,
+    initiative: number | undefined,
+    profileUrl: string | undefined
+  ): boolean => false,
   addAlly: (
     name: string,
     health: number | undefined,
@@ -378,7 +383,12 @@ export const DMHelperContextProvider = ({ children }) => {
     return true;
   };
 
-  const addHero = (name: string, health: number | undefined, initiative: number | undefined): boolean => {
+  const addHero = (
+    name: string,
+    health: number | undefined,
+    initiative: number | undefined,
+    profileUrl: string | undefined
+  ): boolean => {
     if (!validateName(name, toast)) return false;
 
     const hero: Hero = {
@@ -387,6 +397,7 @@ export const DMHelperContextProvider = ({ children }) => {
       health,
       number: getNextEntityNumber(entities, name),
       initiative,
+      dndBeyondProfileUrl: profileUrl,
       type: EntityType.HERO,
     };
 
@@ -401,7 +412,7 @@ export const DMHelperContextProvider = ({ children }) => {
     name: string,
     health: number | undefined,
     initiative: number | undefined,
-    characterSheetId?: string
+    mobLibraryId?: string
   ): boolean => {
     if (!validateName(name, toast)) return false;
 
@@ -412,7 +423,7 @@ export const DMHelperContextProvider = ({ children }) => {
       number: getNextEntityNumber(entities, name),
       initiative,
       type: EntityType.ALLY,
-      characterSheetId,
+      mobLibraryId,
     };
 
     const updatedEntities = [...entities, ally];
