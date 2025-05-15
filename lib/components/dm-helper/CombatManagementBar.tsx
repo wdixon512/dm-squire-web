@@ -15,7 +15,7 @@ export default function CombatManagementBar() {
     onClose: onInitiativeModalClose,
   } = useDisclosure();
 
-  const { combatStarted, updateCombatStarted, entities, resetHeroInitiatives } = useContext(DMHelperContext);
+  const { combatStarted, updateCombatStarted, entities, resetCombat } = useContext(DMHelperContext);
   const heroesAndAllies = useMemo(
     () => entities.filter((entity) => entity.type === EntityType.HERO || entity.type === EntityType.ALLY),
     [entities]
@@ -23,7 +23,7 @@ export default function CombatManagementBar() {
 
   const startCombat = () => {
     if (heroesAndAllies.length > 0) {
-      resetHeroInitiatives();
+      resetCombat();
       onInitiativeModalOpen();
     }
 
@@ -34,7 +34,7 @@ export default function CombatManagementBar() {
     onEndCombatModalOpen();
 
     if (!combatStarted) {
-      resetHeroInitiatives();
+      resetCombat();
       updateCombatStarted(false);
     }
   };

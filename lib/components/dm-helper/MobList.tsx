@@ -42,7 +42,7 @@ export const MobList = () => {
               No enemies added yet.
             </Box>
           ) : (
-            mobs.map((mob, i) => <MobItem key={i} mob={mob} textColor="marioRed.200" />)
+            mobs.map((mob, i) => <MobItem key={i} mob={mob} textColor="marioRed.200" showBench={false} />)
           )}
         </List>
       )}

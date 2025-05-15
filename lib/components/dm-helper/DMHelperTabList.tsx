@@ -9,12 +9,13 @@ export default function DMHelperTabList(props: { readOnlyRoom: boolean }) {
     <>
       <TabList
         alignSelf="center"
-        border="2px solid"
         justifyContent="center"
         py="2"
         display="flex"
         w="100%"
-        bgColor="secondary.500"
+        bgColor="blackAlpha.900"
+        opacity={0.95}
+        clipPath="polygon(3% 0%, 100% 0%, 97% 100%, 0% 100%)"
       >
         {/* Combat Tab*/}
         <Tab

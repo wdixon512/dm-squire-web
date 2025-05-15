@@ -14,9 +14,10 @@ import { sanitizeMonsterName } from '@lib/util/mobUtils';
 interface MobItemProps extends FlexProps {
   mob: Mob;
   handleDrop?: (id: string | number, x: number, y: number) => void;
+  showBench?: boolean;
 }
 
-export const MobItem: React.FC<MobItemProps> = ({ mob, handleDrop, textColor, ...props }) => {
+export const MobItem: React.FC<MobItemProps> = ({ mob, handleDrop, textColor, showBench = true, ...props }) => {
   const { entities, removeEntity, updateEntities, readOnlyRoom } = useContext(DMHelperContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen: mobDetailIsOpen, onOpen: onMobDetailOpen, onClose: onMobDetailClose } = useDisclosure();
@@ -40,6 +41,7 @@ export const MobItem: React.FC<MobItemProps> = ({ mob, handleDrop, textColor, ..
         showHealth={!readOnlyRoom}
         showKill={!readOnlyRoom}
         showDetails={!readOnlyRoom}
+        showBench={showBench}
         readOnly={readOnlyRoom}
         onEdit={onOpen}
         onRemove={() => removeEntity(mob)}

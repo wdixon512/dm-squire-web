@@ -5,7 +5,6 @@ import { DMHelperContext } from '../contexts/DMHelperContext';
 import { useDisclosure } from '@chakra-ui/react';
 import EntityEditModal from './modals/EntityEditModal';
 import EntityDetailModal from './modals/EntityDetailModal';
-import { sanitizeMonsterName } from '@lib/util/mobUtils';
 
 interface AllyItemProps {
   ally: Ally;
@@ -15,6 +14,7 @@ interface AllyItemProps {
   showHealth?: boolean;
   showKill?: boolean;
   showDetails?: boolean;
+  showBench?: boolean;
   onRemove?: () => void;
 }
 
@@ -26,6 +26,7 @@ const AllyItem: React.FC<AllyItemProps> = ({
   showHealth = false,
   showKill = false,
   showDetails = false,
+  showBench = true,
   onRemove,
 }) => {
   const { removeEntity, readOnlyRoom, updateEntities } = useContext(DMHelperContext);
@@ -46,6 +47,7 @@ const AllyItem: React.FC<AllyItemProps> = ({
         showHealth={showHealth}
         showKill={showKill}
         showDetails={showDetails ?? true}
+        showBench={showBench}
         readOnly={readOnlyRoom}
         onEdit={onOpen}
         onRemove={onRemove || (() => removeEntity(ally))}
