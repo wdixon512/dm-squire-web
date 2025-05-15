@@ -47,7 +47,7 @@ export const DMHelperContext = createContext({
     initiative: number | undefined,
     characterSheetId?: string
   ): boolean => false,
-  resetHeroInitiatives: (): void => {},
+  resetCombat: (): void => {},
   mobFavorites: [] as Mob[],
   updateMobFavorites: (mobs: Mob[]): void => {},
   isClient: false,
@@ -448,9 +448,9 @@ export const DMHelperContextProvider = ({ children }) => {
     scheduleCommitRoomChanges();
   };
 
-  const resetHeroInitiatives = (): void => {
+  const resetCombat = (): void => {
     const updatedEntities = entities.map((entity) =>
-      entity.type === EntityType.HERO ? { ...entity, initiative: undefined } : entity
+      entity.type !== EntityType.MOB ? { ...entity, initiative: undefined, skipInCombat: false } : entity
     );
     setEntities(updatedEntities);
     scheduleCommitRoomChanges();
@@ -488,7 +488,7 @@ export const DMHelperContextProvider = ({ children }) => {
         addMob,
         addHero,
         addAlly,
-        resetHeroInitiatives,
+        resetCombat,
         mobFavorites,
         updateMobFavorites,
         isClient,

@@ -12,9 +12,16 @@ interface HeroItemProps extends FlexProps {
   hero: Hero;
   showInitiative?: boolean;
   showRemove?: boolean;
+  showBench?: boolean;
 }
 
-export const HeroItem: React.FC<HeroItemProps> = ({ hero, showInitiative = true, showRemove = false, textColor }) => {
+export const HeroItem: React.FC<HeroItemProps> = ({
+  hero,
+  showInitiative = true,
+  showRemove = false,
+  showBench = true,
+  textColor,
+}) => {
   const { removeEntity, readOnlyRoom } = useContext(DMHelperContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -24,6 +31,7 @@ export const HeroItem: React.FC<HeroItemProps> = ({ hero, showInitiative = true,
         entity={hero}
         showInitiative={showInitiative}
         showRemove={showRemove}
+        showBench={showBench}
         onRemove={() => removeEntity(hero)}
         onEdit={onOpen}
         textColor={textColor ?? 'interactive.200'}

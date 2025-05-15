@@ -33,6 +33,7 @@ export const AllyList = () => {
                 showHealth={true}
                 showKill={true}
                 showDetails={true}
+                showBench={false}
               />
             ))
           )}

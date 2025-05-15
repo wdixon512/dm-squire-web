@@ -26,7 +26,9 @@ export const HeroList = () => {
               No heroes added yet.
             </Box>
           ) : (
-            heroes.map((hero, i) => <HeroItem key={i} hero={hero} showInitiative={false} showRemove={true} />)
+            heroes.map((hero, i) => (
+              <HeroItem key={i} hero={hero} showInitiative={false} showRemove={true} showBench={false} />
+            ))
           )}
         </List>
       )}

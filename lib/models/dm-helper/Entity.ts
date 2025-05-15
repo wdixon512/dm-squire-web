@@ -16,4 +16,5 @@ export type Entity = IProfile & {
   initiative?: number | undefined;
   type: EntityType;
   isLibraryMob?: boolean;
+  skipInCombat?: boolean;
 };

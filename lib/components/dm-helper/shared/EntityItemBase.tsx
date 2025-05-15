@@ -1,8 +1,10 @@
 import { Text, Flex, Button, FlexProps, Icon, Tooltip, Input } from '@chakra-ui/react';
-import { FaUserEdit, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaUserEdit, FaEye, FaEyeSlash, FaCross, FaArrowUp } from 'react-icons/fa';
+import { SiBlockbench } from 'react-icons/si';
 import AnimatedFlex from '@components/global/AnimatedFlex';
-import React from 'react';
-import { Entity } from '@lib/models/dm-helper/Entity';
+import React, { useContext } from 'react';
+import { Entity, EntityType } from '@lib/models/dm-helper/Entity';
+import { DMHelperContext } from '@lib/components/contexts/DMHelperContext';
 
 interface EntityItemBaseProps extends FlexProps {
   entity: Entity;
@@ -12,8 +14,10 @@ interface EntityItemBaseProps extends FlexProps {
   showHealth?: boolean;
   showKill?: boolean;
   showDetails?: boolean;
+  showBench?: boolean;
   onRemove?: () => void;
   onEdit?: () => void;
+  onUnbench?: () => void;
   onHealthChange?: (value: string) => void;
   onDetailsOpen?: () => void;
   readOnly?: boolean;
@@ -33,6 +37,7 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
   showHealth = false,
   showKill = false,
   showDetails = false,
+  showBench,
   onRemove,
   onEdit,
   onHealthChange,
@@ -46,6 +51,16 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
   canViewDetails = false,
   ...props
 }) => {
+  const { updateEntities } = useContext(DMHelperContext);
+
+  const onUnbench = () => {
+    updateEntities((entities) => entities.map((e) => (e.id === entity.id ? { ...e, skipInCombat: false } : e)));
+  };
+
+  const onBench = () => {
+    updateEntities((entities) => entities.map((e) => (e.id === entity.id ? { ...e, skipInCombat: true } : e)));
+  };
+
   return (
     <AnimatedFlex
       align="center"
@@ -70,7 +85,7 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
             </Text>
           </Text>
         </Flex>
-        {showHealth && !readOnly && (
+        {showHealth && !entity.skipInCombat && !readOnly && (
           <Flex flex="1" alignItems="center" justifyContent={'flex-end'} mr="3">
             <Text>Health:</Text>
             <Input
@@ -87,16 +102,17 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
         )}
       </Flex>
       <Flex gap={2}>
-        {showKill && !readOnly && (
+        {showKill && !entity.skipInCombat && !readOnly && (
           <Button variant="redSolid" onClick={onRemove} data-testid={removeButtonTestId ?? `${entity.id}-kill`}>
             Kill
           </Button>
         )}
-        {showRemove && onRemove && (
+        {showRemove && !entity.skipInCombat && onRemove && (
           <Button variant="redSolid" onClick={onRemove} data-testid={removeButtonTestId ?? `${entity.id}-remove`}>
             Remove
           </Button>
         )}
+
         {!readOnly && onEdit && (
           <Tooltip label={editTooltipLabel} aria-label={editTooltipLabel} hasArrow>
             <Button variant="primarySolid" onClick={onEdit} data-testid={editButtonTestId ?? `${entity.id}-edit`}>
@@ -127,6 +143,30 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
               </Button>
             </Tooltip>
           ))}
+        {showBench && !entity.skipInCombat && (
+          <Tooltip
+            label={entity.type === EntityType.MOB ? 'Cannot bench enemies.' : 'Bench'}
+            aria-label="Bench"
+            hasArrow
+            placement="right"
+          >
+            <Button
+              variant="outline"
+              onClick={onBench}
+              data-testid={removeButtonTestId ?? `${entity.id}-unbench`}
+              disabled={entity.type === EntityType.MOB}
+            >
+              <SiBlockbench />
+            </Button>
+          </Tooltip>
+        )}
+        {showBench && entity.skipInCombat && (
+          <Tooltip label="Unbench" aria-label="Unbench" hasArrow placement="right">
+            <Button variant="outline" onClick={onUnbench} data-testid={removeButtonTestId ?? `${entity.id}-unbench`}>
+              <FaArrowUp />
+            </Button>
+          </Tooltip>
+        )}
       </Flex>
     </AnimatedFlex>
   );

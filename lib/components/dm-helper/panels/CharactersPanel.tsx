@@ -25,9 +25,30 @@ export default function CharactersPanel() {
       overflowY="hidden"
     >
       <TabList mb="4">
-        <CharacterSheetTab>Enemies</CharacterSheetTab>
-        <CharacterSheetTab>Heroes</CharacterSheetTab>
-        <CharacterSheetTab>Allies</CharacterSheetTab>
+        <CharacterSheetTab
+          _selected={{
+            color: 'marioRed.200',
+            borderColor: 'marioRed.200',
+          }}
+        >
+          Enemies
+        </CharacterSheetTab>
+        <CharacterSheetTab
+          _selected={{
+            color: 'interactive.200',
+            borderColor: 'interactive.200',
+          }}
+        >
+          Heroes
+        </CharacterSheetTab>
+        <CharacterSheetTab
+          _selected={{
+            color: 'yellow.200',
+            borderColor: 'yellow.200',
+          }}
+        >
+          Allies
+        </CharacterSheetTab>
       </TabList>
       <TabPanels h="100%">
         <DMHelperTabPanel index={tabIndex} current={0}>
@@ -65,18 +86,7 @@ export default function CharactersPanel() {
 function CharacterSheetTab(props: TabProps) {
   const { children, ...rest } = props;
   return (
-    <Tab
-      bgColor="blackAlpha.900"
-      color="white"
-      opacity=".95"
-      borderWidth="2px"
-      py="2"
-      h="fit-content"
-      _selected={{
-        borderColor: 'marioRed.200',
-      }}
-      {...rest}
-    >
+    <Tab bgColor="blackAlpha.900" color="white" opacity=".95" borderWidth="2px" py="2" h="fit-content" {...rest}>
       {children}
     </Tab>
   );
