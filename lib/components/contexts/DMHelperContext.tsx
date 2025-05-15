@@ -184,10 +184,13 @@ export const DMHelperContextProvider = ({ children }) => {
     name: string,
     health: number | undefined,
     initiative: number | undefined,
-    isLibraryMob?: boolean
+    isLibraryMob?: boolean,
+    profileUrl?: string
   ): boolean => {
     const mob = entityService.addMob(name, health, initiative, isLibraryMob, entities);
     if (!mob) return false;
+
+    updateProfile(mob, profileUrl);
 
     const updatedEntities = [...entities, mob];
     setEntities(updatedEntities);
@@ -207,13 +210,9 @@ export const DMHelperContextProvider = ({ children }) => {
     profileUrl: string | undefined
   ): boolean => {
     const hero = entityService.addHero(name, health, initiative, profileUrl, entities);
-
-    if (profileUrl) {
-      roomService.updateHeroProfilePictures();
-    }
-
     if (!hero) return false;
 
+    updateProfile(hero, profileUrl);
     setEntities([...entities, hero]);
     scheduleCommitRoomChanges();
     return true;
@@ -223,22 +222,26 @@ export const DMHelperContextProvider = ({ children }) => {
     name: string,
     health: number | undefined,
     initiative: number | undefined,
-    mobLibraryId?: string
+    mobLibraryId?: string,
+    profileUrl?: string
   ): boolean => {
-    const ally = entityService.addAlly(name, health, initiative, mobLibraryId, entities);
+    const ally = entityService.addAlly(name, health, initiative, mobLibraryId, profileUrl, entities);
     if (!ally) return false;
 
+    updateProfile(ally, profileUrl);
     setEntities([...entities, ally]);
     scheduleCommitRoomChanges();
     return true;
   };
 
   const updateEntity = (entity: Entity): void => {
-    if (entity.type === EntityType.HERO && entity.dndBeyondProfileUrl) {
-      roomService.updateHeroProfilePictures();
+    const { updatedEntities, fieldsUpdated } = entityService.updateEntity(entities, entity);
+    console.log('Updated entity:', updatedEntities, fieldsUpdated);
+    if (fieldsUpdated?.includes('dndBeyondProfileUrl') && entity.dndBeyondProfileUrl && room.id) {
+      roomService.updateProfilePicture(room.id, entity, entity.dndBeyondProfileUrl);
     }
 
-    setEntities(entityService.updateEntity(entities, entity));
+    setEntities(updatedEntities);
     scheduleCommitRoomChanges();
   };
 
@@ -275,6 +278,12 @@ export const DMHelperContextProvider = ({ children }) => {
   const clearMobFavorites = (): void => {
     updateMobFavorites([]);
     scheduleCommitRoomChanges();
+  };
+
+  const updateProfile = (entity: Entity, profileUrl?: string): void => {
+    if (profileUrl && room.id && entity) {
+      roomService.updateProfilePicture(room.id, entity, profileUrl);
+    }
   };
 
   return (

@@ -7,8 +7,11 @@ import { Ally } from '@lib/models/dm-helper/Ally';
 import { auth, rtdb } from '@services/firebase';
 import { ref, get, set, update, push, onValue, orderByChild, equalTo, query } from 'firebase/database';
 import { sanitizeData } from '@lib/util/firebase-utils';
+import { ToastId, UseToastOptions } from '@chakra-ui/react';
 
 export class RoomService {
+  constructor(private toast: (options: UseToastOptions) => ToastId | undefined) {}
+
   async createRoom(room: Room): Promise<string | null> {
     const user = auth.currentUser;
     if (!user) {
@@ -112,16 +115,31 @@ export class RoomService {
     return null;
   }
 
-  async updateHeroProfilePictures(): Promise<void> {
+  async updateProfilePicture(roomId: string, entity: Entity, profileUrl: string): Promise<void> {
     // Fire and forget - don't await the response
-    fetch('/api/scrapeProfilePages')
+    fetch('/api/scrapeProfilePages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + process.env.API_SECRET,
+      },
+      body: JSON.stringify({ roomId, entityId: entity.id, profileUrl }),
+    })
       .then((response) => {
         if (!response.ok) {
-          console.error(`Failed to update profile pictures: ${response.statusText}`);
+          console.error(`Failed to update profile picture: ${response.statusText}`);
+        } else {
+          this.toast({
+            title: 'Profile picture updated',
+            description: 'Profile picture updated successfully. Refresh the page to see changes.',
+            status: 'info',
+            duration: 5000,
+            isClosable: true,
+          });
         }
       })
       .catch((error) => {
-        console.error('Error updating hero profile pictures:', error);
+        console.error('Error updating hero profile picture:', error);
       });
   }
 }

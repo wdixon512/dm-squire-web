@@ -74,15 +74,15 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
     >
       <Flex w="full">
         <Flex alignItems="center" flex="1" gap="2" py={2}>
-          {entity.profilePictureUrl && (
-            <Circle size="32px" overflow="hidden">
-              <Image src={entity.profilePictureUrl} alt={`${entity.name} profile pic`} />
-            </Circle>
-          )}
           {showInitiative && entity.initiative && (
             <Text as="span" fontWeight="800" data-testid={`${entity.id}-initiative`}>
               ({entity.initiative})
             </Text>
+          )}
+          {entity.profilePictureUrl && (
+            <Circle size="32px" overflow="hidden">
+              <Image src={entity.profilePictureUrl} alt={`${entity.name} profile pic`} />
+            </Circle>
           )}
           <Text as="span" fontWeight="800" textColor={props.textColor} data-testid={`${entity.id}-name`}>
             &nbsp;{entityName}

@@ -14,6 +14,7 @@ const AllyForm: React.FC = () => {
   const [allyName, setAllyName] = useState('');
   const [allyCharacterSheetId, setAllyCharacterSheetId] = useState('');
   const [allyCharacterSheetDisplayName, setAllyCharacterSheetDisplayName] = useState('');
+  const [profileUrl, setProfileUrl] = useState('');
 
   const [health, setHealth] = useState('');
   const [initiative, setInitiative] = useState('');
@@ -91,6 +92,27 @@ const AllyForm: React.FC = () => {
         selectedLabelText="Selected character sheet:"
         inputDataTestId="ally-character-sheet-input"
       />
+      <FormControl>
+        <FormLabel display="inline-flex" color="white" gap="2">
+          Profile URL
+          <Tooltip
+            label="Enter this hero's D&D Beyond profile URL. Set your character's privacy setting to `Public` to allow DMSquire more access."
+            placement="top"
+            hasArrow
+          >
+            <FaQuestionCircle />
+          </Tooltip>
+        </FormLabel>
+        <Input
+          type="text"
+          value={profileUrl}
+          onChange={(e) => setProfileUrl(e.target.value)}
+          color="white"
+          textFillColor={'whiteAlpha.800'}
+          placeholder="Enter Profile URL"
+          data-testid="profile-input"
+        />
+      </FormControl>
     </EntityBaseForm>
   );
 };

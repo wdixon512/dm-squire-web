@@ -53,12 +53,17 @@ const AllyItem: React.FC<AllyItemProps> = ({
         onRemove={onRemove || (() => removeEntity(ally))}
         onHealthChange={(value) => updateHealth(ally, value === '' ? '' : parseInt(value, 10))}
         onDetailsOpen={onDetailOpen}
-        canViewDetails={!!ally.mobLibraryId}
+        canViewDetails={!!ally.mobLibraryId || !!ally.dndBeyondProfileUrl}
         editTooltipLabel="Update Ally"
       />
-      <EntityEditModal entity={ally} isOpen={isOpen} onClose={onClose} showHealth={showHealth} />
+      <EntityEditModal entity={ally} isOpen={isOpen} onClose={onClose} showHealth={showHealth} showProfileUrl={true} />
       {ally.mobLibraryId && (
-        <EntityDetailModal characterSheetId={ally.mobLibraryId} isOpen={detailIsOpen} onClose={onDetailClose} />
+        <EntityDetailModal
+          characterSheetId={ally.mobLibraryId}
+          profileUrl={ally.dndBeyondProfileUrl}
+          isOpen={detailIsOpen}
+          onClose={onDetailClose}
+        />
       )}
     </>
   );

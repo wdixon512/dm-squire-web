@@ -58,6 +58,7 @@ export class EntityService {
     health: number | undefined,
     initiative: number | undefined,
     mobLibraryId?: string,
+    profileUrl?: string,
     existingEntities: Entity[] = []
   ): Ally | null {
     if (!validateName(name, this.toast)) {
@@ -70,13 +71,34 @@ export class EntityService {
       health,
       number: getNextEntityNumber(existingEntities, name),
       initiative,
+      dndBeyondProfileUrl: profileUrl,
       type: EntityType.ALLY,
       mobLibraryId,
     };
   }
 
-  updateEntity(entities: Entity[], entity: Entity): Entity[] {
-    return entities.map((e) => (e.id === entity.id ? entity : e));
+  updateEntity(
+    entities: Entity[],
+    entity: Entity
+  ): {
+    updatedEntities: Entity[];
+    fieldsUpdated?: string[];
+  } {
+    let fieldsUpdated: string[] = [];
+    const updatedEntities = entities.map((e) => {
+      if (e.id === entity.id) {
+        // Find all the fields that have changed
+        fieldsUpdated = Object.keys(entity).filter((key) => {
+          if (key === 'id' || key === 'number') return false; // Skip id and number
+          return e[key] !== entity[key];
+        });
+
+        return entity;
+      }
+
+      return e;
+    });
+    return { updatedEntities, fieldsUpdated };
   }
 
   removeEntity(entities: Entity[], entity: Entity): Entity[] {
