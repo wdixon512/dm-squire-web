@@ -10,10 +10,12 @@ export default function DMHelperTabList(props: { readOnlyRoom: boolean }) {
       <TabList
         alignSelf="center"
         justifyContent="center"
-        py="2"
         display="flex"
+        py="2"
         w="100%"
         bgColor="blackAlpha.900"
+        borderBottom="2px solid"
+        borderColor="marioRed.500"
         opacity={0.95}
         clipPath="polygon(3% 0%, 100% 0%, 97% 100%, 0% 100%)"
       >
