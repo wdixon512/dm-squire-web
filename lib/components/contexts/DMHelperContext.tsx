@@ -2,20 +2,17 @@
 
 import { createContext, useEffect, useState, useMemo } from 'react';
 import { useToast } from '@chakra-ui/react';
-import { CombatState, Combat } from '@lib/models/dm-helper/Combat';
+import { CombatState } from '@lib/models/dm-helper/Combat';
 import { DEFAULT_ROOM, Room } from '@lib/models/dm-helper/Room';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { Entity, EntityType } from '@lib/models/dm-helper/Entity';
 import { Hero } from '@lib/models/dm-helper/Hero';
 import { Mob } from '@lib/models/dm-helper/Mob';
-import { getNextEntityNumber, validateMobHealth, validateName } from '@lib/util/dm-helper-utils';
-import { sanitizeData } from '@lib/util/firebase-utils';
-import { auth, rtdb } from '@services/firebase';
-import { ref, get, set, update, push, onValue } from 'firebase/database';
-import useLocalStorage from '@lib/hooks/useLocalStorage';
-import { getRoomByOwnerUID } from '@lib/services/dm-helper-firebase-service';
-import { toKebabCase } from '@lib/util/js-utils';
 import { Ally } from '@lib/models/dm-helper/Ally';
+import useLocalStorage from '@lib/hooks/useLocalStorage';
+import { DMHelperContextType } from './DMHelperContextTypes';
+import { useRoomService } from '@lib/hooks/use-room-service';
+import { useEntityService } from '@lib/hooks/use-entity-service';
 
 /**
  * This file defines the DMHelperContext and DMHelperContextProvider components.
@@ -23,43 +20,7 @@ import { Ally } from '@lib/models/dm-helper/Ally';
  * The DMHelperContextProvider component manages the state and provides functions to create, join, and leave rooms,
  * as well as manage entities, combat state, and mob favorites.
  */
-export const DMHelperContext = createContext({
-  room: {} as Room,
-  setRoom: (() => null) as React.Dispatch<React.SetStateAction<Room | null>>,
-  createRoom: async (): Promise<string | undefined | null> => null,
-  joinRoom: async (roomId: string): Promise<void> => {},
-  leaveRoom: async (): Promise<void> => {},
-  joinRoomLink: undefined as string | undefined,
-  entities: [] as Entity[],
-  updateEntities: (() => null) as React.Dispatch<React.SetStateAction<Entity[]>>,
-  removeEntity: (entity: Entity): void => {},
-  addMob: (name: string, health: number | undefined, initiative: number | undefined, isLibraryMob?: boolean): boolean =>
-    false,
-  addHero: (
-    name: string,
-    health: number | undefined,
-    initiative: number | undefined,
-    profileUrl: string | undefined
-  ): boolean => false,
-  addAlly: (
-    name: string,
-    health: number | undefined,
-    initiative: number | undefined,
-    characterSheetId?: string
-  ): boolean => false,
-  resetCombat: (): void => {},
-  mobFavorites: [] as Mob[],
-  updateMobFavorites: (mobs: Mob[]): void => {},
-  isClient: false,
-  heroes: [] as Hero[],
-  allies: [] as Ally[],
-  combatStarted: false,
-  updateCombatStarted: (started: boolean): void => {},
-  clearMobs: (): void => {},
-  clearMobFavorites: (): void => {},
-  loadingFirebaseRoom: false,
-  readOnlyRoom: false,
-});
+export const DMHelperContext = createContext<DMHelperContextType>({} as DMHelperContextType);
 
 export const DMHelperContextProvider = ({ children }) => {
   const [room, setRoom] = useState<Room>(DEFAULT_ROOM);
@@ -73,6 +34,8 @@ export const DMHelperContextProvider = ({ children }) => {
   const [joinedRoomId, setJoinedRoomId] = useLocalStorage<string | undefined | null>('joinedRoomId', null);
 
   const toast = useToast();
+  const roomService = useRoomService();
+  const entityService = useEntityService();
 
   const heroes = useMemo(() => entities.filter((entity) => entity.type === EntityType.HERO) as Hero[], [entities]);
   const allies = useMemo(() => entities.filter((entity) => entity.type === EntityType.ALLY) as Ally[], [entities]);
@@ -98,7 +61,7 @@ export const DMHelperContextProvider = ({ children }) => {
         try {
           setloadingFirebaseRoom(true);
           // Get room for firebase, and set our context state
-          getRoomByOwnerUID(user.uid).then((dbRoom) => {
+          roomService.getRoomByOwnerUID(user.uid).then((dbRoom) => {
             if (dbRoom) {
               syncContextWithRoom(dbRoom);
             } else {
@@ -108,7 +71,7 @@ export const DMHelperContextProvider = ({ children }) => {
                 combat: {
                   entities: entities,
                   combatState: combatStarted ? CombatState.IN_PROGRESS : CombatState.NOT_IN_PROGRESS,
-                } as Combat,
+                },
                 mobFavorites: mobFavorites,
                 heroes: heroes,
                 allies: allies,
@@ -124,7 +87,7 @@ export const DMHelperContextProvider = ({ children }) => {
             combat: {
               entities: entities,
               combatState: combatStarted ? CombatState.IN_PROGRESS : CombatState.NOT_IN_PROGRESS,
-            } as Combat,
+            },
             mobFavorites: mobFavorites,
             heroes: heroes,
             allies: allies,
@@ -142,127 +105,39 @@ export const DMHelperContextProvider = ({ children }) => {
   useEffect(() => {
     if (!commitPending || joinedRoomId) return;
 
-    let syncChangesWithFirebase = room?.syncWithFirebase;
-
-    const updatedRoom: Room = {
-      ...room,
-      combat: {
-        ...room?.combat,
-        entities: entities,
-        combatState: combatStarted ? CombatState.IN_PROGRESS : CombatState.NOT_IN_PROGRESS,
-      },
-      mobFavorites: mobFavorites,
-      heroes: heroes,
-      allies: allies,
-    };
-
-    // Firebase doesn't like `undefined` values, so we sanitize the data before updating Realtime Database
-    const sanitizedRoom = sanitizeData(updatedRoom);
-    setRoom(sanitizedRoom);
-
-    if (!auth.currentUser) {
-      // If user isn't authenticated, and the room they're in is set to sync with Firebase, we can't update the room
-      if (updatedRoom.syncWithFirebase) {
+    try {
+      roomService.updateRoom(room, entities, mobFavorites, heroes, allies, combatStarted).catch((error) => {
         toast({
-          title: 'Authentication Error',
-          description: 'User is not authenticated',
+          title: 'Error Updating Room',
+          description: error.message,
           status: 'error',
           duration: 5000,
           isClosable: true,
         });
-      }
-
-      syncChangesWithFirebase = false;
-    }
-
-    // If the user is authenticated, but they are not the owner of the room, we can't update the room
-    if (auth.currentUser && updatedRoom.ownerUID !== auth.currentUser.uid) {
+      });
+    } catch (e) {
+      console.error(e);
       toast({
-        title: 'Authorization Error',
-        description: 'You are not the owner of this room. You cannot make updates to it.',
+        title: 'Error Updating Room',
+        description: e.message,
         status: 'error',
         duration: 5000,
         isClosable: true,
       });
-
-      syncChangesWithFirebase = false;
-    }
-
-    // Update the room in Realtime Database
-    if (syncChangesWithFirebase) {
-      try {
-        if (!sanitizedRoom.id) {
-          throw new Error('No room ID found. Failed to sync room with cloud.');
-        }
-        const roomRef = ref(rtdb, `rooms/${sanitizedRoom.id}`);
-        update(roomRef, sanitizedRoom).catch((error) => {
-          toast({
-            title: 'Error Updating Room',
-            description: error.message,
-            status: 'error',
-            duration: 5000,
-            isClosable: true,
-          });
-        });
-      } catch (e) {
-        console.error(e);
-        toast({
-          title: 'Error Updating Room',
-          description: e.message,
-          status: 'error',
-          duration: 5000,
-          isClosable: true,
-        });
-      }
     }
 
     setCommitPending(false);
   }, [commitPending, entities, mobFavorites, heroes, allies, combatStarted, room]);
 
   const createRoom = async (): Promise<string | undefined | null> => {
-    const user = auth.currentUser;
-
-    if (!user) {
-      toast({
-        title: 'Authentication Error',
-        description: 'User is not authenticated',
-        status: 'error',
-        duration: 5000,
-        isClosable: true,
-      });
-      return;
-    }
-
-    let newRoomData = {
-      ...room,
-      ownerUID: user.uid,
-      syncWithFirebase: true,
-    } as Room;
-
     try {
-      const roomRef = ref(rtdb, `rooms`);
-      const newRoomRef = await push(roomRef, newRoomData); // generates a unique ID for the room
-      const newRoomId = newRoomRef.key;
-
-      if (newRoomId) {
-        newRoomData = { ...newRoomData, id: newRoomId };
-        setRoom(newRoomData);
-        await set(newRoomRef, newRoomData);
-        toast({
-          title: 'Room Created',
-          description: 'Your room has been created!',
-          status: 'success',
-          duration: 5000,
-          isClosable: true,
-        });
-
-        const roomLink = `${window.location.origin}/join/${newRoomId}`;
+      const roomId = await roomService.createRoom(room);
+      if (roomId) {
+        const roomLink = `${window.location.origin}/join/${roomId}`;
         setJoinRoomLink(roomLink);
-
         return roomLink;
       }
-
-      throw new Error('Failed to create room; no room ID generated.');
+      return null;
     } catch (error) {
       toast({
         title: 'Error Creating Room',
@@ -271,7 +146,6 @@ export const DMHelperContextProvider = ({ children }) => {
         duration: 5000,
         isClosable: true,
       });
-
       return null;
     }
   };
@@ -279,61 +153,17 @@ export const DMHelperContextProvider = ({ children }) => {
   const joinRoom = async (roomId: string): Promise<void> => {
     try {
       setloadingFirebaseRoom(true);
-      const roomRef = ref(rtdb, `rooms/${roomId}`);
-      const roomSnapshot = await get(roomRef);
-
-      if (roomSnapshot.exists()) {
-        const dbRoom = roomSnapshot.val() as Room;
-        syncContextWithRoom(dbRoom);
-
-        // Only show the toast if we've joined a new room
-        if (joinedRoomId !== dbRoom.id) {
-          toast({
-            title: 'Room Joined',
-            description: `You have successfully joined the room with ID: ${roomId}`,
-            status: 'success',
-            duration: 5000,
-            isClosable: true,
-          });
-        }
-        setJoinedRoomId(dbRoom.id);
-
-        // Start listening for real-time updates
-        onValue(roomRef, (snapshot) => {
-          if (snapshot.exists()) {
-            const updatedRoom = snapshot.val() as Room;
-            syncContextWithRoom(updatedRoom); // Update context state with new data
-          } else {
-            console.warn(`Room with ID ${roomId} no longer exists.`);
-            toast({
-              title: 'Room Removed',
-              description: 'The room you joined has been deleted.',
-              status: 'warning',
-              duration: 5000,
-              isClosable: true,
-            });
-          }
-        });
-      } else {
-        toast({
-          title: 'Room not found',
-          description: 'The room you are trying to join does not exist.',
-          status: 'error',
-          duration: 5000,
-          isClosable: true,
-        });
-      }
+      await roomService.joinRoom(roomId, syncContextWithRoom);
+      setJoinedRoomId(roomId);
     } catch (error) {
-      console.error('Error joining room:', error);
       toast({
         title: 'Error joining room',
-        description: 'An error occurred while trying to join the room.',
+        description: error.message,
         status: 'error',
         duration: 5000,
         isClosable: true,
       });
     }
-
     setloadingFirebaseRoom(false);
   };
 
@@ -356,30 +186,17 @@ export const DMHelperContextProvider = ({ children }) => {
     initiative: number | undefined,
     isLibraryMob?: boolean
   ): boolean => {
-    if (!validateName(name, toast) || !validateMobHealth(health, toast)) return false;
-
-    const mob: Mob = {
-      id: `${toKebabCase(name.toLowerCase())}-${getNextEntityNumber(entities, name)}`,
-      name,
-      health,
-      number: getNextEntityNumber(entities, name),
-      initiative,
-      type: EntityType.MOB,
-      isLibraryMob,
-    };
-
-    const addMobFavorite = (mob: Mob) => {
-      if (!mobFavorites.some((m) => m.name === mob.name)) {
-        const updatedFavorites = [...mobFavorites, mob];
-        setMobFavorites(updatedFavorites);
-      }
-    };
+    const mob = entityService.addMob(name, health, initiative, isLibraryMob, entities);
+    if (!mob) return false;
 
     const updatedEntities = [...entities, mob];
     setEntities(updatedEntities);
-    addMobFavorite(mob);
-    scheduleCommitRoomChanges();
 
+    if (!mobFavorites.some((m) => m.name === mob.name)) {
+      setMobFavorites([...mobFavorites, mob]);
+    }
+
+    scheduleCommitRoomChanges();
     return true;
   };
 
@@ -389,22 +206,11 @@ export const DMHelperContextProvider = ({ children }) => {
     initiative: number | undefined,
     profileUrl: string | undefined
   ): boolean => {
-    if (!validateName(name, toast)) return false;
+    const hero = entityService.addHero(name, health, initiative, profileUrl, entities);
+    if (!hero) return false;
 
-    const hero: Hero = {
-      id: `${toKebabCase(name.toLowerCase())}-${getNextEntityNumber(entities, name)}`,
-      name,
-      health,
-      number: getNextEntityNumber(entities, name),
-      initiative,
-      dndBeyondProfileUrl: profileUrl,
-      type: EntityType.HERO,
-    };
-
-    const updatedEntities = [...entities, hero];
-    setEntities(updatedEntities);
+    setEntities([...entities, hero]);
     scheduleCommitRoomChanges();
-
     return true;
   };
 
@@ -414,26 +220,20 @@ export const DMHelperContextProvider = ({ children }) => {
     initiative: number | undefined,
     mobLibraryId?: string
   ): boolean => {
-    if (!validateName(name, toast)) return false;
+    const ally = entityService.addAlly(name, health, initiative, mobLibraryId, entities);
+    if (!ally) return false;
 
-    const ally: Ally = {
-      id: `${toKebabCase(name.toLowerCase())}-${getNextEntityNumber(entities, name)}`,
-      name,
-      health,
-      number: getNextEntityNumber(entities, name),
-      initiative,
-      type: EntityType.ALLY,
-      mobLibraryId,
-    };
-
-    const updatedEntities = [...entities, ally];
-    setEntities(updatedEntities);
+    setEntities([...entities, ally]);
     scheduleCommitRoomChanges();
-
     return true;
   };
 
-  const updateEntities = (entities: Entity[]) => {
+  const updateEntity = (entity: Entity): void => {
+    setEntities(entityService.updateEntity(entities, entity));
+    scheduleCommitRoomChanges();
+  };
+
+  const updateEntities = (entities: React.SetStateAction<Entity[]>) => {
     setEntities(entities);
     scheduleCommitRoomChanges();
   };
@@ -449,22 +249,17 @@ export const DMHelperContextProvider = ({ children }) => {
   };
 
   const resetCombat = (): void => {
-    const updatedEntities = entities.map((entity) =>
-      entity.type !== EntityType.MOB ? { ...entity, initiative: undefined, skipInCombat: false } : entity
-    );
-    setEntities(updatedEntities);
+    setEntities(entityService.resetCombat(entities));
     scheduleCommitRoomChanges();
   };
 
   const removeEntity = (entity: Entity): void => {
-    const updatedEntities = entities.filter((e) => e.id !== entity.id);
-    setEntities(updatedEntities);
+    setEntities(entityService.removeEntity(entities, entity));
     scheduleCommitRoomChanges();
   };
 
   const clearMobs = (): void => {
-    const updatedEntities = entities.filter((entity) => entity.type !== EntityType.MOB);
-    setEntities(updatedEntities);
+    setEntities(entityService.clearMobs(entities));
     scheduleCommitRoomChanges();
   };
 
@@ -483,6 +278,7 @@ export const DMHelperContextProvider = ({ children }) => {
         leaveRoom,
         joinRoomLink,
         entities,
+        updateEntity,
         updateEntities,
         removeEntity,
         addMob,

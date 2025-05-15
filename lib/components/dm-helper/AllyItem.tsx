@@ -29,12 +29,12 @@ const AllyItem: React.FC<AllyItemProps> = ({
   showBench = true,
   onRemove,
 }) => {
-  const { removeEntity, readOnlyRoom, updateEntities } = useContext(DMHelperContext);
+  const { removeEntity, readOnlyRoom, updateEntity } = useContext(DMHelperContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen: detailIsOpen, onOpen: onDetailOpen, onClose: onDetailClose } = useDisclosure();
 
   const updateHealth = (ally: Ally, newHealth) => {
-    updateEntities((entities) => entities.map((a) => (a.id === ally.id ? { ...a, health: newHealth } : a)));
+    updateEntity({ ...ally, health: newHealth });
   };
 
   return (

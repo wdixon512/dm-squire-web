@@ -51,14 +51,14 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
   canViewDetails = false,
   ...props
 }) => {
-  const { updateEntities } = useContext(DMHelperContext);
+  const { updateEntity } = useContext(DMHelperContext);
 
   const onUnbench = () => {
-    updateEntities((entities) => entities.map((e) => (e.id === entity.id ? { ...e, skipInCombat: false } : e)));
+    updateEntity({ ...entity, skipInCombat: false });
   };
 
   const onBench = () => {
-    updateEntities((entities) => entities.map((e) => (e.id === entity.id ? { ...e, skipInCombat: true } : e)));
+    updateEntity({ ...entity, skipInCombat: true });
   };
 
   return (

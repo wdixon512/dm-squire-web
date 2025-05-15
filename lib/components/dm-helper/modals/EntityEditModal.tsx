@@ -32,8 +32,7 @@ export const EntityEditModal: React.FC<EntityEditModalProps> = ({
   showProfileUrl = false,
   onClose,
 }) => {
-  const { updateEntities } = useContext(DMHelperContext);
-  const [newName, setNewName] = useState<string>(entity.name);
+  const { updateEntity } = useContext(DMHelperContext);
   const [newInitiaive, setNewInitiative] = useState(entity.initiative?.toString());
   const [newHealth, setNewHealth] = useState(entity.health?.toString());
   const [newProfileUrl, setNewProfileUrl] = useState(entity.dndBeyondProfileUrl ?? '');
@@ -53,26 +52,12 @@ export const EntityEditModal: React.FC<EntityEditModalProps> = ({
         return;
       }
 
-      updateEntities((prevEntities) =>
-        prevEntities.map((e) => {
-          if (e.id === entity.id) {
-            const sameName = newName === entity.name;
-            const mobsWithSameName = prevEntities.filter((m) => m.name === newName);
-            const newNumber = sameName ? entity.number : mobsWithSameName.length + 1;
-
-            return {
-              ...e,
-              name: newName,
-              health: newHealth ? parseInt(newHealth, 10) : 0,
-              initiative: newInitiaive ? parseInt(newInitiaive, 10) : 0,
-              number: newNumber,
-              id: `${newName.toLowerCase()}-${newNumber}`,
-              dndBeyondProfileUrl: newProfileUrl,
-            } as Entity;
-          }
-          return e;
-        })
-      );
+      updateEntity({
+        ...entity,
+        health: newHealth ? parseInt(newHealth, 10) : 0,
+        initiative: newInitiaive ? parseInt(newInitiaive, 10) : 0,
+        dndBeyondProfileUrl: newProfileUrl,
+      });
     }
 
     onClose();

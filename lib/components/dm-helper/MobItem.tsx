@@ -18,7 +18,7 @@ interface MobItemProps extends FlexProps {
 }
 
 export const MobItem: React.FC<MobItemProps> = ({ mob, handleDrop, textColor, showBench = true, ...props }) => {
-  const { entities, removeEntity, updateEntities, readOnlyRoom } = useContext(DMHelperContext);
+  const { entities, removeEntity, updateEntity, readOnlyRoom } = useContext(DMHelperContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen: mobDetailIsOpen, onOpen: onMobDetailOpen, onClose: onMobDetailClose } = useDisclosure();
   const characterSheetId = useMemo(() => sanitizeMonsterName(mob.name), [mob.name]);
@@ -28,7 +28,7 @@ export const MobItem: React.FC<MobItemProps> = ({ mob, handleDrop, textColor, sh
   };
 
   const updateHealth = (mob: Mob, newHealth) => {
-    updateEntities(entities.map((m) => (m.id === mob.id ? { ...m, health: newHealth } : m)));
+    updateEntity({ ...mob, health: newHealth });
   };
 
   return (
