@@ -14,4 +14,5 @@ export type Entity = {
   initiative?: number | undefined;
   type: EntityType;
   isLibraryMob?: boolean;
+  skipInCombat?: boolean;
 };

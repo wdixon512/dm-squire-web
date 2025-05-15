@@ -8,11 +8,16 @@ import {
   Input,
   Button,
   useToast,
+  FormLabel,
+  Checkbox,
+  Flex,
+  Tooltip,
 } from '@chakra-ui/react';
 import { ChevronLeftIcon, ChevronRightIcon } from '@chakra-ui/icons';
 import { useContext, useState, useRef } from 'react';
 import { EntityType, Entity } from '@lib/models/dm-helper/Entity';
 import { DMHelperContext } from '../../contexts/DMHelperContext';
+import { FaQuestion, FaQuestionCircle } from 'react-icons/fa';
 
 interface InitiativeModalProps {
   isOpen: boolean;
@@ -22,58 +27,52 @@ interface InitiativeModalProps {
 
 export const InitiativeModal: React.FC<InitiativeModalProps> = ({ isOpen, entities, onClose }) => {
   const { updateEntities } = useContext(DMHelperContext);
-  const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
+  const [currentEntityIndex, setCurrentEntityIndex] = useState(0);
   const [initiativeRolls, setInitiativeRolls] = useState<number[]>([]);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [benchedEntities, setBenchedEntities] = useState<boolean[]>(entities.map(() => false));
+  const initiativeInputRef = useRef<HTMLInputElement>(null);
   const toast = useToast();
 
   const handleNextHero = () => {
-    const initiativeValue = inputRef.current?.value;
-
-    if (!initiativeValue || initiativeValue === '') {
-      toast({
-        title: 'Warning',
-        description: 'Please enter a valid initiative value.',
-        status: 'warning',
-        duration: 3000,
-        isClosable: true,
-      });
+    if (benchedEntities[currentEntityIndex]) {
+      goToNextHero();
       return;
     }
 
-    if (currentHeroIndex < entities.length - 1) {
-      setCurrentHeroIndex(currentHeroIndex + 1);
+    if (!validateCurrentInitiative()) {
+      return;
+    }
+
+    goToNextHero();
+  };
+
+  const goToNextHero = () => {
+    if (currentEntityIndex < entities.length - 1) {
+      setCurrentEntityIndex(currentEntityIndex + 1);
     }
   };
 
   const handlePreviousHero = () => {
-    if (currentHeroIndex > 0) {
-      setCurrentHeroIndex(currentHeroIndex - 1);
+    if (currentEntityIndex > 0) {
+      setCurrentEntityIndex(currentEntityIndex - 1);
     }
   };
 
   const handleInitiativeChange = () => {
     const updatedRolls = [...initiativeRolls];
-    const initiativeValue = inputRef.current?.value || '0';
-    updatedRolls[currentHeroIndex] = Number(initiativeValue);
+    const initiativeValue = initiativeInputRef.current?.value || '0';
+    updatedRolls[currentEntityIndex] = Number(initiativeValue);
     setInitiativeRolls(updatedRolls);
   };
 
+  const handleSkipEntityChange = (skip: boolean) => {
+    const updatedBenchedEntities = [...benchedEntities];
+    updatedBenchedEntities[currentEntityIndex] = skip;
+    setBenchedEntities(updatedBenchedEntities);
+  };
+
   const handleDone = (aborted = false) => {
-    const initiativeValue = inputRef.current?.value;
-
-    if (initiativeValue === '') {
-      toast({
-        title: 'Warning',
-        description: 'Please enter a valid initiative value.',
-        status: 'warning',
-        duration: 3000,
-        isClosable: true,
-      });
-      return;
-    }
-
-    if (aborted || initiativeRolls.some((roll) => roll === undefined || roll === null)) {
+    if (aborted) {
       toast({
         title: 'Warning',
         description: 'Initiative setting was aborted. Please set all initiatives before closing.',
@@ -84,10 +83,17 @@ export const InitiativeModal: React.FC<InitiativeModalProps> = ({ isOpen, entiti
       onClose();
       return;
     }
+    // if we're NOT benching the last entity, validate inititive
+    if (!benchedEntities[currentEntityIndex]) {
+      if (!validateCurrentInitiative()) {
+        return;
+      }
+    }
 
-    const updatedEntities = entities.map((hero, index) => ({
-      ...hero,
+    const updatedEntities = entities.map((entity, index) => ({
+      ...entity,
       initiative: initiativeRolls[index],
+      skipInCombat: benchedEntities[index] || false,
     }));
 
     updateEntities((prevEntities: Entity[]) =>
@@ -99,8 +105,25 @@ export const InitiativeModal: React.FC<InitiativeModalProps> = ({ isOpen, entiti
     );
 
     setInitiativeRolls([]);
-    setCurrentHeroIndex(0);
+    setCurrentEntityIndex(0);
     onClose();
+  };
+
+  const validateCurrentInitiative = (): boolean => {
+    const initiativeValue = initiativeInputRef.current?.value;
+
+    if (initiativeValue === '') {
+      toast({
+        title: 'Warning',
+        description: 'Please enter a valid initiative value.',
+        status: 'warning',
+        duration: 3000,
+        isClosable: true,
+      });
+      return false;
+    }
+
+    return true;
   };
 
   return (
@@ -110,20 +133,38 @@ export const InitiativeModal: React.FC<InitiativeModalProps> = ({ isOpen, entiti
         {entities && entities.length > 0 ? (
           <>
             <ModalHeader textColor="primary.400">
-              What did {entities[currentHeroIndex]?.name} roll for initiative?
+              What did {entities[currentEntityIndex]?.name} roll for initiative?
             </ModalHeader>
-            <ModalBody>
+
+            <ModalBody pt="0">
+              <Flex alignItems="flex-start" gap="2">
+                <Checkbox
+                  isChecked={benchedEntities[currentEntityIndex]}
+                  onChange={(e) => handleSkipEntityChange(e.target.checked)}
+                />
+
+                <FormLabel display="inline-flex" gap="2" textColor="primary.400">
+                  Bench {entities[currentEntityIndex]?.name}
+                  <Tooltip
+                    label="If you bench an entity, it will not be included in the combat initiative order."
+                    placement="top"
+                  >
+                    <FaQuestionCircle />
+                  </Tooltip>
+                </FormLabel>
+              </Flex>
               <Input
-                ref={inputRef} // Attach ref to the input
+                ref={initiativeInputRef} // Attach ref to the input
                 type="number"
                 textColor="primary.400"
                 placeholder="Enter initiative"
-                value={initiativeRolls[currentHeroIndex] ?? ''}
+                value={initiativeRolls[currentEntityIndex] ?? ''}
                 onChange={handleInitiativeChange}
                 required={true}
+                disabled={benchedEntities[currentEntityIndex]}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
-                    if (currentHeroIndex === entities.length - 1) {
+                    if (currentEntityIndex === entities.length - 1) {
                       handleDone();
                     } else {
                       handleNextHero();
@@ -134,24 +175,24 @@ export const InitiativeModal: React.FC<InitiativeModalProps> = ({ isOpen, entiti
               />
             </ModalBody>
             <ModalFooter justifyContent="space-between">
-              {currentHeroIndex > 0 && (
+              {currentEntityIndex > 0 && (
                 <Button
                   leftIcon={<ChevronLeftIcon />}
                   lineHeight={5}
                   onClick={handlePreviousHero}
                   data-testid="init-modal-back-btn"
                 >
-                  Back ({entities[currentHeroIndex - 1]?.name})
+                  Back ({entities[currentEntityIndex - 1]?.name})
                 </Button>
               )}
-              {currentHeroIndex < entities.length - 1 ? (
+              {currentEntityIndex < entities.length - 1 ? (
                 <Button
                   rightIcon={<ChevronRightIcon />}
                   lineHeight={5}
                   onClick={handleNextHero}
                   data-testid="init-modal-next-btn"
                 >
-                  Next ({entities[currentHeroIndex + 1]?.name})
+                  Next ({entities[currentEntityIndex + 1]?.name})
                 </Button>
               ) : (
                 <Button colorScheme="green" onClick={() => handleDone()} data-testid="init-modal-done-btn">
