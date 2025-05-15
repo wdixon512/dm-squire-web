@@ -207,6 +207,11 @@ export const DMHelperContextProvider = ({ children }) => {
     profileUrl: string | undefined
   ): boolean => {
     const hero = entityService.addHero(name, health, initiative, profileUrl, entities);
+
+    if (profileUrl) {
+      roomService.updateHeroProfilePictures();
+    }
+
     if (!hero) return false;
 
     setEntities([...entities, hero]);
@@ -229,6 +234,10 @@ export const DMHelperContextProvider = ({ children }) => {
   };
 
   const updateEntity = (entity: Entity): void => {
+    if (entity.type === EntityType.HERO && entity.dndBeyondProfileUrl) {
+      roomService.updateHeroProfilePictures();
+    }
+
     setEntities(entityService.updateEntity(entities, entity));
     scheduleCommitRoomChanges();
   };

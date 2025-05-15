@@ -1,5 +1,5 @@
-import { Text, Flex, Button, FlexProps, Icon, Tooltip, Input } from '@chakra-ui/react';
-import { FaUserEdit, FaEye, FaEyeSlash, FaCross, FaArrowUp } from 'react-icons/fa';
+import { Text, Flex, Button, FlexProps, Icon, Tooltip, Input, Image, Circle } from '@chakra-ui/react';
+import { FaUserEdit, FaEye, FaEyeSlash, FaArrowUp } from 'react-icons/fa';
 import { SiBlockbench } from 'react-icons/si';
 import AnimatedFlex from '@components/global/AnimatedFlex';
 import React, { useContext } from 'react';
@@ -73,16 +73,19 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
       {...props}
     >
       <Flex w="full">
-        <Flex alignItems="center" flex="1" py={2}>
-          <Text>
-            {showInitiative && entity.initiative && (
-              <Text as="span" fontWeight="800" data-testid={`${entity.id}-initiative`}>
-                ({entity.initiative})
-              </Text>
-            )}
-            <Text as="span" fontWeight="800" textColor={props.textColor} data-testid={`${entity.id}-name`}>
-              &nbsp;{entityName}
+        <Flex alignItems="center" flex="1" gap="2" py={2}>
+          {entity.profilePictureUrl && (
+            <Circle size="32px" overflow="hidden">
+              <Image src={entity.profilePictureUrl} alt={`${entity.name} profile pic`} />
+            </Circle>
+          )}
+          {showInitiative && entity.initiative && (
+            <Text as="span" fontWeight="800" data-testid={`${entity.id}-initiative`}>
+              ({entity.initiative})
             </Text>
+          )}
+          <Text as="span" fontWeight="800" textColor={props.textColor} data-testid={`${entity.id}-name`}>
+            &nbsp;{entityName}
           </Text>
         </Flex>
         {showHealth && !entity.skipInCombat && !readOnly && (

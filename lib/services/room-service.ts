@@ -111,4 +111,17 @@ export class RoomService {
 
     return null;
   }
+
+  async updateHeroProfilePictures(): Promise<void> {
+    // Fire and forget - don't await the response
+    fetch('/api/scrapeProfilePages')
+      .then((response) => {
+        if (!response.ok) {
+          console.error(`Failed to update profile pictures: ${response.statusText}`);
+        }
+      })
+      .catch((error) => {
+        console.error('Error updating hero profile pictures:', error);
+      });
+  }
 }
