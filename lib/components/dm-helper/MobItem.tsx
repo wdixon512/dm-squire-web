@@ -36,23 +36,10 @@ export const MobItem: React.FC<MobItemProps> = ({ mob, handleDrop, textColor, sh
     updateEntity({ ...mob, health: newHealth });
   };
 
-  // On component mount, fetch the detailed mob data
-  useEffect(() => {
-    if (!characterSheetId) {
-      return;
-    }
-    getMobById(characterSheetId).then((mob) => {
-      if (mob) {
-        setDetailedMob(mob);
-      }
-    });
-  }, [characterSheetId]);
-
   return (
     <>
       <EntityItemBase
         entity={mob}
-        detailedEntity={detailedMob}
         entityName={hasMultipleMobsWithSameName(mob.name) ? `${mob.name} #${mob.number}` : mob.name}
         textColor={textColor}
         showInitiative={true}

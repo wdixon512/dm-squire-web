@@ -184,12 +184,11 @@ export const DMHelperContextProvider = ({ children }) => {
     name: string,
     health: number | undefined,
     initiative: number | undefined,
+    profilePictureUrl?: string,
     isLibraryMob?: boolean
   ): boolean => {
-    const mob = entityService.addMob(name, health, initiative, isLibraryMob, entities);
+    const mob = entityService.addMob(name, health, initiative, profilePictureUrl, isLibraryMob, entities);
     if (!mob) return false;
-
-    updateProfileFromLibrary(mob);
 
     const updatedEntities = [...entities, mob];
     setEntities(updatedEntities);
@@ -222,9 +221,10 @@ export const DMHelperContextProvider = ({ children }) => {
     health: number | undefined,
     initiative: number | undefined,
     mobLibraryId?: string,
-    profileUrl?: string
+    profileUrl?: string,
+    profilePictureUrl?: string
   ): boolean => {
-    const ally = entityService.addAlly(name, health, initiative, mobLibraryId, profileUrl, entities);
+    const ally = entityService.addAlly(name, health, initiative, mobLibraryId, profileUrl, profilePictureUrl, entities);
     if (!ally) return false;
 
     updateProfileFromDndBeyond(ally, profileUrl);
@@ -282,12 +282,6 @@ export const DMHelperContextProvider = ({ children }) => {
   const updateProfileFromDndBeyond = (entity: Entity, profileUrl?: string): void => {
     if (profileUrl && room.id && entity) {
       roomService.updateProfilePictureFromDndBeyond(room.id, entity, profileUrl);
-    }
-  };
-
-  const updateProfileFromLibrary = (entity: Entity): void => {
-    if (room.id && entity) {
-      roomService.updateProfilePictureFromLibrary(room.id, entity);
     }
   };
 

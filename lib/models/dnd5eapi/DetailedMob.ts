@@ -42,6 +42,7 @@ export interface DetailedMob {
     name: string; // Reaction name
     text: string[]; // Reaction description
   }>; // Reactions
+  profilePictureUrl: string; // URL to the monster's profile picture
 }
 
 export interface SummaryMob {

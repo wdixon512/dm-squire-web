@@ -13,6 +13,7 @@ export class EntityService {
     name: string,
     health: number | undefined,
     initiative: number | undefined,
+    profilePictureUrl?: string,
     isLibraryMob?: boolean,
     existingEntities: Entity[] = []
   ): Mob | null {
@@ -26,6 +27,7 @@ export class EntityService {
       health,
       number: getNextEntityNumber(existingEntities, name),
       initiative,
+      profilePictureUrl,
       type: EntityType.MOB,
       isLibraryMob,
     };
@@ -59,6 +61,7 @@ export class EntityService {
     initiative: number | undefined,
     mobLibraryId?: string,
     profileUrl?: string,
+    profilePictureUrl?: string,
     existingEntities: Entity[] = []
   ): Ally | null {
     if (!validateName(name, this.toast)) {
@@ -72,6 +75,7 @@ export class EntityService {
       number: getNextEntityNumber(existingEntities, name),
       initiative,
       dndBeyondProfileUrl: profileUrl,
+      profilePictureUrl,
       type: EntityType.ALLY,
       mobLibraryId,
     };

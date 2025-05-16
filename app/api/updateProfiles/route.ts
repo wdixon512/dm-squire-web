@@ -3,20 +3,14 @@ import { rtdb } from '@services/firebase';
 import { ref, get, update } from 'firebase/database';
 import puppeteer from 'puppeteer';
 import { ProfileUpdateRequestBody } from '@lib/models/dtos/ProfileUpdateResponse';
-import { getServerFirestoreDb } from '@lib/services/firebase-admin-service';
-import { sanitizeMonsterName } from '@lib/util/mobUtils';
-import { DetailedMob } from '@lib/models/dnd5eapi/DetailedMob';
-import { getLibraryProfilePictureUrl } from '@lib/util/dm-helper-utils';
 
 export async function POST(req: NextRequest) {
   try {
-    const { roomId, entityId, entityName, profileUrl, method } = (await req.json()) as ProfileUpdateRequestBody;
+    const { roomId, entityId, profileUrl, method } = (await req.json()) as ProfileUpdateRequestBody;
 
     switch (method) {
       case 'dndbeyond':
         return await updateProfileFromDndBeyond(roomId, entityId, profileUrl);
-      case 'library':
-        return await updateProfileFromLibrary(roomId, entityId, entityName);
       default:
         return NextResponse.json(
           { error: 'Invalid method. Only "dndbeyond" and "library" are supported.' },
@@ -62,45 +56,6 @@ async function updateProfileFromDndBeyond(
   return NextResponse.json({
     message: 'Profile picture updated successfully',
     profilePictureUrl: profilePic,
-  });
-}
-
-async function updateProfileFromLibrary(roomId: string, entityId: string, entityName: string | undefined) {
-  if (!roomId || !entityId || !entityName) {
-    return NextResponse.json(
-      { error: 'Missing required fields: roomId, entityId, and entityName are required' },
-      { status: 400 }
-    );
-  }
-
-  // Get the room's entities
-  const roomRef = ref(rtdb, `rooms/${roomId}/combat/entities`);
-  const entityIndex = await findEntityIndex(roomRef, entityId);
-
-  if (entityIndex === -1) {
-    return NextResponse.json({ error: 'Entity not found in room' }, { status: 404 });
-  }
-
-  const db = getServerFirestoreDb();
-
-  // Query Firestore for the monster by sanitized name
-  const docRef = db.collection('monsters').doc(sanitizeMonsterName(entityName));
-  const snapshot = await docRef.get();
-
-  if (!snapshot.exists) {
-    return new Response(`Monster ${entityName} not found.`, { status: 404 });
-  }
-
-  const monster = snapshot.data() as DetailedMob;
-  const profilePictureUrl = getLibraryProfilePictureUrl(monster.name);
-  // Update the hero's profile picture URL
-  await update(roomRef, {
-    [`${entityIndex}/profilePictureUrl`]: profilePictureUrl,
-  });
-
-  return NextResponse.json({
-    message: 'Profile picture updated successfully',
-    profilePictureUrl: profilePictureUrl,
   });
 }
 

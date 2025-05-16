@@ -5,11 +5,9 @@ import AnimatedFlex from '@components/global/AnimatedFlex';
 import React, { useContext } from 'react';
 import { Entity, EntityType } from '@lib/models/dm-helper/Entity';
 import { DMHelperContext } from '@lib/components/contexts/DMHelperContext';
-import { DetailedMob } from '@lib/models/dnd5eapi/DetailedMob';
 
 interface EntityItemBaseProps extends FlexProps {
   entity: Entity;
-  detailedEntity: DetailedMob | undefined;
   entityName?: string;
   showInitiative?: boolean;
   showRemove?: boolean;
@@ -33,7 +31,6 @@ interface EntityItemBaseProps extends FlexProps {
 
 export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
   entity,
-  detailedEntity,
   entityName = entity.name,
   showInitiative = true,
   showRemove = false,
@@ -89,15 +86,6 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
           {entity.profilePictureUrl ? (
             <Circle size="32px" overflow="hidden">
               <Image src={entity.profilePictureUrl} alt={`${entity.name} profile pic`} />
-            </Circle>
-          ) : detailedEntity ? (
-            <Circle size="32px" overflow="hidden">
-              <Img
-                src={`/static/images/d&d5e-mobs/${detailedEntity?.name.toLowerCase().replace(/ /g, '-')}.jpg`}
-                alt={detailedEntity.name}
-                mx="auto"
-                objectPosition="center top"
-              />
             </Circle>
           ) : (
             <Circle size="32px" overflow="hidden">

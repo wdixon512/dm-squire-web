@@ -148,37 +148,4 @@ export class RoomService {
         console.error('Error updating hero profile picture:', error);
       });
   }
-
-  async updateProfilePictureFromLibrary(roomId: string, entity: Entity) {
-    // Fire and forget - don't await the response
-    fetch('/api/updateProfiles', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + process.env.API_SECRET,
-      },
-      body: JSON.stringify({
-        roomId,
-        entityId: entity.id,
-        entityName: entity.name,
-        method: 'library',
-      } as ProfileUpdateRequestBody),
-    })
-      .then((response) => {
-        if (!response.ok) {
-          console.error(`Failed to update profile picture: ${response.statusText}`);
-        } else {
-          this.toast({
-            title: 'Profile picture updated',
-            description: 'Profile picture updated successfully. Refresh the page to see changes.',
-            status: 'info',
-            duration: 5000,
-            isClosable: true,
-          });
-        }
-      })
-      .catch((error) => {
-        console.error('Error updating hero profile picture:', error);
-      });
-  }
 }

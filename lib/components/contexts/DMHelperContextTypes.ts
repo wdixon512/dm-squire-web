@@ -15,7 +15,13 @@ export interface DMHelperContextType {
   updateEntity: (entity: Entity) => void;
   updateEntities: React.Dispatch<React.SetStateAction<Entity[]>>;
   removeEntity: (entity: Entity) => void;
-  addMob: (name: string, health: number | undefined, initiative: number | undefined, isLibraryMob?: boolean) => boolean;
+  addMob: (
+    name: string,
+    health: number | undefined,
+    initiative: number | undefined,
+    profilePictureUrl?: string,
+    isLibraryMob?: boolean
+  ) => boolean;
   addHero: (
     name: string,
     health: number | undefined,
@@ -26,7 +32,9 @@ export interface DMHelperContextType {
     name: string,
     health: number | undefined,
     initiative: number | undefined,
-    characterSheetId?: string
+    mobLibraryId?: string,
+    profileUrl?: string,
+    profilePictureUrl?: string
   ) => boolean;
   resetCombat: () => void;
   mobFavorites: Mob[];
