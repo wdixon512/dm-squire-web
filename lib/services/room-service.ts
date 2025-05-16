@@ -117,7 +117,7 @@ export class RoomService {
 
   async updateProfilePicture(roomId: string, entity: Entity, profileUrl: string): Promise<void> {
     // Fire and forget - don't await the response
-    fetch('/api/scrapeProfilePages', {
+    fetch('/api/updateProfiles', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

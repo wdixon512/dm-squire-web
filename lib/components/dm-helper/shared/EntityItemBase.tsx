@@ -88,7 +88,7 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
             &nbsp;{entityName}
           </Text>
         </Flex>
-        {showHealth && !entity.skipInCombat && !readOnly && (
+        {showHealth && !readOnly && (
           <Flex flex="1" alignItems="center" justifyContent={'flex-end'} mr="3">
             <Text>Health:</Text>
             <Input
@@ -105,12 +105,12 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
         )}
       </Flex>
       <Flex gap={2}>
-        {showKill && !entity.skipInCombat && !readOnly && (
+        {showKill && !readOnly && (
           <Button variant="redSolid" onClick={onRemove} data-testid={removeButtonTestId ?? `${entity.id}-kill`}>
             Kill
           </Button>
         )}
-        {showRemove && !entity.skipInCombat && onRemove && (
+        {showRemove && onRemove && (
           <Button variant="redSolid" onClick={onRemove} data-testid={removeButtonTestId ?? `${entity.id}-remove`}>
             Remove
           </Button>
