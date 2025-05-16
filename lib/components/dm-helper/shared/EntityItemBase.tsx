@@ -1,13 +1,15 @@
-import { Text, Flex, Button, FlexProps, Icon, Tooltip, Input, Image, Circle } from '@chakra-ui/react';
+import { Text, Flex, Button, FlexProps, Icon, Tooltip, Input, Image, Circle, Img } from '@chakra-ui/react';
 import { FaUserEdit, FaEye, FaEyeSlash, FaArrowUp } from 'react-icons/fa';
 import { SiBlockbench } from 'react-icons/si';
 import AnimatedFlex from '@components/global/AnimatedFlex';
 import React, { useContext } from 'react';
 import { Entity, EntityType } from '@lib/models/dm-helper/Entity';
 import { DMHelperContext } from '@lib/components/contexts/DMHelperContext';
+import { DetailedMob } from '@lib/models/dnd5eapi/DetailedMob';
 
 interface EntityItemBaseProps extends FlexProps {
   entity: Entity;
+  detailedEntity: DetailedMob | undefined;
   entityName?: string;
   showInitiative?: boolean;
   showRemove?: boolean;
@@ -31,6 +33,7 @@ interface EntityItemBaseProps extends FlexProps {
 
 export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
   entity,
+  detailedEntity,
   entityName = entity.name,
   showInitiative = true,
   showRemove = false,
@@ -74,14 +77,36 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
     >
       <Flex w="full">
         <Flex alignItems="center" flex="1" gap="2" py={2}>
+          {/* Initiative */}
           {showInitiative && entity.initiative && (
-            <Text as="span" fontWeight="800" data-testid={`${entity.id}-initiative`}>
-              ({entity.initiative})
+            <Text as="span" fontWeight="800" data-testid={`${entity.id}-initiative`} w="10">
+              {entity.initiative < 10 && <span>&nbsp;</span>}
+              {`(${entity.initiative})`}
             </Text>
           )}
-          {entity.profilePictureUrl && (
+
+          {/* Profile Picture */}
+          {entity.profilePictureUrl ? (
             <Circle size="32px" overflow="hidden">
               <Image src={entity.profilePictureUrl} alt={`${entity.name} profile pic`} />
+            </Circle>
+          ) : detailedEntity ? (
+            <Circle size="32px" overflow="hidden">
+              <Img
+                src={`/static/images/d&d5e-mobs/${detailedEntity?.name.toLowerCase().replace(/ /g, '-')}.jpg`}
+                alt={detailedEntity.name}
+                mx="auto"
+                objectPosition="center top"
+              />
+            </Circle>
+          ) : (
+            <Circle size="32px" overflow="hidden">
+              <Img
+                src={`/static/images/unknown-profile-pic.png`}
+                alt="Unknown profile pic"
+                mx="auto"
+                objectPosition="center top"
+              />
             </Circle>
           )}
           <Text as="span" fontWeight="800" textColor={props.textColor} data-testid={`${entity.id}-name`}>

@@ -7,3 +7,13 @@ export interface ProfileUpdateResponse {
     profilesUpdated: number;
   }>;
 }
+
+export interface ProfileUpdateRequestBody {
+  roomId: string;
+  entityId: string;
+  method: UpdateProfileMethod;
+  entityName?: string;
+  profileUrl?: string;
+}
+
+export type UpdateProfileMethod = 'dndbeyond' | 'library';

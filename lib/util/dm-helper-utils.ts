@@ -15,6 +15,11 @@ export const getNextEntityNumber = (entities: Entity[], name: string) => {
   return number;
 };
 
+export const getLibraryProfilePictureUrl = (detailedMobName: string): string => {
+  const formattedName = detailedMobName.toLowerCase().replace(/ /g, '-');
+  return `/static/images/d&d5e-mobs/${formattedName}.jpg`;
+};
+
 // Validation functions
 export const validateName = (name: string, toast: (options: UseToastOptions) => ToastId | undefined): boolean => {
   if (name.trim() === '') {

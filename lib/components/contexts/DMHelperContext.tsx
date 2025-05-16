@@ -184,13 +184,12 @@ export const DMHelperContextProvider = ({ children }) => {
     name: string,
     health: number | undefined,
     initiative: number | undefined,
-    isLibraryMob?: boolean,
-    profileUrl?: string
+    isLibraryMob?: boolean
   ): boolean => {
     const mob = entityService.addMob(name, health, initiative, isLibraryMob, entities);
     if (!mob) return false;
 
-    updateProfile(mob, profileUrl);
+    updateProfileFromLibrary(mob);
 
     const updatedEntities = [...entities, mob];
     setEntities(updatedEntities);
@@ -212,7 +211,7 @@ export const DMHelperContextProvider = ({ children }) => {
     const hero = entityService.addHero(name, health, initiative, profileUrl, entities);
     if (!hero) return false;
 
-    updateProfile(hero, profileUrl);
+    updateProfileFromDndBeyond(hero, profileUrl);
     setEntities([...entities, hero]);
     scheduleCommitRoomChanges();
     return true;
@@ -228,7 +227,7 @@ export const DMHelperContextProvider = ({ children }) => {
     const ally = entityService.addAlly(name, health, initiative, mobLibraryId, profileUrl, entities);
     if (!ally) return false;
 
-    updateProfile(ally, profileUrl);
+    updateProfileFromDndBeyond(ally, profileUrl);
     setEntities([...entities, ally]);
     scheduleCommitRoomChanges();
     return true;
@@ -238,7 +237,7 @@ export const DMHelperContextProvider = ({ children }) => {
     const { updatedEntities, fieldsUpdated } = entityService.updateEntity(entities, entity);
     console.log('Updated entity:', updatedEntities, fieldsUpdated);
     if (fieldsUpdated?.includes('dndBeyondProfileUrl') && entity.dndBeyondProfileUrl && room.id) {
-      roomService.updateProfilePicture(room.id, entity, entity.dndBeyondProfileUrl);
+      roomService.updateProfilePictureFromDndBeyond(room.id, entity, entity.dndBeyondProfileUrl);
     }
 
     setEntities(updatedEntities);
@@ -280,9 +279,15 @@ export const DMHelperContextProvider = ({ children }) => {
     scheduleCommitRoomChanges();
   };
 
-  const updateProfile = (entity: Entity, profileUrl?: string): void => {
+  const updateProfileFromDndBeyond = (entity: Entity, profileUrl?: string): void => {
     if (profileUrl && room.id && entity) {
-      roomService.updateProfilePicture(room.id, entity, profileUrl);
+      roomService.updateProfilePictureFromDndBeyond(room.id, entity, profileUrl);
+    }
+  };
+
+  const updateProfileFromLibrary = (entity: Entity): void => {
+    if (room.id && entity) {
+      roomService.updateProfilePictureFromLibrary(room.id, entity);
     }
   };
 

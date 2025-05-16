@@ -1,7 +1,7 @@
 'use client';
 
 import { FlexProps, useDisclosure } from '@chakra-ui/react';
-import { useContext, useMemo } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { DMHelperContext } from '../contexts/DMHelperContext';
 import React from 'react';
 import { Mob } from '@lib/models/dm-helper/Mob';
@@ -10,6 +10,8 @@ import EntityDetailModal from './modals/EntityDetailModal';
 import { EntityItemBase } from './shared/EntityItemBase';
 import { EntityType } from '@lib/models/dm-helper/Entity';
 import { sanitizeMonsterName } from '@lib/util/mobUtils';
+import { DetailedMob } from '@lib/models/dnd5eapi/DetailedMob';
+import useDndApi from '@lib/services/dnd5eapi-service';
 
 interface MobItemProps extends FlexProps {
   mob: Mob;
@@ -23,6 +25,9 @@ export const MobItem: React.FC<MobItemProps> = ({ mob, handleDrop, textColor, sh
   const { isOpen: mobDetailIsOpen, onOpen: onMobDetailOpen, onClose: onMobDetailClose } = useDisclosure();
   const characterSheetId = useMemo(() => sanitizeMonsterName(mob.name), [mob.name]);
 
+  const [detailedMob, setDetailedMob] = useState<DetailedMob>();
+  const { getMobById } = useDndApi();
+
   const hasMultipleMobsWithSameName = (mobName: string) => {
     return entities.filter((e) => e.name === mobName && e.type === EntityType.MOB).length > 1;
   };
@@ -31,10 +36,23 @@ export const MobItem: React.FC<MobItemProps> = ({ mob, handleDrop, textColor, sh
     updateEntity({ ...mob, health: newHealth });
   };
 
+  // On component mount, fetch the detailed mob data
+  useEffect(() => {
+    if (!characterSheetId) {
+      return;
+    }
+    getMobById(characterSheetId).then((mob) => {
+      if (mob) {
+        setDetailedMob(mob);
+      }
+    });
+  }, [characterSheetId]);
+
   return (
     <>
       <EntityItemBase
         entity={mob}
+        detailedEntity={detailedMob}
         entityName={hasMultipleMobsWithSameName(mob.name) ? `${mob.name} #${mob.number}` : mob.name}
         textColor={textColor}
         showInitiative={true}

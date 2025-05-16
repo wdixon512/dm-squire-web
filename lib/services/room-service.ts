@@ -8,6 +8,7 @@ import { auth, rtdb } from '@services/firebase';
 import { ref, get, set, update, push, onValue, orderByChild, equalTo, query } from 'firebase/database';
 import { sanitizeData } from '@lib/util/firebase-utils';
 import { ToastId, UseToastOptions } from '@chakra-ui/react';
+import { ProfileUpdateRequestBody } from '@lib/models/dtos/ProfileUpdateResponse';
 
 export class RoomService {
   constructor(private toast: (options: UseToastOptions) => ToastId | undefined) {}
@@ -115,7 +116,7 @@ export class RoomService {
     return null;
   }
 
-  async updateProfilePicture(roomId: string, entity: Entity, profileUrl: string): Promise<void> {
+  async updateProfilePictureFromDndBeyond(roomId: string, entity: Entity, profileUrl: string): Promise<void> {
     // Fire and forget - don't await the response
     fetch('/api/updateProfiles', {
       method: 'POST',
@@ -123,7 +124,45 @@ export class RoomService {
         'Content-Type': 'application/json',
         Authorization: 'Bearer ' + process.env.API_SECRET,
       },
-      body: JSON.stringify({ roomId, entityId: entity.id, profileUrl }),
+      body: JSON.stringify({
+        roomId,
+        entityId: entity.id,
+        profileUrl,
+        method: 'dndbeyond',
+      } as ProfileUpdateRequestBody),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          console.error(`Failed to update profile picture: ${response.statusText}`);
+        } else {
+          this.toast({
+            title: 'Profile picture updated',
+            description: 'Profile picture updated successfully. Refresh the page to see changes.',
+            status: 'info',
+            duration: 5000,
+            isClosable: true,
+          });
+        }
+      })
+      .catch((error) => {
+        console.error('Error updating hero profile picture:', error);
+      });
+  }
+
+  async updateProfilePictureFromLibrary(roomId: string, entity: Entity) {
+    // Fire and forget - don't await the response
+    fetch('/api/updateProfiles', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + process.env.API_SECRET,
+      },
+      body: JSON.stringify({
+        roomId,
+        entityId: entity.id,
+        entityName: entity.name,
+        method: 'library',
+      } as ProfileUpdateRequestBody),
     })
       .then((response) => {
         if (!response.ok) {
