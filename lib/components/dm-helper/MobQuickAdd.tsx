@@ -14,7 +14,7 @@ export const MobQuickAdd = (props: FlexProps) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleAddMob = (mob: Mob) => {
-    addMob(mob.name, mob.health, mob.initiative, mob.isLibraryMob);
+    addMob(mob.name, mob.health, mob.initiative, mob.profilePictureUrl, mob.isLibraryMob);
   };
 
   const handleRemoveFavorite = (mob: Mob) => {
