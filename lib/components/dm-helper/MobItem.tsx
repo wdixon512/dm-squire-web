@@ -1,7 +1,7 @@
 'use client';
 
 import { FlexProps, useDisclosure } from '@chakra-ui/react';
-import { useContext, useMemo } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 import { DMHelperContext } from '../contexts/DMHelperContext';
 import React from 'react';
 import { Mob } from '@lib/models/dm-helper/Mob';
@@ -10,6 +10,8 @@ import EntityDetailModal from './modals/EntityDetailModal';
 import { EntityItemBase } from './shared/EntityItemBase';
 import { EntityType } from '@lib/models/dm-helper/Entity';
 import { sanitizeMonsterName } from '@lib/util/mobUtils';
+import { DetailedMob } from '@lib/models/dnd5eapi/DetailedMob';
+import useDndApi from '@lib/services/dnd5eapi-service';
 
 interface MobItemProps extends FlexProps {
   mob: Mob;
@@ -18,17 +20,20 @@ interface MobItemProps extends FlexProps {
 }
 
 export const MobItem: React.FC<MobItemProps> = ({ mob, handleDrop, textColor, showBench = true, ...props }) => {
-  const { entities, removeEntity, updateEntities, readOnlyRoom } = useContext(DMHelperContext);
+  const { entities, removeEntity, updateEntity, readOnlyRoom } = useContext(DMHelperContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen: mobDetailIsOpen, onOpen: onMobDetailOpen, onClose: onMobDetailClose } = useDisclosure();
   const characterSheetId = useMemo(() => sanitizeMonsterName(mob.name), [mob.name]);
+
+  const [detailedMob, setDetailedMob] = useState<DetailedMob>();
+  const { getMobById } = useDndApi();
 
   const hasMultipleMobsWithSameName = (mobName: string) => {
     return entities.filter((e) => e.name === mobName && e.type === EntityType.MOB).length > 1;
   };
 
   const updateHealth = (mob: Mob, newHealth) => {
-    updateEntities(entities.map((m) => (m.id === mob.id ? { ...m, health: newHealth } : m)));
+    updateEntity({ ...mob, health: newHealth });
   };
 
   return (

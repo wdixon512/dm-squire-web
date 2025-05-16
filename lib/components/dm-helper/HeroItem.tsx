@@ -7,6 +7,8 @@ import React from 'react';
 import { Hero } from '@lib/models/dm-helper/Hero';
 import EntityEditModal from './modals/EntityEditModal';
 import { EntityItemBase } from './shared/EntityItemBase';
+import EntityDetailModal from './modals/EntityDetailModal';
+import HeroDetailModal from './modals/HeroDetailModal';
 
 interface HeroItemProps extends FlexProps {
   hero: Hero;
@@ -24,6 +26,7 @@ export const HeroItem: React.FC<HeroItemProps> = ({
 }) => {
   const { removeEntity, readOnlyRoom } = useContext(DMHelperContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: heroDetailIsOpen, onOpen: onHeroDetailOpen, onClose: onHeroDetailClose } = useDisclosure();
 
   return (
     <>
@@ -31,14 +34,21 @@ export const HeroItem: React.FC<HeroItemProps> = ({
         entity={hero}
         showInitiative={showInitiative}
         showRemove={showRemove}
+        showDetails={true}
         showBench={showBench}
         onRemove={() => removeEntity(hero)}
         onEdit={onOpen}
+        onDetailsOpen={onHeroDetailOpen}
         textColor={textColor ?? 'interactive.200'}
         readOnly={readOnlyRoom}
+        canViewDetails={!!hero.dndBeyondProfileUrl}
         editTooltipLabel="Update Hero Initiative"
       />
-      <EntityEditModal entity={hero} isOpen={isOpen} onClose={onClose} />
+      <EntityEditModal entity={hero} isOpen={isOpen} onClose={onClose} showProfileUrl={true} />
+
+      {!!hero.dndBeyondProfileUrl && (
+        <HeroDetailModal profileUrl={hero.dndBeyondProfileUrl} isOpen={heroDetailIsOpen} onClose={onHeroDetailClose} />
+      )}
     </>
   );
 };

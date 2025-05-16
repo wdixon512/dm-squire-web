@@ -38,7 +38,6 @@ export const useDndApi = (): UseDndApiHook => {
   // Fetch details of a specific monster by its index
   const getMobByName = async (mobName: string): Promise<DetailedMob | null> => {
     const mobId = sanitizeMonsterName(mobName);
-    console.log('mobId', mobId);
 
     return cacheLoadAsync(mobId, async () => {
       try {

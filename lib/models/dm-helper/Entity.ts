@@ -1,3 +1,5 @@
+import { IProfile } from './IProfile';
+
 export enum EntityType {
   MOB = 'mob',
   HERO = 'hero',
@@ -5,7 +7,7 @@ export enum EntityType {
   ENTITY = 'entity',
 }
 
-export type Entity = {
+export type Entity = IProfile & {
   id: string;
   apiUrl?: string;
   name: string;

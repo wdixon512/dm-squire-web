@@ -23,7 +23,7 @@ const MobForm: React.FC = () => {
     const parsedInitiative = initiative ? parseInt(initiative, 10) : undefined;
 
     if (mobName) {
-      addMob(mobName, parsedHealth, parsedInitiative, !!selectedMob);
+      addMob(mobName, parsedHealth, parsedInitiative, selectedMob?.profilePictureUrl, !!selectedMob);
       setMobName('');
       setHealth('');
       setInitiative('');

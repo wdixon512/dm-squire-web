@@ -6,6 +6,7 @@ import { DMHelperContext } from '../contexts/DMHelperContext';
 import MobItem from './MobItem';
 import { EntityType } from '@lib/models/dm-helper/Entity';
 import { Mob } from '@lib/models/dm-helper/Mob';
+import { sortEntitiesByInitiative } from '@lib/util/mobUtils';
 
 export const MobList = () => {
   const { entities, isClient } = useContext(DMHelperContext);
@@ -42,7 +43,9 @@ export const MobList = () => {
               No enemies added yet.
             </Box>
           ) : (
-            mobs.map((mob, i) => <MobItem key={i} mob={mob} textColor="marioRed.200" showBench={false} />)
+            sortEntitiesByInitiative(mobs).map((mob, i) => (
+              <MobItem key={i} mob={mob as Mob} textColor="marioRed.200" showBench={false} />
+            ))
           )}
         </List>
       )}

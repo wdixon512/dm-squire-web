@@ -7,13 +7,14 @@ import { EntityBaseForm } from './shared/EntityBaseForm';
 import { MobTypeaheadFormControl } from './shared/MobTypeaheadFormControl';
 import { DetailedMob } from '@lib/models/dnd5eapi/DetailedMob';
 import { sanitizeMonsterName } from '@lib/util/mobUtils';
-import { FaQuestion, FaQuestionCircle } from 'react-icons/fa';
+import { FaQuestionCircle } from 'react-icons/fa';
 
 const AllyForm: React.FC = () => {
   const { addAlly } = React.useContext(DMHelperContext);
   const [allyName, setAllyName] = useState('');
-  const [allyCharacterSheetId, setAllyCharacterSheetId] = useState('');
-  const [allyCharacterSheetDisplayName, setAllyCharacterSheetDisplayName] = useState('');
+  const [mobLibraryId, setMobLibraryId] = useState('');
+  const [libraryDisplayName, setLibraryDisplayName] = useState('');
+  const [profileUrl, setProfileUrl] = useState('');
 
   const [health, setHealth] = useState('');
   const [initiative, setInitiative] = useState('');
@@ -25,17 +26,22 @@ const AllyForm: React.FC = () => {
         allyName,
         health ? parseInt(health, 10) : undefined,
         initiative ? parseInt(initiative, 10) : undefined,
-        allyCharacterSheetId
+        mobLibraryId,
+        profileUrl,
+        selectedMob?.profilePictureUrl
       );
       setAllyName('');
       setHealth('');
       setInitiative('');
+      setLibraryDisplayName('');
+      setProfileUrl('');
       setSelectedMob(null);
     }
   };
 
   const handleCharacterSheetSelect = (mob: DetailedMob) => {
-    setAllyCharacterSheetId(sanitizeMonsterName(mob.name));
+    setSelectedMob(mob);
+    setMobLibraryId(sanitizeMonsterName(mob.name));
   };
 
   return (
@@ -71,8 +77,8 @@ const AllyForm: React.FC = () => {
         />
       </FormControl>
       <MobTypeaheadFormControl
-        value={allyCharacterSheetDisplayName}
-        onChange={setAllyCharacterSheetDisplayName}
+        value={libraryDisplayName}
+        onChange={setLibraryDisplayName}
         onSelect={handleCharacterSheetSelect}
         selectedMob={selectedMob}
         label={
@@ -91,6 +97,27 @@ const AllyForm: React.FC = () => {
         selectedLabelText="Selected character sheet:"
         inputDataTestId="ally-character-sheet-input"
       />
+      <FormControl>
+        <FormLabel display="inline-flex" color="white" gap="2">
+          Profile URL
+          <Tooltip
+            label="Enter this hero's D&D Beyond profile URL. Set your character's privacy setting to `Public` to allow DMSquire more access."
+            placement="top"
+            hasArrow
+          >
+            <FaQuestionCircle />
+          </Tooltip>
+        </FormLabel>
+        <Input
+          type="text"
+          value={profileUrl}
+          onChange={(e) => setProfileUrl(e.target.value)}
+          color="white"
+          textFillColor={'whiteAlpha.800'}
+          placeholder="Enter Profile URL"
+          data-testid="profile-input"
+        />
+      </FormControl>
     </EntityBaseForm>
   );
 };

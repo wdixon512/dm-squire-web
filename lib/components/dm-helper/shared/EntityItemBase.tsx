@@ -1,5 +1,5 @@
-import { Text, Flex, Button, FlexProps, Icon, Tooltip, Input } from '@chakra-ui/react';
-import { FaUserEdit, FaEye, FaEyeSlash, FaCross, FaArrowUp } from 'react-icons/fa';
+import { Text, Flex, Button, FlexProps, Icon, Tooltip, Input, Image, Circle, Img } from '@chakra-ui/react';
+import { FaUserEdit, FaEye, FaEyeSlash, FaArrowUp } from 'react-icons/fa';
 import { SiBlockbench } from 'react-icons/si';
 import AnimatedFlex from '@components/global/AnimatedFlex';
 import React, { useContext } from 'react';
@@ -51,14 +51,14 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
   canViewDetails = false,
   ...props
 }) => {
-  const { updateEntities } = useContext(DMHelperContext);
+  const { updateEntity } = useContext(DMHelperContext);
 
   const onUnbench = () => {
-    updateEntities((entities) => entities.map((e) => (e.id === entity.id ? { ...e, skipInCombat: false } : e)));
+    updateEntity({ ...entity, skipInCombat: false });
   };
 
   const onBench = () => {
-    updateEntities((entities) => entities.map((e) => (e.id === entity.id ? { ...e, skipInCombat: true } : e)));
+    updateEntity({ ...entity, skipInCombat: true });
   };
 
   return (
@@ -73,19 +73,35 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
       {...props}
     >
       <Flex w="full">
-        <Flex alignItems="center" flex="1" py={2}>
-          <Text>
-            {showInitiative && entity.initiative && (
-              <Text as="span" fontWeight="800" data-testid={`${entity.id}-initiative`}>
-                ({entity.initiative})
-              </Text>
-            )}
-            <Text as="span" fontWeight="800" textColor={props.textColor} data-testid={`${entity.id}-name`}>
-              &nbsp;{entityName}
+        <Flex alignItems="center" flex="1" gap="2" py={2}>
+          {/* Initiative */}
+          {showInitiative && entity.initiative && (
+            <Text as="span" fontWeight="800" data-testid={`${entity.id}-initiative`} w="10">
+              {entity.initiative < 10 && <span>&nbsp;</span>}
+              {`(${entity.initiative})`}
             </Text>
+          )}
+
+          {/* Profile Picture */}
+          {entity.profilePictureUrl ? (
+            <Circle size="32px" overflow="hidden">
+              <Image src={entity.profilePictureUrl} alt={`${entity.name} profile pic`} />
+            </Circle>
+          ) : (
+            <Circle size="32px" overflow="hidden">
+              <Img
+                src={`/static/images/unknown-profile-pic.png`}
+                alt="Unknown profile pic"
+                mx="auto"
+                objectPosition="center top"
+              />
+            </Circle>
+          )}
+          <Text as="span" fontWeight="800" textColor={props.textColor} data-testid={`${entity.id}-name`}>
+            &nbsp;{entityName}
           </Text>
         </Flex>
-        {showHealth && !entity.skipInCombat && !readOnly && (
+        {showHealth && !readOnly && (
           <Flex flex="1" alignItems="center" justifyContent={'flex-end'} mr="3">
             <Text>Health:</Text>
             <Input
@@ -102,12 +118,12 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
         )}
       </Flex>
       <Flex gap={2}>
-        {showKill && !entity.skipInCombat && !readOnly && (
+        {showKill && !readOnly && (
           <Button variant="redSolid" onClick={onRemove} data-testid={removeButtonTestId ?? `${entity.id}-kill`}>
             Kill
           </Button>
         )}
-        {showRemove && !entity.skipInCombat && onRemove && (
+        {showRemove && onRemove && (
           <Button variant="redSolid" onClick={onRemove} data-testid={removeButtonTestId ?? `${entity.id}-remove`}>
             Remove
           </Button>

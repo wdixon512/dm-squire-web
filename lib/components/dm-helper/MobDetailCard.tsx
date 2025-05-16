@@ -2,6 +2,7 @@
 
 import { Box, Img, Heading, Text, Divider, Flex, List, ListItem, Badge } from '@chakra-ui/react';
 import { DetailedMob } from '@lib/models/dnd5eapi/DetailedMob';
+import { getLibraryProfilePictureUrl } from '@lib/util/dm-helper-utils';
 import { toKebabCase } from '@lib/util/js-utils';
 
 interface MobDetailCardProps {
@@ -21,13 +22,7 @@ export const MobDetailCard: React.FC<MobDetailCardProps> = ({ mob }) => {
         bg="gray.50"
         data-testid={`detail-card-${toKebabCase(mob?.name.toLowerCase())}`}
       >
-        <Img
-          src={`/static/images/d&d5e-mobs/${mob?.name.toLowerCase().replace(/ /g, '-')}.jpg`}
-          alt={mob.name}
-          mb={3}
-          mx="auto"
-          display="block"
-        />
+        <Img src={getLibraryProfilePictureUrl(mob.name)} alt={mob.name} mb={3} mx="auto" display="block" />
         <Heading size="lg" mb={3} textAlign="center" variant="dark">
           {mob.name}
         </Heading>

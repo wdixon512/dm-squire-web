@@ -29,12 +29,12 @@ const AllyItem: React.FC<AllyItemProps> = ({
   showBench = true,
   onRemove,
 }) => {
-  const { removeEntity, readOnlyRoom, updateEntities } = useContext(DMHelperContext);
+  const { removeEntity, readOnlyRoom, updateEntity } = useContext(DMHelperContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen: detailIsOpen, onOpen: onDetailOpen, onClose: onDetailClose } = useDisclosure();
 
   const updateHealth = (ally: Ally, newHealth) => {
-    updateEntities((entities) => entities.map((a) => (a.id === ally.id ? { ...a, health: newHealth } : a)));
+    updateEntity({ ...ally, health: newHealth });
   };
 
   return (
@@ -53,12 +53,17 @@ const AllyItem: React.FC<AllyItemProps> = ({
         onRemove={onRemove || (() => removeEntity(ally))}
         onHealthChange={(value) => updateHealth(ally, value === '' ? '' : parseInt(value, 10))}
         onDetailsOpen={onDetailOpen}
-        canViewDetails={!!ally.characterSheetId}
+        canViewDetails={!!ally.mobLibraryId || !!ally.dndBeyondProfileUrl}
         editTooltipLabel="Update Ally"
       />
-      <EntityEditModal entity={ally} isOpen={isOpen} onClose={onClose} showHealth={showHealth} />
-      {ally.characterSheetId && (
-        <EntityDetailModal characterSheetId={ally.characterSheetId} isOpen={detailIsOpen} onClose={onDetailClose} />
+      <EntityEditModal entity={ally} isOpen={isOpen} onClose={onClose} showHealth={showHealth} showProfileUrl={true} />
+      {ally.mobLibraryId && (
+        <EntityDetailModal
+          characterSheetId={ally.mobLibraryId}
+          profileUrl={ally.dndBeyondProfileUrl}
+          isOpen={detailIsOpen}
+          onClose={onDetailClose}
+        />
       )}
     </>
   );
