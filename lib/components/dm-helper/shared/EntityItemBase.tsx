@@ -103,7 +103,7 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
         </Flex>
         {showHealth && !readOnly && (
           <Flex flex="1" alignItems="center" justifyContent={'flex-end'} mr="3">
-            <Text>Health:</Text>
+            <Text>HP:</Text>
             <Input
               type="number"
               textColor="white"
