@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { rtdb } from '@services/firebase';
 import { ref, get, update } from 'firebase/database';
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-core';
 import { ProfileUpdateRequestBody } from '@lib/models/dtos/ProfileUpdateResponse';
 
 export async function POST(req: NextRequest) {
@@ -35,6 +35,15 @@ async function updateProfileFromDndBeyond(
     );
   }
 
+  if (!validateScrapeUrl(profileUrl)) {
+    return NextResponse.json(
+      {
+        error: 'Invalid URL. Please provide a valid D&D Beyond character profile URL.',
+      },
+      { status: 400 }
+    );
+  }
+
   const profilePic = await scrapeProfilePicture(profileUrl);
   if (!profilePic) {
     return NextResponse.json({ error: 'Failed to scrape profile picture' }, { status: 404 });
@@ -59,13 +68,29 @@ async function updateProfileFromDndBeyond(
   });
 }
 
+function validateScrapeUrl(url: string): boolean {
+  const allowedDomains = ['dndbeyond.com'];
+
+  if (!allowedDomains.some((domain) => url.includes(domain))) {
+    return false;
+  }
+
+  return true;
+}
+
 async function scrapeProfilePicture(url: string): Promise<string | null> {
-  console.log('scraping information from:', url);
-  const browser = await puppeteer.launch({ headless: true });
+  console.log('Scraping profile picture from:', url);
+  // keep timer
+  const startTime = Date.now();
+
+  const browser = await puppeteer.connect({
+    browserWSEndpoint: `wss://chrome.browserless.io?token=${process.env.BLESS_TOKEN}`,
+  });
+
   const page = await browser.newPage();
 
   try {
-    await page.goto(url, { waitUntil: 'networkidle2' });
+    await page.goto(url, { waitUntil: 'networkidle2', timeout: 15000 });
 
     // First, try to get the portrait by class
     let imgSrc = await page
@@ -86,6 +111,10 @@ async function scrapeProfilePicture(url: string): Promise<string | null> {
     console.error(`Error scraping rendered profile picture for ${url}:`, error);
     return null;
   } finally {
+    const endTime = Date.now();
+    const elapsedTime = endTime - startTime;
+    console.log(`Scraping took ${elapsedTime} ms`);
+
     await browser.close();
   }
 }
