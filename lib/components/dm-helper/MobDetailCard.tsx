@@ -1,5 +1,6 @@
 'use client';
 
+import { forwardRef } from 'react';
 import { Box, Img, Heading, Text, Divider, Flex, List, ListItem, Badge } from '@chakra-ui/react';
 import { DetailedMob } from '@lib/models/dnd5eapi/DetailedMob';
 import { getLibraryProfilePictureUrl } from '@lib/util/dm-helper-utils';
@@ -9,7 +10,7 @@ interface MobDetailCardProps {
   mob?: DetailedMob;
 }
 
-export const MobDetailCard: React.FC<MobDetailCardProps> = ({ mob }) => {
+export const MobDetailCard = forwardRef<HTMLDivElement, MobDetailCardProps>(({ mob }, ref) => {
   const calculateModifier = (score: string): number => Math.floor((parseInt(score) - 10) / 2);
 
   // Helper to render arrays as badges, or null if empty
@@ -29,6 +30,8 @@ export const MobDetailCard: React.FC<MobDetailCardProps> = ({ mob }) => {
   return (
     mob && (
       <Box
+        ref={ref}
+        tabIndex={-1}
         borderWidth="1px"
         borderRadius="lg"
         overflow="hidden"
@@ -231,4 +234,4 @@ export const MobDetailCard: React.FC<MobDetailCardProps> = ({ mob }) => {
       </Box>
     )
   );
-};
+});

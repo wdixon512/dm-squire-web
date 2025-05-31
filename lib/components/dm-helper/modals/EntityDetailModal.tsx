@@ -19,6 +19,7 @@ export const EntityDetailModal: React.FC<EntityDetailModalProps> = ({
 }) => {
   const { getMobById } = useDndApi();
   const [detailedMob, setDetailedMob] = useState<DetailedMob>();
+  const initialFocusRef = useRef<HTMLDivElement>(null);
 
   const handleDone = () => {
     onClose();
@@ -37,7 +38,13 @@ export const EntityDetailModal: React.FC<EntityDetailModalProps> = ({
   }, [characterSheetId]);
 
   return (
-    <Modal isOpen={isOpen} onClose={() => handleDone()} isCentered size={profileUrl ? 'full' : '2xl'}>
+    <Modal
+      isOpen={isOpen}
+      onClose={() => handleDone()}
+      isCentered
+      size={profileUrl ? 'full' : '2xl'}
+      initialFocusRef={initialFocusRef}
+    >
       <ModalOverlay />
       {profileUrl ? (
         <ModalContent h="100%" overflowX="hidden">
@@ -53,7 +60,7 @@ export const EntityDetailModal: React.FC<EntityDetailModalProps> = ({
       ) : (
         <ModalContent maxW="1000px" maxH="90vh" overflowX="hidden">
           <ModalBody>
-            <MobDetailCard mob={detailedMob} />
+            <MobDetailCard mob={detailedMob} ref={initialFocusRef} />
           </ModalBody>
           <ModalFooter justifyContent="space-between">
             <Button variant="solid" onClick={() => handleDone()} data-testid="done-edit-modal-btn">
