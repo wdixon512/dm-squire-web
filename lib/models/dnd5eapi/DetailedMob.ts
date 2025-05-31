@@ -27,10 +27,10 @@ export interface DetailedMob {
     attack?: string[]; // Attack information (e.g., ["|4|1d6+2"])
   }>; // Actions
   save: string[]; // Saving Throws (e.g., [])
-  resist: string[]; // Damage Resistances (e.g., [])
-  vulnerable: string[]; // Damage Vulnerabilities (e.g., [])
-  immune: string[]; // Damage Immunities (e.g., [])
-  conditionImmune: string[]; // Condition Immunities (e.g., [])
+  resist: string[]; // damage_resistances from API
+  vulnerable: string[]; // damage_vulnerabilities from API
+  immune: string[]; // damage_immunities from API
+  conditionImmune: string[]; // condition_immunities from API (flatten to string[] below)
   spells: string[]; // Spells (e.g., [])
   slots: string[]; // Spell Slots (e.g., [])
   legendary: Array<{

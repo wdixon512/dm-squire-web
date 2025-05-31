@@ -12,6 +12,20 @@ interface MobDetailCardProps {
 export const MobDetailCard: React.FC<MobDetailCardProps> = ({ mob }) => {
   const calculateModifier = (score: string): number => Math.floor((parseInt(score) - 10) / 2);
 
+  // Helper to render arrays as badges, or null if empty
+  const renderBadges = (items?: string[]) => {
+    if (!items || items.length === 0) return null;
+    return (
+      <List spacing={1} mb={3}>
+        {items.map((item, idx) => (
+          <ListItem key={idx} display="inline" mr={2}>
+            <Badge colorScheme="purple">{item}</Badge>
+          </ListItem>
+        ))}
+      </List>
+    );
+  };
+
   return (
     mob && (
       <Box
@@ -108,6 +122,7 @@ export const MobDetailCard: React.FC<MobDetailCardProps> = ({ mob }) => {
 
         <Divider my={3} />
 
+        {/* Traits section */}
         <Box>
           <Text variant="dark" fontSize="lg" fontWeight="bold" mb={1}>
             Traits
@@ -125,8 +140,56 @@ export const MobDetailCard: React.FC<MobDetailCardProps> = ({ mob }) => {
           </List>
         </Box>
 
-        <Divider my={3} />
+        {/* New Resistances / Vulnerabilities / Immunities */}
+        {(mob.resist?.length || mob.vulnerable?.length || mob.immune?.length || mob.conditionImmune?.length) > 0 && (
+          <>
+            <Divider my={3} />
+            <Box>
+              <Text variant="dark" fontSize="lg" fontWeight="bold" mb={2}>
+                Damage & Condition Immunities
+              </Text>
 
+              {mob.resist && mob.resist.length > 0 && (
+                <>
+                  <Text variant="dark" fontWeight="semibold" mb={1}>
+                    Damage Resistances:
+                  </Text>
+                  {renderBadges(mob.resist)}
+                </>
+              )}
+
+              {mob.vulnerable && mob.vulnerable.length > 0 && (
+                <>
+                  <Text variant="dark" fontWeight="semibold" mb={1}>
+                    Damage Vulnerabilities:
+                  </Text>
+                  {renderBadges(mob.vulnerable)}
+                </>
+              )}
+
+              {mob.immune && mob.immune.length > 0 && (
+                <>
+                  <Text variant="dark" fontWeight="semibold" mb={1}>
+                    Damage Immunities:
+                  </Text>
+                  {renderBadges(mob.immune)}
+                </>
+              )}
+
+              {mob.conditionImmune && mob.conditionImmune.length > 0 && (
+                <>
+                  <Text variant="dark" fontWeight="semibold" mb={1}>
+                    Condition Immunities:
+                  </Text>
+                  {renderBadges(mob.conditionImmune)}
+                </>
+              )}
+            </Box>
+          </>
+        )}
+
+        {/* Actions section */}
+        <Divider my={3} />
         <Box>
           <Text variant="dark" fontSize="lg" fontWeight="bold" mb={1}>
             Actions
@@ -144,6 +207,7 @@ export const MobDetailCard: React.FC<MobDetailCardProps> = ({ mob }) => {
           </List>
         </Box>
 
+        {/* Legendary Actions */}
         {mob.legendary && mob.legendary.length > 0 && (
           <>
             <Divider my={3} />
