@@ -22,8 +22,8 @@ export const DMHelperComponent = () => {
         index={tabIndex}
         onChange={setTabIndex}
       >
-        <DMHelperTabList readOnlyRoom={readOnlyRoom} flexShrink={0} />
-        <DMHelperTabPanels readOnlyRoom={readOnlyRoom} combatStarted={combatStarted} tabIndex={tabIndex} flex="1" minH="0" />
+        <DMHelperTabList readOnlyRoom={readOnlyRoom} />
+        <DMHelperTabPanels readOnlyRoom={readOnlyRoom} combatStarted={combatStarted} tabIndex={tabIndex} />
       </Tabs>
     </>
   );
