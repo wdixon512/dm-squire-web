@@ -36,7 +36,12 @@ export default function CharactersPanel() {
       </TabList>
       <TabPanels flex="1" minH="0" overflow={{ base: 'visible', lg: 'hidden' }}>
         <DMHelperTabPanel index={tabIndex} current={0} h={{ base: 'auto', lg: '100%' }}>
-          <MotionBox h={{ base: 'auto', lg: '100%' }} minH="0" overflow={{ base: 'visible', lg: 'hidden' }} {...slideVariant}>
+          <MotionBox
+            h={{ base: 'auto', lg: '100%' }}
+            minH="0"
+            overflow={{ base: 'visible', lg: 'hidden' }}
+            {...slideVariant}
+          >
             <Flex
               gap={{ base: 2, lg: 4 }}
               w="100%"
@@ -63,23 +68,49 @@ export default function CharactersPanel() {
                 <MobForm />
                 <MobQuickAdd />
               </Box>
-              <MobList flex="1" minH="0" />
+              <MobList />
             </Flex>
           </MotionBox>
         </DMHelperTabPanel>
         <DMHelperTabPanel index={tabIndex} current={1} h={{ base: 'auto', lg: '100%' }}>
-          <MotionBox h={{ base: 'auto', lg: '100%' }} minH="0" overflow={{ base: 'visible', lg: 'hidden' }} {...slideVariant}>
-            <Flex gap={{ base: 2, lg: 4 }} w="100%" h={{ base: 'auto', lg: '100%' }} direction={{ base: 'column', lg: 'row' }} px={{ base: 2, lg: 0 }} minH="0" overflow={{ base: 'visible', lg: 'hidden' }}>
-              <HeroForm flexShrink={0} />
-              <HeroList flex="1" minH="0" />
+          <MotionBox
+            h={{ base: 'auto', lg: '100%' }}
+            minH="0"
+            overflow={{ base: 'visible', lg: 'hidden' }}
+            {...slideVariant}
+          >
+            <Flex
+              gap={{ base: 2, lg: 4 }}
+              w="100%"
+              h={{ base: 'auto', lg: '100%' }}
+              direction={{ base: 'column', lg: 'row' }}
+              px={{ base: 2, lg: 0 }}
+              minH="0"
+              overflow={{ base: 'visible', lg: 'hidden' }}
+            >
+              <HeroForm />
+              <HeroList />
             </Flex>
           </MotionBox>
         </DMHelperTabPanel>
         <DMHelperTabPanel index={tabIndex} current={2} h={{ base: 'auto', lg: '100%' }}>
-          <MotionBox h={{ base: 'auto', lg: '100%' }} minH="0" overflow={{ base: 'visible', lg: 'hidden' }} {...slideVariant}>
-            <Flex gap={{ base: 2, lg: 4 }} w="100%" h={{ base: 'auto', lg: '100%' }} direction={{ base: 'column', lg: 'row' }} px={{ base: 2, lg: 0 }} minH="0" overflow={{ base: 'visible', lg: 'hidden' }}>
-              <AllyForm flexShrink={0} />
-              <AllyList flex="1" minH="0" />
+          <MotionBox
+            h={{ base: 'auto', lg: '100%' }}
+            minH="0"
+            overflow={{ base: 'visible', lg: 'hidden' }}
+            {...slideVariant}
+          >
+            <Flex
+              gap={{ base: 2, lg: 4 }}
+              w="100%"
+              h={{ base: 'auto', lg: '100%' }}
+              direction={{ base: 'column', lg: 'row' }}
+              px={{ base: 2, lg: 0 }}
+              minH="0"
+              overflow={{ base: 'visible', lg: 'hidden' }}
+            >
+              <AllyForm />
+              <AllyList />
             </Flex>
           </MotionBox>
         </DMHelperTabPanel>
