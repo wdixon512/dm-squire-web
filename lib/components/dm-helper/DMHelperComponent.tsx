@@ -13,11 +13,11 @@ export const DMHelperComponent = () => {
   return (
     <>
       <Tabs
-        display="grid"
-        gridTemplateRows="10% 90%"
-        alignContent={'center'}
-        height="100%"
-        overflowY={'hidden'}
+        display="flex"
+        flexDirection="column"
+        height={{ base: 'auto', lg: '100%' }}
+        minH={{ base: '100vh', lg: '100%' }}
+        overflow={{ base: 'visible', lg: 'hidden' }}
         w="100%"
         index={tabIndex}
         onChange={setTabIndex}

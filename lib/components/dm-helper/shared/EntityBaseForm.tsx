@@ -41,7 +41,7 @@ export const EntityBaseForm: React.FC<EntityBaseFormProps> = ({
   return (
     <Box
       as="form"
-      p={4}
+      p={{ base: 2, lg: 4 }}
       bg="blackAlpha.900"
       opacity=".95"
       borderWidth={1}

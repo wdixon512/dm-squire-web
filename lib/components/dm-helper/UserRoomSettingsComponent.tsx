@@ -17,6 +17,7 @@ import {
 import { auth } from '@lib/services/firebase';
 import { useFirebaseGoogleAuth } from '../contexts/FirebaseGoogleAuthContext';
 import UserInfo from './UserInfo';
+import BackgroundSelector from '../global/BackgroundSelector';
 
 export const UserRoomSettingsComponent: React.FC = () => {
   const { room, readOnlyRoom, leaveRoom, isClient } = useContext(DMHelperContext);
@@ -29,9 +30,12 @@ export const UserRoomSettingsComponent: React.FC = () => {
 
   return (
     isClient && (
-      <Card bgColor="blackAlpha.900" p={'4'}>
-        <UserInfo mb="8" />
-        <Flex direction={'column'} alignSelf="flex-start">
+      <Card bgColor="blackAlpha.900" p={{ base: 2, lg: 4 }} w={{ base: "100%", lg: "auto" }} maxW="100%">
+        <Flex direction={'column'} alignSelf="flex-start" w="100%" gap={4}>
+          <BackgroundSelector />
+        </Flex>
+        <UserInfo mb={{ base: 4, lg: 8 }} />
+        <Flex direction={'column'} alignSelf="flex-start" w="100%">
           {room?.id && <Text>Current Room Id: {room.id}</Text>}
           {!readOnlyRoom ? (
             <Flex gap={4}>

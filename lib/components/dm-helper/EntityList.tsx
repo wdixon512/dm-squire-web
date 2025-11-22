@@ -29,14 +29,19 @@ export const EntityList = () => {
   return (
     <DndProvider backend={HTML5Backend}>
       <Box
-        p={4}
+        p={{ base: 2, lg: 4 }}
         bg="blackAlpha.900"
         borderWidth={1}
         borderRadius="md"
         shadow="md"
         w="100%"
+        h={{ base: 'auto', lg: '100%' }}
+        maxH={{ base: 'none', lg: '100%' }}
         opacity=".95"
-        overflowY="auto"
+        overflowY={{ base: 'visible', lg: 'auto' }}
+        overflowX="hidden"
+        minW="0"
+        minH="0"
         sx={{
           '&::-webkit-scrollbar': {
             width: '8px',

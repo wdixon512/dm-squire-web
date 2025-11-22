@@ -11,23 +11,37 @@ export default function DMHelperTabList(props: { readOnlyRoom: boolean }) {
         alignSelf="center"
         justifyContent="center"
         display="flex"
-        py="2"
+        py={{ base: '1', lg: '2' }}
+        px={{ base: 1, lg: 0 }}
+        mt={{ base: 2, lg: 4 }}
         w="100%"
         bgColor="blackAlpha.900"
         borderBottom="2px solid"
         borderColor="marioRed.500"
         opacity={0.95}
-        clipPath="polygon(3% 0%, 100% 0%, 97% 100%, 0% 100%)"
+        clipPath={{ base: 'none', lg: 'polygon(3% 0%, 100% 0%, 97% 100%, 0% 100%)' }}
+        flexWrap={{ base: 'wrap', lg: 'nowrap' }}
+        gap={{ base: 1, lg: 0 }}
+        overflowX={{ base: 'auto', lg: 'visible' }}
       >
         {/* Combat Tab*/}
         <Tab
-          _selected={{ color: 'white', bg: 'primary.200' }}
+          _selected={{ color: 'white', bg: 'marioRed.600' }}
           borderRadius="lg"
           fontWeight="bold"
           data-testid="combat-panel"
+          fontSize={{ base: 'xs', lg: 'md' }}
+          px={{ base: 2, lg: 4 }}
+          py={{ base: 1, lg: 2 }}
         >
-          <Image src="/static/images/sword.png" alt="sword-icon" w="20px" h="20px" mr="1" />
-          <Text as="span" lineHeight="24px">
+          <Image
+            src="/static/images/sword.png"
+            alt="sword-icon"
+            w={{ base: '16px', lg: '20px' }}
+            h={{ base: '16px', lg: '20px' }}
+            mr={{ base: '0.5', lg: '1' }}
+          />
+          <Text as="span" lineHeight={{ base: '16px', lg: '24px' }}>
             Combat
           </Text>
         </Tab>
@@ -36,42 +50,63 @@ export default function DMHelperTabList(props: { readOnlyRoom: boolean }) {
           <>
             {/* Heroes Tab*/}
             <Tab
-              _selected={{ color: 'white', bg: 'primary.200' }}
+              _selected={{ color: 'white', bg: 'marioRed.600' }}
               borderRadius="lg"
               fontWeight="bold"
               data-testid="characters-panel"
+              fontSize={{ base: 'xs', lg: 'md' }}
+              px={{ base: 2, lg: 4 }}
+              py={{ base: 1, lg: 2 }}
             >
-              <Image src="/static/images/knight.png" alt="knight" w="20px" h="20px" mr="1" />
-              <Text as="span" lineHeight="24px">
+              <Image
+                src="/static/images/knight.png"
+                alt="knight"
+                w={{ base: '16px', lg: '20px' }}
+                h={{ base: '16px', lg: '20px' }}
+                mr={{ base: '0.5', lg: '1' }}
+              />
+              <Text as="span" lineHeight={{ base: '16px', lg: '24px' }}>
                 Characters
               </Text>
             </Tab>
 
             {/* Invite Others Tab */}
             <Tab
-              _selected={{ color: 'white', bg: 'primary.200' }}
+              _selected={{ color: 'white', bg: 'marioRed.600' }}
               borderRadius="lg"
               fontWeight="bold"
               data-testid="invite-others-panel"
+              fontSize={{ base: 'xs', lg: 'md' }}
+              px={{ base: 2, lg: 4 }}
+              py={{ base: 1, lg: 2 }}
             >
-              <Image src="/static/images/join-party.png" alt="knight" w="20px" h="20px" mr="1" />
-              <Text as="span" lineHeight="24px">
+              <Image
+                src="/static/images/join-party.png"
+                alt="knight"
+                w={{ base: '16px', lg: '20px' }}
+                h={{ base: '16px', lg: '20px' }}
+                mr={{ base: '0.5', lg: '1' }}
+              />
+              <Text as="span" lineHeight={{ base: '16px', lg: '24px' }}>
                 Invite Others
               </Text>
             </Tab>
           </>
         )}
 
-        {/* Manage Tab */}
+        {/* Settings Tab */}
         <Tab
-          _selected={{ color: 'white', bg: 'primary.200' }}
+          _selected={{ color: 'white', bg: 'marioRed.600' }}
           borderRadius="lg"
           fontWeight="bold"
           data-testid="user-room-settings-panel"
+          fontSize={{ base: 'xs', lg: 'md' }}
+          px={{ base: 2, lg: 4 }}
+          py={{ base: 1, lg: 2 }}
         >
-          <Icon as={FaUserCog} w={6} h={6} mr={2} />
-          <Text as="span" lineHeight="24px">
-            Manage
+          <Icon as={FaUserCog} w={{ base: 4, lg: 6 }} h={{ base: 4, lg: 6 }} mr={{ base: 1, lg: 2 }} />
+          <Text as="span" lineHeight={{ base: '16px', lg: '24px' }}>
+            Settings
           </Text>
         </Tab>
       </TabList>

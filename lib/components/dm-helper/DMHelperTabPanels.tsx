@@ -11,16 +11,16 @@ export default function DMHelperTabPanels(props: { readOnlyRoom: boolean; combat
   const { readOnlyRoom, combatStarted, tabIndex } = props;
 
   return (
-    <TabPanels maxH="100%">
-      <DMHelperTabPanel current={0} index={tabIndex} display="flex" justifyContent="center" key={1}>
-        <MotionBox {...fadeVariant} flex="1" h="100%">
+    <TabPanels flex="1" minH="0" overflow={{ base: 'visible', lg: 'hidden' }}>
+      <DMHelperTabPanel current={0} index={tabIndex} display="flex" justifyContent="center" key={1} h={{ base: 'auto', lg: '100%' }}>
+        <MotionBox {...fadeVariant} flex="1" h={{ base: 'auto', lg: '100%' }} minH="0" overflow={{ base: 'visible', lg: 'hidden' }}>
           <CombatPanel readOnlyRoom={readOnlyRoom} combatStarted={combatStarted} />
         </MotionBox>
       </DMHelperTabPanel>
 
       {!readOnlyRoom && (
-        <DMHelperTabPanel current={1} index={tabIndex}>
-          <MotionBox {...fadeVariant} flex="1" h="100%">
+        <DMHelperTabPanel current={1} index={tabIndex} h={{ base: 'auto', lg: '100%' }}>
+          <MotionBox {...fadeVariant} flex="1" h={{ base: 'auto', lg: '100%' }} minH="0" overflow={{ base: 'visible', lg: 'hidden' }}>
             <CharactersPanel />
           </MotionBox>
         </DMHelperTabPanel>
@@ -28,16 +28,16 @@ export default function DMHelperTabPanels(props: { readOnlyRoom: boolean; combat
 
       {/* Invite Others Tab Panel */}
       {!readOnlyRoom && (
-        <DMHelperTabPanel current={2} index={tabIndex}>
-          <MotionBox {...fadeVariant} flex="1">
+        <DMHelperTabPanel current={2} index={tabIndex} h={{ base: 'auto', lg: '100%' }}>
+          <MotionBox {...fadeVariant} flex="1" h={{ base: 'auto', lg: '100%' }} display="flex" justifyContent="center" alignItems="flex-start" w="100%" px={{ base: 2, lg: 0 }} minH="0" overflow={{ base: 'visible', lg: 'hidden' }}>
             <InviteOthersForm />
           </MotionBox>
         </DMHelperTabPanel>
       )}
 
-      {/* Manage Tab Panel */}
-      <DMHelperTabPanel current={readOnlyRoom ? 1 : 3} index={tabIndex}>
-        <MotionBox {...fadeVariant} flex="1">
+      {/* Settings Tab Panel */}
+      <DMHelperTabPanel current={readOnlyRoom ? 1 : 3} index={tabIndex} h={{ base: 'auto', lg: '100%' }}>
+        <MotionBox {...fadeVariant} flex="1" h={{ base: 'auto', lg: '100%' }} display="flex" justifyContent="center" alignItems="flex-start" w="100%" px={{ base: 2, lg: 0 }} minH="0" overflow={{ base: 'visible', lg: 'hidden' }}>
           <UserRoomSettingsComponent />
         </MotionBox>
       </DMHelperTabPanel>
