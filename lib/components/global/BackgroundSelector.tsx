@@ -9,17 +9,20 @@ export default function BackgroundSelector() {
 
   return (
     <>
-      <Box p={{ base: 2, lg: 4 }} position={{ base: "relative", lg: "absolute" }} top={{ base: 0, lg: 4 }} left={{ base: 0, lg: 4 }} zIndex={10}>
+      <Box pb={{ base: 2, lg: 4 }} position="relative" zIndex={10}>
         <Tooltip label="Select a background image" placement="right" hasArrow>
-          <Button gap="2" onClick={onOpen} bgColor="blackAlpha.900" border="1px solid gold" size={{ base: "sm", lg: "md" }}>
-            <Flex alignContent="center" flexDir="column" w="full">
-              <Text color="marioRed.100" fontSize={{ base: "10px", lg: "12px" }} fontWeight="bold">
-                New!
-              </Text>
-              <Flex justifyContent={'center'}>
-                <Icon as={FaImage} fontSize={{ base: "12px", lg: "16px" }} />
-              </Flex>
-            </Flex>
+          <Button
+            gap="2"
+            onClick={onOpen}
+            bgColor="blackAlpha.900"
+            border="1px solid"
+            borderColor="gray.600"
+            size={{ base: 'sm', lg: 'md' }}
+          >
+            <Icon as={FaImage} fontSize={{ base: '14px', lg: '18px' }} />
+            <Text fontSize={{ base: 'sm', lg: 'md' }} fontWeight="bold">
+              Background
+            </Text>
           </Button>
         </Tooltip>
       </Box>

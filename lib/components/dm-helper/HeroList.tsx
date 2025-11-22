@@ -19,8 +19,11 @@ export const HeroList = () => {
       opacity=".95"
       flex="1"
       minW="0"
-      overflowY="auto"
-      h="100%"
+      minH="0"
+      overflowY={{ base: 'visible', lg: 'auto' }}
+      overflowX="hidden"
+      h={{ base: 'auto', lg: '100%' }}
+      maxH={{ base: 'none', lg: '100%' }}
       sx={{
         '&::-webkit-scrollbar': {
           width: '8px',

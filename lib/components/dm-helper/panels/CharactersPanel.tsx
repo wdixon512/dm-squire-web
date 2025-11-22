@@ -19,12 +19,13 @@ export default function CharactersPanel() {
       onChange={setTabIndex}
       variant="enclosed-colored"
       colorScheme="primary"
-      display="grid"
-      height="100%"
-      gridTemplateRows="10% 90%"
-      overflowY="hidden"
+      display="flex"
+      flexDirection="column"
+      height={{ base: 'auto', lg: '100%' }}
+      minH={{ base: 'auto', lg: '100%' }}
+      overflow={{ base: 'visible', lg: 'hidden' }}
     >
-      <TabList mb="4">
+      <TabList mb="4" flexShrink={0}>
         <CharacterSheetTab _selected={{ color: 'marioRed.200', borderColor: 'marioRed.200' }}>
           Enemies
         </CharacterSheetTab>
@@ -33,15 +34,17 @@ export default function CharactersPanel() {
         </CharacterSheetTab>
         <CharacterSheetTab _selected={{ color: 'yellow.200', borderColor: 'yellow.200' }}>Allies</CharacterSheetTab>
       </TabList>
-      <TabPanels h="100%">
-        <DMHelperTabPanel index={tabIndex} current={0}>
-          <MotionBox h="100%" {...slideVariant}>
+      <TabPanels flex="1" minH="0" overflow={{ base: 'visible', lg: 'hidden' }}>
+        <DMHelperTabPanel index={tabIndex} current={0} h={{ base: 'auto', lg: '100%' }}>
+          <MotionBox h={{ base: 'auto', lg: '100%' }} minH="0" overflow={{ base: 'visible', lg: 'hidden' }} {...slideVariant}>
             <Flex
               gap={{ base: 2, lg: 4 }}
               w="100%"
-              h="100%"
+              h={{ base: 'auto', lg: '100%' }}
               direction={{ base: 'column', lg: 'row' }}
               px={{ base: 2, lg: 0 }}
+              minH="0"
+              overflow={{ base: 'visible', lg: 'hidden' }}
             >
               <Box
                 flex={{ base: '1', lg: '.5' }}
@@ -49,27 +52,34 @@ export default function CharactersPanel() {
                 display="flex"
                 flexDirection="column"
                 minW={{ base: '100%', lg: 'auto' }}
+                flexShrink={0}
+                overflowY="auto"
+                sx={{
+                  '&::-webkit-scrollbar': { width: '8px' },
+                  '&::-webkit-scrollbar-track': { width: '8px' },
+                  '&::-webkit-scrollbar-thumb': { backgroundColor: 'gray.500', borderRadius: '4px' },
+                }}
               >
                 <MobForm />
                 <MobQuickAdd />
               </Box>
-              <MobList />
+              <MobList flex="1" minH="0" />
             </Flex>
           </MotionBox>
         </DMHelperTabPanel>
-        <DMHelperTabPanel index={tabIndex} current={1}>
-          <MotionBox h="100%" {...slideVariant}>
-            <Flex gap={{ base: 2, lg: 4 }} w="100%" direction={{ base: 'column', lg: 'row' }} px={{ base: 2, lg: 0 }}>
-              <HeroForm />
-              <HeroList />
+        <DMHelperTabPanel index={tabIndex} current={1} h={{ base: 'auto', lg: '100%' }}>
+          <MotionBox h={{ base: 'auto', lg: '100%' }} minH="0" overflow={{ base: 'visible', lg: 'hidden' }} {...slideVariant}>
+            <Flex gap={{ base: 2, lg: 4 }} w="100%" h={{ base: 'auto', lg: '100%' }} direction={{ base: 'column', lg: 'row' }} px={{ base: 2, lg: 0 }} minH="0" overflow={{ base: 'visible', lg: 'hidden' }}>
+              <HeroForm flexShrink={0} />
+              <HeroList flex="1" minH="0" />
             </Flex>
           </MotionBox>
         </DMHelperTabPanel>
-        <DMHelperTabPanel index={tabIndex} current={2}>
-          <MotionBox h="100%" {...slideVariant}>
-            <Flex gap={{ base: 2, lg: 4 }} w="100%" direction={{ base: 'column', lg: 'row' }} px={{ base: 2, lg: 0 }}>
-              <AllyForm />
-              <AllyList />
+        <DMHelperTabPanel index={tabIndex} current={2} h={{ base: 'auto', lg: '100%' }}>
+          <MotionBox h={{ base: 'auto', lg: '100%' }} minH="0" overflow={{ base: 'visible', lg: 'hidden' }} {...slideVariant}>
+            <Flex gap={{ base: 2, lg: 4 }} w="100%" h={{ base: 'auto', lg: '100%' }} direction={{ base: 'column', lg: 'row' }} px={{ base: 2, lg: 0 }} minH="0" overflow={{ base: 'visible', lg: 'hidden' }}>
+              <AllyForm flexShrink={0} />
+              <AllyList flex="1" minH="0" />
             </Flex>
           </MotionBox>
         </DMHelperTabPanel>

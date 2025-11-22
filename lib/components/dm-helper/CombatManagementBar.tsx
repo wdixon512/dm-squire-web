@@ -1,4 +1,4 @@
-import { Box, Button, Flex, useDisclosure } from '@chakra-ui/react';
+import { Button, Flex, useDisclosure } from '@chakra-ui/react';
 import React, { useContext, useMemo } from 'react';
 import ClearMobsModal from './modals/ClearMobsModal';
 import { DMHelperContext } from '../contexts/DMHelperContext';
@@ -44,23 +44,27 @@ export default function CombatManagementBar() {
     onClearMonstersOpen();
   };
   return (
-    <Box bgColor="blackAlpha.800" p={{ base: 2, lg: 4 }} borderWidth="1px" borderRadius="md" shadow="md">
-      <Flex alignItems="center" gap={{ base: 2, lg: 4 }} flexWrap={{ base: "wrap", lg: "nowrap" }}>
+    <>
+      <Flex direction="row" gap="4" flexShrink={0} flexWrap="wrap">
         {combatStarted ? (
-          <Button variant="redSolid" onClick={() => endCombat()} data-testid="end-combat-btn" px={{ base: 4, lg: 8 }} fontSize={{ base: "sm", lg: "md" }}>
+          <Button
+            variant="redSolid"
+            onClick={() => endCombat()}
+            data-testid="end-combat-btn"
+            fontSize={{ base: 'sm', lg: 'md' }}
+          >
             End Combat
           </Button>
         ) : (
-          <Button onClick={() => startCombat()} data-testid="start-combat-button" px={{ base: 4, lg: 8 }} fontSize={{ base: "sm", lg: "md" }}>
+          <Button onClick={() => startCombat()} data-testid="start-combat-button" fontSize={{ base: 'sm', lg: 'md' }}>
             Start Combat
           </Button>
         )}
         <Button
           variant="redSolid"
-          width="fit-content"
           onClick={(e) => showClearMobForm(e)}
           data-testid="clear-mobs-button"
-          fontSize={{ base: "sm", lg: "md" }}
+          fontSize={{ base: 'sm', lg: 'md' }}
         >
           Clear Enemies
         </Button>
@@ -74,6 +78,6 @@ export default function CombatManagementBar() {
         onClose={onEndCombatModalClose}
       />
       <InitiativeModal isOpen={isInitiativeModalOpen} entities={heroesAndAllies} onClose={onInitiativeModalClose} />
-    </Box>
+    </>
   );
 }

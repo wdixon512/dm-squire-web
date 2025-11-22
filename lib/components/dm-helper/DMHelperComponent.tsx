@@ -13,17 +13,17 @@ export const DMHelperComponent = () => {
   return (
     <>
       <Tabs
-        display="grid"
-        gridTemplateRows={{ base: 'auto 1fr', lg: '10% 90%' }}
-        alignContent={'center'}
-        height="100%"
-        overflowY={'hidden'}
+        display="flex"
+        flexDirection="column"
+        height={{ base: 'auto', lg: '100%' }}
+        minH={{ base: '100vh', lg: '100%' }}
+        overflow={{ base: 'visible', lg: 'hidden' }}
         w="100%"
         index={tabIndex}
         onChange={setTabIndex}
       >
-        <DMHelperTabList readOnlyRoom={readOnlyRoom} />
-        <DMHelperTabPanels readOnlyRoom={readOnlyRoom} combatStarted={combatStarted} tabIndex={tabIndex} />
+        <DMHelperTabList readOnlyRoom={readOnlyRoom} flexShrink={0} />
+        <DMHelperTabPanels readOnlyRoom={readOnlyRoom} combatStarted={combatStarted} tabIndex={tabIndex} flex="1" minH="0" />
       </Tabs>
     </>
   );

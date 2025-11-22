@@ -12,12 +12,13 @@ export const AppWrapper = (props: ContainerProps) => {
       maxW="100vw"
       px="0"
       mx="0"
-      height="100vh"
-      overflowX="hidden"
+      height={{ base: 'auto', lg: '100vh' }}
+      minH={{ base: '100vh', lg: '100vh' }}
+      overflow={{ base: 'visible', lg: 'hidden' }}
       bgImage={backgroundImageUrl || '/static/images/backgrounds/demon-in-hell.jpg'}
       bgSize="cover"
-      display="grid"
-      gridTemplateRows={{ base: 'auto 1fr' }}
+      display="flex"
+      flexDirection="column"
     >
       {props.children}
     </Container>

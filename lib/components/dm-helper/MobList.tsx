@@ -21,8 +21,9 @@ export const MobList = () => {
       shadow="md"
       opacity=".95"
       flex="1"
-      h="100%"
-      overflowY="auto"
+      h={{ base: 'auto', lg: '100%' }}
+      maxH={{ base: 'none', lg: '100%' }}
+      overflowY={{ base: 'visible', lg: 'auto' }}
       minW="0"
       sx={{
         '&::-webkit-scrollbar': { width: '8px' },

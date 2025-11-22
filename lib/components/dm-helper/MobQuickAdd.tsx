@@ -1,12 +1,23 @@
 'use client';
 
-import { Box, Button, Circle, Flex, FlexProps, Heading, useDisclosure } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Flex,
+  FlexProps,
+  useDisclosure,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Icon,
+} from '@chakra-ui/react';
 import { useContext } from 'react';
 import { DMHelperContext } from '../contexts/DMHelperContext';
 import { Mob } from '@lib/models/dm-helper/Mob';
-import { AnimatePresence } from 'framer-motion';
-import AnimatedFlex from '../global/AnimatedFlex';
 import ClearQuickAddModal from './modals/ClearQuickAddModal';
+import { ChevronDownIcon } from '@chakra-ui/icons';
+import { FaBolt } from 'react-icons/fa';
 
 export const MobQuickAdd = (props: FlexProps) => {
   const { ...rest } = props;
@@ -29,101 +40,85 @@ export const MobQuickAdd = (props: FlexProps) => {
   return (
     !readOnlyRoom && (
       <>
-        <AnimatePresence initial={false}>
-          {isClient && (
-            <AnimatedFlex
-              direction="column"
-              gap="4"
-              overflowY="auto"
-              sx={{
-                '&::-webkit-scrollbar': {
-                  width: '8px',
-                },
-                '&::-webkit-scrollbar-track': {
-                  width: '8px',
-                },
-                '&::-webkit-scrollbar-thumb': {
-                  backgroundColor: 'gray.500',
-                  borderRadius: '4px',
-                },
-              }}
-              {...rest}
-            >
-              <Flex
-                direction="column"
-                p={{ base: 2, lg: 4 }}
+        {isClient && (
+          <Box {...rest}>
+            <Menu placement="bottom-end">
+              <MenuButton
+                as={Button}
+                leftIcon={<Icon as={FaBolt} />}
+                rightIcon={<ChevronDownIcon />}
+                variant="outline"
+                size={{ base: 'md', lg: 'sm' }}
+                color="white"
                 bg="blackAlpha.900"
-                opacity=".95"
-                borderWidth={1}
-                borderRadius="md"
-                shadow="md"
-                gap={2}
+                borderColor="gray.600"
+                _hover={{ bg: 'gray.700', borderColor: 'gray.500' }}
+                _active={{ bg: 'gray.600', borderColor: 'gray.400' }}
+                _focus={{ bg: 'gray.700', borderColor: 'gray.500' }}
+                justifyContent="space-between"
+                fontWeight="bold"
               >
-                <Heading size="md" textAlign="center" textColor="white" borderBottom={'2px solid'}>
-                  Quick Add
-                </Heading>
-                <Flex gap="4" justifyContent={'center'} flexWrap="wrap" data-testid="mob-favorites-list" pt="2">
-                  {mobFavorites.length === 0 && (
-                    <Heading size="sm" textAlign="center" textColor="white" fontStyle="italic" fontWeight="normal">
-                      No enemies in Quick Add
-                    </Heading>
-                  )}
-                  {mobFavorites.map((mob, i) => (
-                    <Box position="relative" key={i}>
-                      <Button
-                        variant="outline"
-                        width="fit"
+                Quick Add {mobFavorites.length > 0 && `(${mobFavorites.length})`}
+              </MenuButton>
+              <MenuList
+                bgColor="blackAlpha.900"
+                borderColor="gray.600"
+                maxH="60vh"
+                overflowY="auto"
+                minW={{ base: '200px', lg: '250px' }}
+                w={{ base: '100%', lg: 'auto' }}
+              >
+                {mobFavorites.length === 0 ? (
+                  <MenuItem isDisabled bg="blackAlpha.600">
+                    No enemies in Quick Add
+                  </MenuItem>
+                ) : (
+                  <>
+                    {mobFavorites.map((mob, i) => (
+                      <MenuItem
+                        key={i}
                         onClick={() => handleAddMob(mob)}
+                        bg="blackAlpha.600"
                         data-testid={`${mob.id.toLowerCase()}-quickadd-btn`}
                       >
-                        {mob.name}
-                      </Button>
-                      <Circle
-                        size="4"
-                        bg="marioRed.500"
-                        color="white"
-                        position="absolute"
-                        top="0"
-                        right="0"
-                        transform="translate(40%, -40%)"
-                        p="0"
-                      >
-                        <Button
-                          onClick={() => handleRemoveFavorite(mob)}
-                          size="sm"
-                          borderRadius="full"
-                          w="100%"
-                          h="100%"
-                          bg="transparent"
-                          color="white"
-                          fontSize={8}
-                          lineHeight={8}
-                          p="0"
-                          mt="2px"
-                          _hover={{ bg: 'transparent' }}
-                          _focus={{ boxShadow: 'none' }}
-                          data-testid={`${mob.id.toLowerCase()}-quickadd-remove-btn`}
-                        >
-                          X
-                        </Button>
-                      </Circle>
-                    </Box>
-                  ))}
-                </Flex>
-                <Flex justifyContent={'center'} mt="4">
-                  <Button
-                    color="marioRed.700"
-                    variant="redLink"
-                    onClick={(e) => showClearQuickAddForm(e)}
-                    data-testid={`quickadd-clear-btn`}
-                  >
-                    Clear Quick Add
-                  </Button>
-                </Flex>
-              </Flex>
-            </AnimatedFlex>
-          )}
-        </AnimatePresence>
+                        <Flex w="100%" justifyContent="space-between" alignItems="center">
+                          <Box flex="1">{mob.name}</Box>
+                          <Box
+                            as="span"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleRemoveFavorite(mob);
+                            }}
+                            cursor="pointer"
+                            color="red.300"
+                            _hover={{ color: 'red.100' }}
+                            fontSize="sm"
+                            fontWeight="bold"
+                            px={2}
+                            data-testid={`${mob.id.toLowerCase()}-quickadd-remove-btn`}
+                          >
+                            X
+                          </Box>
+                        </Flex>
+                      </MenuItem>
+                    ))}
+                    <MenuItem
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        showClearQuickAddForm(e);
+                      }}
+                      bg="blackAlpha.600"
+                      color="marioRed.700"
+                      data-testid="quickadd-clear-btn"
+                    >
+                      Clear Quick Add
+                    </MenuItem>
+                  </>
+                )}
+              </MenuList>
+            </Menu>
+          </Box>
+        )}
         <ClearQuickAddModal isOpen={isOpen} onClose={onClose} />
       </>
     )

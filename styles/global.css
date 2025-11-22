@@ -1,3 +1,18 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Prevent page scrolling on desktop only */
+@media (min-width: 1024px) {
+  html,
+  body {
+    overflow: hidden;
+    height: 100%;
+  }
+}
+
 .typewriter h1 {
   overflow: hidden; /* Ensures the content is not revealed until the animation */
   border-right: 0.15em solid white; /* The typwriter cursor */

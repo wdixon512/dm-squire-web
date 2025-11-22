@@ -35,9 +35,13 @@ export const EntityList = () => {
         borderRadius="md"
         shadow="md"
         w="100%"
+        h={{ base: 'auto', lg: '100%' }}
+        maxH={{ base: 'none', lg: '100%' }}
         opacity=".95"
-        overflowY="auto"
+        overflowY={{ base: 'visible', lg: 'auto' }}
+        overflowX="hidden"
         minW="0"
+        minH="0"
         sx={{
           '&::-webkit-scrollbar': {
             width: '8px',

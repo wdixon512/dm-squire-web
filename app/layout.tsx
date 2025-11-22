@@ -13,7 +13,7 @@ import AppWrapper from '@lib/components/global/AppWrapper';
 export default function MyApp({ children }) {
   return (
     <html>
-      <body style={{ overflowX: 'hidden' }}>
+      <body style={{ margin: 0, padding: 0 }}>
         <ChakraProvider theme={theme}>
           <Head>
             <meta name="viewport" content="width=device-width, initial-scale=1" />

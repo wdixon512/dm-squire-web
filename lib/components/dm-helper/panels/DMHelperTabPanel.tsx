@@ -8,7 +8,7 @@ export default function DMHelperTabPanel({
 }: TabPanelProps & { index: number; current: number }) {
   if (index !== current) return null;
   return (
-    <TabPanel maxH="100%" h="100%" px="0" {...rest}>
+    <TabPanel h={{ base: 'auto', lg: '100%' }} minH="0" overflow={{ base: 'visible', lg: 'hidden' }} px="0" display="flex" flexDirection="column" {...rest}>
       {children}
     </TabPanel>
   );

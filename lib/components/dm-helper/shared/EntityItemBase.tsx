@@ -83,7 +83,13 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
 
   if (showKill && !readOnly && onRemove) {
     menuItems.push(
-      <MenuItem key="kill" onClick={onRemove} color="red.300" data-testid={removeButtonTestId ?? `${entity.id}-kill`}>
+      <MenuItem
+        key="kill"
+        onClick={onRemove}
+        color="red.300"
+        bg="blackAlpha.600"
+        data-testid={removeButtonTestId ?? `${entity.id}-kill`}
+      >
         Kill
       </MenuItem>
     );
@@ -95,6 +101,7 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
         key="remove"
         onClick={onRemove}
         color="red.300"
+        bg="blackAlpha.600"
         data-testid={removeButtonTestId ?? `${entity.id}-remove`}
       >
         Remove
@@ -104,7 +111,7 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
 
   if (!readOnly && onEdit) {
     menuItems.push(
-      <MenuItem key="edit" onClick={onEdit} data-testid={editButtonTestId ?? `${entity.id}-edit`}>
+      <MenuItem key="edit" onClick={onEdit} bg="blackAlpha.600" data-testid={editButtonTestId ?? `${entity.id}-edit`}>
         <Icon as={FaUserEdit} mr={2} />
         {editTooltipLabel}
       </MenuItem>
@@ -117,6 +124,7 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
         <MenuItem
           key="details"
           onClick={onDetailsOpen}
+          bg="blackAlpha.600"
           data-testid={detailsButtonTestId ?? `view-details-${entity.id}`}
         >
           <Icon as={FaEye} mr={2} />
@@ -125,7 +133,12 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
       );
     } else {
       menuItems.push(
-        <MenuItem key="details" isDisabled data-testid={detailsButtonTestId ?? `view-details-${entity.id}`}>
+        <MenuItem
+          key="details"
+          isDisabled
+          bg="blackAlpha.600"
+          data-testid={detailsButtonTestId ?? `view-details-${entity.id}`}
+        >
           <Icon as={FaEyeSlash} mr={2} />
           Can't find details
         </MenuItem>
@@ -140,6 +153,7 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
           key="bench"
           onClick={onBench}
           isDisabled={entity.type === EntityType.MOB}
+          bg="blackAlpha.600"
           data-testid={removeButtonTestId ?? `${entity.id}-unbench`}
         >
           <Icon as={SiBlockbench} mr={2} />
@@ -148,7 +162,12 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
       );
     } else {
       menuItems.push(
-        <MenuItem key="unbench" onClick={onUnbench} data-testid={removeButtonTestId ?? `${entity.id}-unbench`}>
+        <MenuItem
+          key="unbench"
+          onClick={onUnbench}
+          bg="blackAlpha.600"
+          data-testid={removeButtonTestId ?? `${entity.id}-unbench`}
+        >
           <Icon as={FaArrowUp} mr={2} />
           Unbench
         </MenuItem>
@@ -181,9 +200,10 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
               aria-label="Entity actions"
               flexShrink={0}
               color="white"
+              bg="blackAlpha.600"
               _hover={{ bg: 'whiteAlpha.200' }}
             />
-            <MenuList bg="blackAlpha.900" borderColor="gray.600">
+            <MenuList bgColor="blackAlpha.900" borderColor="gray.600">
               {menuItems}
             </MenuList>
           </Menu>
