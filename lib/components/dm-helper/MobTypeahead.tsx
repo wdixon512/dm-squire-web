@@ -42,7 +42,10 @@ export const MobTypeahead = React.forwardRef<HTMLUListElement, MobTypeaheadProps
               bg={i === highlightedIndex ? 'gray.100' : 'white'}
               border={i === highlightedIndex ? '1px solid' : 'none'}
               borderColor="primary.200"
-              onClick={() => handleTypeaheadClick(mob)}
+              onMouseDown={(e) => {
+                e.preventDefault();
+                handleTypeaheadClick(mob);
+              }}
               data-testid={`typeahead-mob-${toKebabCase(mob.name)}`}
             >
               <Text color={'primary.200'} fontWeight={'bold'}>
