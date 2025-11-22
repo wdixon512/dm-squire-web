@@ -109,7 +109,23 @@ export default function CharactersPanel() {
               minH="0"
               overflow={{ base: 'visible', lg: 'hidden' }}
             >
-              <AllyForm />
+              <Box
+                flex={{ base: '1', lg: '.5' }}
+                gap="2"
+                display="flex"
+                flexDirection="column"
+                minW={{ base: '100%', lg: 'auto' }}
+                flexShrink={0}
+                overflowY={{ base: 'visible', lg: 'auto' }}
+                h={{ base: 'auto', lg: '100%' }}
+                sx={{
+                  '&::-webkit-scrollbar': { width: '8px' },
+                  '&::-webkit-scrollbar-track': { width: '8px' },
+                  '&::-webkit-scrollbar-thumb': { backgroundColor: 'gray.500', borderRadius: '4px' },
+                }}
+              >
+                <AllyForm />
+              </Box>
               <AllyList />
             </Flex>
           </MotionBox>
