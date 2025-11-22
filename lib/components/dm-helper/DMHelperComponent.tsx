@@ -14,7 +14,7 @@ export const DMHelperComponent = () => {
     <>
       <Tabs
         display="grid"
-        gridTemplateRows="10% 90%"
+        gridTemplateRows={{ base: 'auto 1fr', lg: '10% 90%' }}
         alignContent={'center'}
         height="100%"
         overflowY={'hidden'}

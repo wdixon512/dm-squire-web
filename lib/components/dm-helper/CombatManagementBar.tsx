@@ -44,14 +44,14 @@ export default function CombatManagementBar() {
     onClearMonstersOpen();
   };
   return (
-    <Box bgColor="blackAlpha.800" p={4} borderWidth="1px" borderRadius="md" shadow="md">
-      <Flex alignItems="center" gap="4">
+    <Box bgColor="blackAlpha.800" p={{ base: 2, lg: 4 }} borderWidth="1px" borderRadius="md" shadow="md">
+      <Flex alignItems="center" gap={{ base: 2, lg: 4 }} flexWrap={{ base: "wrap", lg: "nowrap" }}>
         {combatStarted ? (
-          <Button variant="redSolid" onClick={() => endCombat()} data-testid="end-combat-btn" px="8">
+          <Button variant="redSolid" onClick={() => endCombat()} data-testid="end-combat-btn" px={{ base: 4, lg: 8 }} fontSize={{ base: "sm", lg: "md" }}>
             End Combat
           </Button>
         ) : (
-          <Button onClick={() => startCombat()} data-testid="start-combat-button" px="8">
+          <Button onClick={() => startCombat()} data-testid="start-combat-button" px={{ base: 4, lg: 8 }} fontSize={{ base: "sm", lg: "md" }}>
             Start Combat
           </Button>
         )}
@@ -60,6 +60,7 @@ export default function CombatManagementBar() {
           width="fit-content"
           onClick={(e) => showClearMobForm(e)}
           data-testid="clear-mobs-button"
+          fontSize={{ base: "sm", lg: "md" }}
         >
           Clear Enemies
         </Button>

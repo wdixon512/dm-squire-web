@@ -51,7 +51,7 @@ export const MobQuickAdd = (props: FlexProps) => {
             >
               <Flex
                 direction="column"
-                p={4}
+                p={{ base: 2, lg: 4 }}
                 bg="blackAlpha.900"
                 opacity=".95"
                 borderWidth={1}

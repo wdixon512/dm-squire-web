@@ -34,7 +34,7 @@ export const InviteOthersForm = () => {
 
   return (
     isClient && (
-      <Flex direction="column" bgColor="blackAlpha.900" p="8" borderRadius="xl" w="fit-content" justifySelf="center">
+      <Flex direction="column" bgColor="blackAlpha.900" p={{ base: 4, lg: 8 }} borderRadius="xl" w={{ base: "100%", lg: "fit-content" }} maxW={{ base: "100%", lg: "none" }} justifySelf="center" mx={{ base: 2, lg: 0 }}>
         {/* User is not signed in */}
         {!auth.currentUser ? (
           <Heading>Sign in to create a room</Heading>

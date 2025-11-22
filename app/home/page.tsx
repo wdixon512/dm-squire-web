@@ -8,7 +8,7 @@ export default function Home() {
     <>
       <BackgroundSelector />
       <DMHelperContextProvider>
-        <Container maxW={{ xl: '1200px' }} justifyContent={'center'}>
+        <Container maxW={{ base: '100%', lg: '1200px' }} px={{ base: 2, lg: 0 }} justifyContent={'center'}>
           <DMHelperComponent />
         </Container>
       </DMHelperContextProvider>

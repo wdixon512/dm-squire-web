@@ -17,7 +17,7 @@ export const AppWrapper = (props: ContainerProps) => {
       bgImage={backgroundImageUrl || '/static/images/backgrounds/demon-in-hell.jpg'}
       bgSize="cover"
       display="grid"
-      gridTemplateRows={'7% 93%'}
+      gridTemplateRows={{ base: 'auto 1fr' }}
     >
       {props.children}
     </Container>

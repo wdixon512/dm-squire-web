@@ -25,36 +25,31 @@ export default function CharactersPanel() {
       overflowY="hidden"
     >
       <TabList mb="4">
-        <CharacterSheetTab
-          _selected={{
-            color: 'marioRed.200',
-            borderColor: 'marioRed.200',
-          }}
-        >
+        <CharacterSheetTab _selected={{ color: 'marioRed.200', borderColor: 'marioRed.200' }}>
           Enemies
         </CharacterSheetTab>
-        <CharacterSheetTab
-          _selected={{
-            color: 'interactive.200',
-            borderColor: 'interactive.200',
-          }}
-        >
+        <CharacterSheetTab _selected={{ color: 'interactive.200', borderColor: 'interactive.200' }}>
           Heroes
         </CharacterSheetTab>
-        <CharacterSheetTab
-          _selected={{
-            color: 'yellow.200',
-            borderColor: 'yellow.200',
-          }}
-        >
-          Allies
-        </CharacterSheetTab>
+        <CharacterSheetTab _selected={{ color: 'yellow.200', borderColor: 'yellow.200' }}>Allies</CharacterSheetTab>
       </TabList>
       <TabPanels h="100%">
         <DMHelperTabPanel index={tabIndex} current={0}>
           <MotionBox h="100%" {...slideVariant}>
-            <Flex gap="4" w="100%" h="100%">
-              <Box flex=".5" gap="2" display="flex" flexDirection="column">
+            <Flex
+              gap={{ base: 2, lg: 4 }}
+              w="100%"
+              h="100%"
+              direction={{ base: 'column', lg: 'row' }}
+              px={{ base: 2, lg: 0 }}
+            >
+              <Box
+                flex={{ base: '1', lg: '.5' }}
+                gap="2"
+                display="flex"
+                flexDirection="column"
+                minW={{ base: '100%', lg: 'auto' }}
+              >
                 <MobForm />
                 <MobQuickAdd />
               </Box>
@@ -64,7 +59,7 @@ export default function CharactersPanel() {
         </DMHelperTabPanel>
         <DMHelperTabPanel index={tabIndex} current={1}>
           <MotionBox h="100%" {...slideVariant}>
-            <Flex gap="4" w="100%">
+            <Flex gap={{ base: 2, lg: 4 }} w="100%" direction={{ base: 'column', lg: 'row' }} px={{ base: 2, lg: 0 }}>
               <HeroForm />
               <HeroList />
             </Flex>
@@ -72,7 +67,7 @@ export default function CharactersPanel() {
         </DMHelperTabPanel>
         <DMHelperTabPanel index={tabIndex} current={2}>
           <MotionBox h="100%" {...slideVariant}>
-            <Flex gap="4" w="100%">
+            <Flex gap={{ base: 2, lg: 4 }} w="100%" direction={{ base: 'column', lg: 'row' }} px={{ base: 2, lg: 0 }}>
               <AllyForm />
               <AllyList />
             </Flex>
