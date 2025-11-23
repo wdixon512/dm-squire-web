@@ -1,7 +1,7 @@
 import { TabPanels } from '@chakra-ui/react';
 import React from 'react';
 import { InviteOthersForm } from './InviteOthersForm';
-import UserRoomSettingsComponent from './UserRoomSettingsComponent';
+import { SettingsPanel } from './SettingsPanel';
 import CombatPanel from './panels/CombatPanel';
 import DMHelperTabPanel from './panels/DMHelperTabPanel';
 import CharactersPanel from './panels/CharactersPanel';
@@ -37,8 +37,8 @@ export default function DMHelperTabPanels(props: { readOnlyRoom: boolean; combat
 
       {/* Settings Tab Panel */}
       <DMHelperTabPanel current={readOnlyRoom ? 1 : 3} index={tabIndex} h={{ base: 'auto', lg: '100%' }}>
-        <MotionBox {...fadeVariant} flex="1" h={{ base: 'auto', lg: '100%' }} display="flex" justifyContent="center" alignItems="flex-start" w="100%" px={{ base: 2, lg: 0 }} minH="0" overflow={{ base: 'visible', lg: 'hidden' }}>
-          <UserRoomSettingsComponent />
+        <MotionBox {...fadeVariant} flex="1" h={{ base: 'auto', lg: '100%' }} minH="0" overflow={{ base: 'visible', lg: 'hidden' }}>
+          <SettingsPanel />
         </MotionBox>
       </DMHelperTabPanel>
     </TabPanels>

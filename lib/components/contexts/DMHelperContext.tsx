@@ -50,33 +50,44 @@ export const DMHelperContextProvider = ({ children }) => {
     if (!isClient || joinedRoomId === null) {
       return false;
     }
-    // If user has admin privileges, they can edit
     return !hasAdminPrivileges(room);
   }, [isClient, joinedRoomId, room]);
 
-  // Utilities to update Room context state & Realtime Database
   const scheduleCommitRoomChanges = () => setCommitPending(true);
 
   // On component mount, fetch the room from Realtime Database
   useEffect(() => {
     setIsClient(true);
 
-    // If localstorage is indicating that we've joined a room, join it
-    if (joinedRoomId) {
-      joinRoom(joinedRoomId);
-      return;
-    }
-
     const auth = getAuth();
+    let hasLoadedRoom = false;
+    let previousUser = auth.currentUser;
+
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      if (user) {
+      if (joinedRoomId) {
+        const shouldLoadRoom = !hasLoadedRoom || (user && !previousUser);
+
+        if (shouldLoadRoom) {
+          try {
+            hasLoadedRoom = true;
+            previousUser = user;
+            await joinRoom(joinedRoomId);
+            return;
+          } catch (error) {
+            console.warn('Error loading/refreshing joined room:', error);
+            setloadingFirebaseRoom(false);
+            return;
+          }
+        }
+        previousUser = user;
+        return;
+      }
+
+      if (!joinedRoomId && user) {
         try {
           setloadingFirebaseRoom(true);
-          // Get room for firebase, and set our context state
-          roomService.getRoomByOwnerUID(user.uid).then((dbRoom) => {
-            if (dbRoom) {
-              syncContextWithRoom(dbRoom);
-            } else {
+          roomService.getRoomByOwnerUID(user.uid, syncContextWithRoom).then((dbRoom) => {
+            if (!dbRoom) {
               setRoom({
                 ...room,
                 ownerUID: user.uid,
@@ -89,10 +100,10 @@ export const DMHelperContextProvider = ({ children }) => {
                 allies: allies,
               });
             }
+            setloadingFirebaseRoom(false);
           });
         } catch (error) {
           console.warn('Error fetching room:', error, 'Creating new room...');
-          // If we fail to retrieve the room, create a new one
           setRoom({
             ...room,
             ownerUID: user.uid,
@@ -104,18 +115,20 @@ export const DMHelperContextProvider = ({ children }) => {
             heroes: heroes,
             allies: allies,
           });
+          setloadingFirebaseRoom(false);
         }
+      } else {
+        setloadingFirebaseRoom(false);
       }
-
-      setloadingFirebaseRoom(false);
     });
 
     return () => unsubscribe();
   }, [joinedRoomId]);
 
-  // Commit changes to the room to Realtime Database
   useEffect(() => {
-    if (!commitPending || joinedRoomId) return;
+    if (!commitPending) return;
+
+    if (joinedRoomId && !hasAdminPrivileges(room)) return;
 
     try {
       roomService.updateRoom(room, entities, mobFavorites, heroes, allies, combatStarted).catch((error) => {

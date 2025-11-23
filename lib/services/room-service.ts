@@ -9,6 +9,7 @@ import { ref, get, set, update, push, onValue, orderByChild, equalTo, query } fr
 import { sanitizeData } from '@lib/util/firebase-utils';
 import { ToastId, UseToastOptions } from '@chakra-ui/react';
 import { ProfileUpdateRequestBody } from '@lib/models/dtos/ProfileUpdateResponse';
+import { isRoomOwner, isRoomAdmin } from '@lib/util/room-permissions';
 
 export class RoomService {
   constructor(private toast: (options: UseToastOptions) => ToastId | undefined) {}
@@ -76,13 +77,7 @@ export class RoomService {
       throw new Error('User is not authenticated');
     }
 
-    // Check if user is owner or admin
-    const isOwner = room.ownerUID === auth.currentUser.uid;
-    const isAdmin = room.adminEmails?.some(
-      (email) => email.toLowerCase() === auth.currentUser?.email?.toLowerCase()
-    ) || false;
-
-    if (!isOwner && !isAdmin) {
+    if (!isRoomOwner(room) && !isRoomAdmin(room)) {
       throw new Error('You do not have permission to update this room');
     }
 
@@ -108,15 +103,26 @@ export class RoomService {
     await update(roomRef, sanitizedRoom);
   }
 
-  async getRoomByOwnerUID(ownerUID: string): Promise<Room | null> {
-    // Create a query to find rooms with the matching ownerUID
+  async getRoomByOwnerUID(ownerUID: string, onRoomUpdate?: (room: Room) => void): Promise<Room | null> {
     const roomsRef = ref(rtdb, `rooms`);
     const queryByOwnerUID = query(roomsRef, orderByChild('ownerUID'), equalTo(ownerUID));
     const snapshot = await get(queryByOwnerUID);
 
     if (snapshot.exists()) {
       const dbRooms = snapshot.val();
-      return Object.values(dbRooms)[0] as Room;
+      const room = Object.values(dbRooms)[0] as Room;
+
+      if (onRoomUpdate && room.id) {
+        const roomRef = ref(rtdb, `rooms/${room.id}`);
+        onValue(roomRef, (snapshot) => {
+          if (snapshot.exists()) {
+            const updatedRoom = snapshot.val() as Room;
+            onRoomUpdate(updatedRoom);
+          }
+        });
+      }
+
+      return room;
     }
 
     return null;
@@ -173,7 +179,7 @@ export class RoomService {
 
     const room = roomSnapshot.val() as Room;
 
-    if (room.ownerUID !== auth.currentUser.uid) {
+    if (!isRoomOwner(room)) {
       throw new Error('Only the room owner can add admins');
     }
 
@@ -212,7 +218,7 @@ export class RoomService {
 
     const room = roomSnapshot.val() as Room;
 
-    if (room.ownerUID !== auth.currentUser.uid) {
+    if (!isRoomOwner(room)) {
       throw new Error('Only the room owner can remove admins');
     }
 

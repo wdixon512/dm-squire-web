@@ -16,9 +16,7 @@ import {
   useToast,
   Divider,
 } from '@chakra-ui/react';
-import { FaTrash, FaUserShield } from 'react-icons/fa';
-import { isRoomOwner } from '@lib/util/room-permissions';
-import { auth } from '@services/firebase';
+import { FaTrash } from 'react-icons/fa';
 
 export const AdminManagement: React.FC = () => {
   const { room, addAdminEmail, removeAdminEmail } = useContext(DMHelperContext);
@@ -26,13 +24,7 @@ export const AdminManagement: React.FC = () => {
   const [isAdding, setIsAdding] = useState(false);
   const toast = useToast();
 
-  const isOwner = isRoomOwner(room);
   const adminEmails = room?.adminEmails || [];
-
-  // Only show to room owners
-  if (!isOwner) {
-    return null;
-  }
 
   const handleAddAdmin = async () => {
     const email = emailInput.trim();
@@ -80,15 +72,10 @@ export const AdminManagement: React.FC = () => {
   };
 
   return (
-    <Box w="100%" mt={4}>
-      <Flex alignItems="center" gap={2} mb={4}>
-        <FaUserShield color="white" />
-        <Text fontSize={{ base: 'md', lg: 'lg' }} fontWeight="bold" color="white">
-          Room Admins
-        </Text>
-      </Flex>
+    <Box w="100%">
       <Text fontSize={{ base: 'xs', lg: 'sm' }} color="gray.400" mb={4}>
-        Grant admin access to other users. Admins can manage all entities in this room when signed in with a matching email.
+        Grant admin access to other users. Admins can manage all entities in this room when signed in with a matching
+        email.
       </Text>
 
       <VStack spacing={4} align="stretch">
@@ -174,4 +161,3 @@ export const AdminManagement: React.FC = () => {
     </Box>
   );
 };
-
