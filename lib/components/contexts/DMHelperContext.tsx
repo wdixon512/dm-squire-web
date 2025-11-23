@@ -13,6 +13,9 @@ import useLocalStorage from '@lib/hooks/useLocalStorage';
 import { DMHelperContextType } from './DMHelperContextTypes';
 import { useRoomService } from '@lib/hooks/use-room-service';
 import { useEntityService } from '@lib/hooks/use-entity-service';
+import { hasAdminPrivileges } from '@lib/util/room-permissions';
+import { ref, get } from 'firebase/database';
+import { rtdb } from '@services/firebase';
 
 /**
  * This file defines the DMHelperContext and DMHelperContextProvider components.
@@ -40,7 +43,16 @@ export const DMHelperContextProvider = ({ children }) => {
   const heroes = useMemo(() => entities.filter((entity) => entity.type === EntityType.HERO) as Hero[], [entities]);
   const allies = useMemo(() => entities.filter((entity) => entity.type === EntityType.ALLY) as Ally[], [entities]);
 
-  const readOnlyRoom = useMemo(() => isClient && joinedRoomId !== null, [isClient, joinedRoomId]);
+  // Room is read-only if:
+  // 1. User joined a room (joinedRoomId !== null) AND
+  // 2. User does NOT have admin privileges (not owner and not admin)
+  const readOnlyRoom = useMemo(() => {
+    if (!isClient || joinedRoomId === null) {
+      return false;
+    }
+    // If user has admin privileges, they can edit
+    return !hasAdminPrivileges(room);
+  }, [isClient, joinedRoomId, room]);
 
   // Utilities to update Room context state & Realtime Database
   const scheduleCommitRoomChanges = () => setCommitPending(true);
@@ -285,6 +297,70 @@ export const DMHelperContextProvider = ({ children }) => {
     }
   };
 
+  const addAdminEmail = async (email: string): Promise<void> => {
+    if (!room.id) {
+      throw new Error('Room ID is required');
+    }
+    try {
+      await roomService.addAdminEmail(room.id, email);
+      // Refresh room data to get updated admin list
+      const roomRef = ref(rtdb, `rooms/${room.id}`);
+      const roomSnapshot = await get(roomRef);
+      if (roomSnapshot.exists()) {
+        const updatedRoom = roomSnapshot.val() as Room;
+        setRoom(updatedRoom);
+      }
+      toast({
+        title: 'Admin added',
+        description: `${email} has been granted admin access`,
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+    } catch (error: any) {
+      toast({
+        title: 'Error adding admin',
+        description: error.message || 'Failed to add admin',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+      throw error;
+    }
+  };
+
+  const removeAdminEmail = async (email: string): Promise<void> => {
+    if (!room.id) {
+      throw new Error('Room ID is required');
+    }
+    try {
+      await roomService.removeAdminEmail(room.id, email);
+      // Refresh room data to get updated admin list
+      const roomRef = ref(rtdb, `rooms/${room.id}`);
+      const roomSnapshot = await get(roomRef);
+      if (roomSnapshot.exists()) {
+        const updatedRoom = roomSnapshot.val() as Room;
+        setRoom(updatedRoom);
+      }
+      toast({
+        title: 'Admin removed',
+        description: `${email} has been removed from admins`,
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+    } catch (error: any) {
+      toast({
+        title: 'Error removing admin',
+        description: error.message || 'Failed to remove admin',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+      });
+      throw error;
+    }
+  };
+
   return (
     <DMHelperContext.Provider
       value={{
@@ -313,6 +389,8 @@ export const DMHelperContextProvider = ({ children }) => {
         clearMobFavorites,
         loadingFirebaseRoom,
         readOnlyRoom,
+        addAdminEmail,
+        removeAdminEmail,
       }}
     >
       {children}

@@ -76,8 +76,14 @@ export class RoomService {
       throw new Error('User is not authenticated');
     }
 
-    if (room.ownerUID !== auth.currentUser.uid) {
-      throw new Error('You are not the owner of this room');
+    // Check if user is owner or admin
+    const isOwner = room.ownerUID === auth.currentUser.uid;
+    const isAdmin = room.adminEmails?.some(
+      (email) => email.toLowerCase() === auth.currentUser?.email?.toLowerCase()
+    ) || false;
+
+    if (!isOwner && !isAdmin) {
+      throw new Error('You do not have permission to update this room');
     }
 
     const updatedRoom: Room = {
@@ -147,5 +153,73 @@ export class RoomService {
       .catch((error) => {
         console.error('Error updating hero profile picture:', error);
       });
+  }
+
+  /**
+   * Add an admin email to a room
+   * Only the room owner can add admins
+   */
+  async addAdminEmail(roomId: string, email: string): Promise<void> {
+    if (!auth.currentUser) {
+      throw new Error('User is not authenticated');
+    }
+
+    const roomRef = ref(rtdb, `rooms/${roomId}`);
+    const roomSnapshot = await get(roomRef);
+
+    if (!roomSnapshot.exists()) {
+      throw new Error('Room not found');
+    }
+
+    const room = roomSnapshot.val() as Room;
+
+    if (room.ownerUID !== auth.currentUser.uid) {
+      throw new Error('Only the room owner can add admins');
+    }
+
+    const adminEmails = room.adminEmails || [];
+    const normalizedEmail = email.toLowerCase().trim();
+
+    // Check if email is already an admin
+    if (adminEmails.some((e) => e.toLowerCase() === normalizedEmail)) {
+      throw new Error('This email is already an admin');
+    }
+
+    // Don't allow adding the owner's email as admin
+    if (normalizedEmail === auth.currentUser.email?.toLowerCase()) {
+      throw new Error('You are already the room owner');
+    }
+
+    const updatedAdminEmails = [...adminEmails, normalizedEmail];
+    await update(roomRef, { adminEmails: updatedAdminEmails });
+  }
+
+  /**
+   * Remove an admin email from a room
+   * Only the room owner can remove admins
+   */
+  async removeAdminEmail(roomId: string, email: string): Promise<void> {
+    if (!auth.currentUser) {
+      throw new Error('User is not authenticated');
+    }
+
+    const roomRef = ref(rtdb, `rooms/${roomId}`);
+    const roomSnapshot = await get(roomRef);
+
+    if (!roomSnapshot.exists()) {
+      throw new Error('Room not found');
+    }
+
+    const room = roomSnapshot.val() as Room;
+
+    if (room.ownerUID !== auth.currentUser.uid) {
+      throw new Error('Only the room owner can remove admins');
+    }
+
+    const adminEmails = room.adminEmails || [];
+    const normalizedEmail = email.toLowerCase().trim();
+
+    const updatedAdminEmails = adminEmails.filter((e) => e.toLowerCase() !== normalizedEmail);
+    await update(roomRef, { adminEmails: updatedAdminEmails });
   }
 }

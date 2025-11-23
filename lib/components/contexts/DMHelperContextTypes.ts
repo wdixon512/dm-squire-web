@@ -48,4 +48,6 @@ export interface DMHelperContextType {
   clearMobFavorites: () => void;
   loadingFirebaseRoom: boolean;
   readOnlyRoom: boolean;
+  addAdminEmail: (email: string) => Promise<void>;
+  removeAdminEmail: (email: string) => Promise<void>;
 }

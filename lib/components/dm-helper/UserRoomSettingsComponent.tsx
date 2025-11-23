@@ -18,11 +18,14 @@ import { auth } from '@lib/services/firebase';
 import { useFirebaseGoogleAuth } from '../contexts/FirebaseGoogleAuthContext';
 import UserInfo from './UserInfo';
 import BackgroundSelector from '../global/BackgroundSelector';
+import { AdminManagement } from './AdminManagement';
+import { isRoomOwner } from '@lib/util/room-permissions';
 
 export const UserRoomSettingsComponent: React.FC = () => {
   const { room, readOnlyRoom, leaveRoom, isClient } = useContext(DMHelperContext);
   const { signInWithGoogle, signOutOfGoogle } = useFirebaseGoogleAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const isOwner = isRoomOwner(room);
 
   const handleLeaveRoom = () => {
     onOpen();
@@ -37,6 +40,7 @@ export const UserRoomSettingsComponent: React.FC = () => {
         <UserInfo mb={{ base: 4, lg: 8 }} />
         <Flex direction={'column'} alignSelf="flex-start" w="100%">
           {room?.id && <Text>Current Room Id: {room.id}</Text>}
+          {isOwner && <AdminManagement />}
           {!readOnlyRoom ? (
             <Flex gap={4}>
               {!auth.currentUser && (
