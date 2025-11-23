@@ -46,14 +46,16 @@ const AllyForm: React.FC = () => {
 
   return (
     <EntityBaseForm onFormSubmit={handleAddAlly} addButtonTestId="add-ally-button" flex=".5">
-      <Heading as="h3" size="md" color="white" mb="0" borderBottom={'2px dotted'}>
+      <Heading as="h3" size={{ base: 'sm', lg: 'md' }} color="white" mb="0" borderBottom={'2px dotted'}>
         Add an{' '}
         <Box as="span" color="yellow.200">
           Ally
         </Box>
       </Heading>
       <FormControl>
-        <FormLabel color="white">Ally Name</FormLabel>
+        <FormLabel color="white" fontSize={{ base: 'sm', lg: 'md' }}>
+          Ally Name
+        </FormLabel>
         <Input
           type="text"
           value={allyName}
@@ -61,12 +63,15 @@ const AllyForm: React.FC = () => {
           color="white"
           textFillColor={'whiteAlpha.800'}
           placeholder="Enter ally name"
+          size={{ base: 'sm', lg: 'md' }}
           required
           data-testid="ally-name-input"
         />
       </FormControl>
       <FormControl>
-        <FormLabel color="white">Ally Health</FormLabel>
+        <FormLabel color="white" fontSize={{ base: 'sm', lg: 'md' }}>
+          Ally Health
+        </FormLabel>
         <Input
           type="number"
           value={health}
@@ -74,6 +79,7 @@ const AllyForm: React.FC = () => {
           color="white"
           textFillColor={'whiteAlpha.800'}
           placeholder="Enter health"
+          size={{ base: 'sm', lg: 'md' }}
         />
       </FormControl>
       <MobTypeaheadFormControl
@@ -98,7 +104,7 @@ const AllyForm: React.FC = () => {
         inputDataTestId="ally-character-sheet-input"
       />
       <FormControl>
-        <FormLabel display="inline-flex" color="white" gap="2">
+        <FormLabel display="inline-flex" color="white" gap="2" fontSize={{ base: 'sm', lg: 'md' }}>
           Profile URL
           <Tooltip
             label="Enter this hero's D&D Beyond profile URL. Set your character's privacy setting to `Public` to allow DMSquire more access."
@@ -115,6 +121,7 @@ const AllyForm: React.FC = () => {
           color="white"
           textFillColor={'whiteAlpha.800'}
           placeholder="Enter Profile URL"
+          size={{ base: 'sm', lg: 'md' }}
           data-testid="profile-input"
         />
       </FormControl>

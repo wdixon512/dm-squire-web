@@ -42,7 +42,7 @@ export const HeroItem: React.FC<HeroItemProps> = ({
         textColor={textColor ?? 'interactive.200'}
         readOnly={readOnlyRoom}
         canViewDetails={!!hero.dndBeyondProfileUrl}
-        editTooltipLabel="Update Hero Initiative"
+        editTooltipLabel="Update Hero"
       />
       <EntityEditModal entity={hero} isOpen={isOpen} onClose={onClose} showProfileUrl={true} />
 

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { rtdb } from '@services/firebase';
 import { ref, get, update } from 'firebase/database';
-import puppeteer from 'puppeteer-core';
 import { ProfileUpdateRequestBody } from '@lib/models/dtos/ProfileUpdateResponse';
+import { BrowserlessScrapeResponse } from '@lib/models/dtos/BrowserlessScrapeResponse';
 
 export async function POST(req: NextRequest) {
   try {
@@ -80,42 +80,88 @@ function validateScrapeUrl(url: string): boolean {
 
 async function scrapeProfilePicture(url: string): Promise<string | null> {
   console.log('Scraping profile picture from:', url);
-  // keep timer
+
+  const blessToken = process.env.BLESS_TOKEN;
+  if (!blessToken) {
+    console.error('BLESS_TOKEN is not configured. Please set BLESS_TOKEN in your environment variables.');
+    return null;
+  }
+
+  const browserlessEndpoint = process.env.BROWSERLESS_ENDPOINT || 'https://production-sfo.browserless.io';
+  const scrapeUrl = `${browserlessEndpoint}/scrape?token=${blessToken}`;
   const startTime = Date.now();
 
-  const browser = await puppeteer.connect({
-    browserWSEndpoint: `wss://chrome.browserless.io?token=${process.env.BLESS_TOKEN}`,
-  });
-
-  const page = await browser.newPage();
-
   try {
-    await page.goto(url, { waitUntil: 'networkidle2', timeout: 15000 });
+    const response = await fetch(scrapeUrl, {
+      method: 'POST',
+      headers: {
+        'Cache-Control': 'no-cache',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        url: url,
+        elements: [{ selector: 'img.ddbc-character-avatar__portrait' }],
+        waitForSelector: {
+          selector: 'img.ddbc-character-avatar__portrait',
+          timeout: 10000,
+        },
+      }),
+    });
 
-    // First, try to get the portrait by class
-    let imgSrc = await page
-      .$eval('img.ddbc-character-avatar__portrait', (img: HTMLImageElement) => img.src)
-      .catch(() => null);
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`Browserless API error (${response.status}):`, errorText);
 
-    console.log('main image:', imgSrc);
+      if (response.status === 403) {
+        console.error('403 Forbidden: Check that your BLESS_TOKEN is valid and has not expired.');
+        console.error('Verify your token at https://www.browserless.io/');
+      }
 
-    // Fallback: use alt text
-    if (!imgSrc) {
-      imgSrc = await page.$eval('img[alt="Character portrait"]', (img: HTMLImageElement) => img.src).catch(() => null);
+      return null;
     }
 
-    console.log('fallback image:', imgSrc);
+    const result = (await response.json()) as BrowserlessScrapeResponse;
+    let imgSrc: string | null = null;
 
-    return imgSrc ?? null;
-  } catch (error) {
-    console.error(`Error scraping rendered profile picture for ${url}:`, error);
-    return null;
-  } finally {
+    // Extract image src from the structured response
+    if (result.data && Array.isArray(result.data)) {
+      for (const selectorResult of result.data) {
+        if (selectorResult.results && Array.isArray(selectorResult.results)) {
+          for (const element of selectorResult.results) {
+            // Check for src attribute in the attributes array (for img elements)
+            const srcAttribute = element.attributes?.find((attr) => attr.name === 'src');
+            if (srcAttribute?.value) {
+              imgSrc = srcAttribute.value;
+              break;
+            }
+            // Fallback: check for direct src property
+            if (element.src) {
+              imgSrc = element.src;
+              break;
+            }
+          }
+          if (imgSrc) break;
+        }
+      }
+    }
+
+    console.log('Scraped image URL:', imgSrc);
+
+    if (!imgSrc) {
+      console.log('Full API response:', JSON.stringify(result, null, 2));
+    }
+
     const endTime = Date.now();
     const elapsedTime = endTime - startTime;
     console.log(`Scraping took ${elapsedTime} ms`);
 
-    await browser.close();
+    return imgSrc;
+  } catch (error: any) {
+    console.error(`Error scraping rendered profile picture for ${url}:`, error);
+    if (error.message) {
+      console.error('Error details:', error.message);
+    }
+    return null;
   }
 }
 

@@ -101,13 +101,16 @@ export const MobTypeaheadFormControl: React.FC<MobTypeaheadFormControlProps> = (
 
   return (
     <FormControl position="relative">
-      <FormLabel color="white">{label}</FormLabel>
+      <FormLabel color="white" fontSize={{ base: 'sm', lg: 'md' }}>
+        {label}
+      </FormLabel>
       <Input
         type="text"
         value={value}
         color="white"
         textFillColor={'whiteAlpha.800'}
         placeholder={placeholder}
+        size={{ base: 'sm', lg: 'md' }}
         onChange={handleInputChange}
         onFocus={handleFocus}
         onBlur={handleBlur}

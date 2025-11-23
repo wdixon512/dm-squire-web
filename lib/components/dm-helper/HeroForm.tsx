@@ -30,14 +30,16 @@ export const HeroForm = () => {
 
   return (
     <EntityBaseForm onFormSubmit={handleAddHero} label="Hero" addButtonTestId="add-hero-button" flex=".5">
-      <Heading as="h3" size="md" color="white" mb="0" borderBottom={'2px dotted'}>
+      <Heading as="h3" size={{ base: 'sm', lg: 'md' }} color="white" mb="0" borderBottom={'2px dotted'}>
         Add a{' '}
         <Box as="span" color="interactive.200">
           Hero
         </Box>
       </Heading>
       <FormControl>
-        <FormLabel color="white">Hero Name</FormLabel>
+        <FormLabel color="white" fontSize={{ base: 'sm', lg: 'md' }}>
+          Hero Name
+        </FormLabel>
         <Input
           type="text"
           value={heroName}
@@ -45,13 +47,14 @@ export const HeroForm = () => {
           color="white"
           textFillColor={'whiteAlpha.800'}
           placeholder="Enter hero name"
+          size={{ base: 'sm', lg: 'md' }}
           required
           data-testid="hero-name-input"
         />
       </FormControl>
 
       <FormControl>
-        <FormLabel display="inline-flex" color="white" gap="2">
+        <FormLabel display="inline-flex" color="white" gap="2" fontSize={{ base: 'sm', lg: 'md' }}>
           Profile URL
           <Tooltip
             label="Enter this hero's D&D Beyond profile URL. Set your character's privacy setting to `Public` to allow DMSquire more access."
@@ -68,6 +71,7 @@ export const HeroForm = () => {
           color="white"
           textFillColor={'whiteAlpha.800'}
           placeholder="Enter Profile URL"
+          size={{ base: 'sm', lg: 'md' }}
           data-testid="profile-input"
         />
       </FormControl>

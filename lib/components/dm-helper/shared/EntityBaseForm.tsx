@@ -51,13 +51,13 @@ export const EntityBaseForm: React.FC<EntityBaseFormProps> = ({
       onSubmit={handleSubmit}
       {...boxProps}
     >
-      <VStack spacing={4} align="stretch">
+      <VStack spacing={{ base: 2, lg: 4 }} align="stretch">
         {children}
-        <Button type="submit" colorScheme="blue" data-testid={addButtonTestId}>
+        <Button type="submit" colorScheme="blue" size={{ base: 'sm', lg: 'md' }} data-testid={addButtonTestId}>
           Add {label}
         </Button>
         {showClearButton && clearEntities && (
-          <Button onClick={clearEntities} colorScheme="red">
+          <Button onClick={clearEntities} colorScheme="red" size={{ base: 'sm', lg: 'md' }}>
             Clear All
           </Button>
         )}

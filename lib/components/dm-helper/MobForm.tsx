@@ -42,7 +42,7 @@ const MobForm: React.FC = () => {
 
   return (
     <EntityBaseForm onFormSubmit={handleAddMob} addButtonTestId="add-mob-button" flex=".5">
-      <Heading as="h3" size="md" color="white" mb="0" borderBottom={'2px dotted'}>
+      <Heading as="h3" size={{ base: 'sm', lg: 'md' }} color="white" mb="0" borderBottom={'2px dotted'}>
         Add an{' '}
         <Box as="span" color="marioRed.200">
           Enemy
@@ -58,7 +58,9 @@ const MobForm: React.FC = () => {
         inputDataTestId="mob-name-input"
       />
       <FormControl>
-        <FormLabel color="white">Health</FormLabel>
+        <FormLabel color="white" fontSize={{ base: 'sm', lg: 'md' }}>
+          Health
+        </FormLabel>
         <Flex gap={2}>
           <Input
             type="number"
@@ -67,6 +69,7 @@ const MobForm: React.FC = () => {
             color="white"
             textFillColor={'whiteAlpha.800'}
             placeholder="Enter health"
+            size={{ base: 'sm', lg: 'md' }}
             data-testid="mob-health-input"
           />
           <DiceRoller
@@ -77,7 +80,9 @@ const MobForm: React.FC = () => {
         </Flex>
       </FormControl>
       <FormControl>
-        <FormLabel color="white">Initiative</FormLabel>
+        <FormLabel color="white" fontSize={{ base: 'sm', lg: 'md' }}>
+          Initiative
+        </FormLabel>
         <Flex gap={2}>
           <Input
             type="number"
@@ -86,6 +91,7 @@ const MobForm: React.FC = () => {
             color="white"
             textFillColor={'whiteAlpha.800'}
             placeholder="Enter initiative"
+            size={{ base: 'sm', lg: 'md' }}
             data-testid="mob-initiative-input"
           />
           <DiceRoller

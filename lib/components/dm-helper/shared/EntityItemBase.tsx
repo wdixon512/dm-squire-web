@@ -16,12 +16,14 @@ import {
   IconButton,
 } from '@chakra-ui/react';
 import { FaUserEdit, FaEye, FaEyeSlash, FaArrowUp } from 'react-icons/fa';
+import { FaSkull } from 'react-icons/fa6';
 import { BsThreeDotsVertical } from 'react-icons/bs';
 import { SiBlockbench } from 'react-icons/si';
 import AnimatedFlex from '@components/global/AnimatedFlex';
 import React, { useContext } from 'react';
 import { Entity, EntityType } from '@lib/models/dm-helper/Entity';
 import { DMHelperContext } from '@lib/components/contexts/DMHelperContext';
+import { DamageHealControls } from './DamageHealControls';
 
 interface EntityItemBaseProps extends FlexProps {
   entity: Entity;
@@ -78,6 +80,18 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
     updateEntity({ ...entity, skipInCombat: true });
   };
 
+  const handleDamage = (amount: number) => {
+    const currentHealth = entity.health ?? 0;
+    const newHealth = Math.max(0, currentHealth - amount);
+    onHealthChange?.(newHealth.toString());
+  };
+
+  const handleHeal = (amount: number) => {
+    const currentHealth = entity.health ?? 0;
+    const newHealth = currentHealth + amount;
+    onHealthChange?.(newHealth.toString());
+  };
+
   // Build menu items for mobile
   const menuItems: React.ReactElement[] = [];
 
@@ -90,6 +104,7 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
         bg="blackAlpha.600"
         data-testid={removeButtonTestId ?? `${entity.id}-kill`}
       >
+        <Icon as={FaSkull} mr={2} />
         Kill
       </MenuItem>
     );
@@ -247,24 +262,36 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
           {entityName}
         </Text>
 
-        {/* HP Input */}
-        {showHealth && !readOnly && (
-          <Flex alignItems="center" gap={1} flexShrink={0}>
-            <Text fontSize="xs" whiteSpace="nowrap">
-              HP:
-            </Text>
-            <Input
-              type="number"
-              textColor="white"
-              fontWeight="800"
-              value={entity.health ?? ''}
-              onChange={(e) => onHealthChange?.(e.target.value)}
-              w="70px"
-              fontSize="xs"
-              size="sm"
-              data-testid={healthTestId ?? `${entity.id}-health`}
-            />
-          </Flex>
+        {/* HP Label and Damage/Heal Controls */}
+        {showHealth && (
+          <>
+            {readOnly ? (
+              <Flex alignItems="center" gap={1} flexShrink={0}>
+                <Text fontSize="xs" whiteSpace="nowrap">
+                  HP:
+                </Text>
+                <Text
+                  fontSize="xs"
+                  fontWeight="800"
+                  color="white"
+                  minW="35px"
+                  textAlign="right"
+                  data-testid={healthTestId ?? `${entity.id}-health-label`}
+                >
+                  {entity.health ?? 0}
+                </Text>
+              </Flex>
+            ) : (
+              <DamageHealControls
+                currentHealth={entity.health}
+                onDamage={handleDamage}
+                onHeal={handleHeal}
+                entityName={entityName}
+                entityId={entity.id}
+                size="sm"
+              />
+            )}
+          </>
         )}
       </Flex>
 
@@ -305,20 +332,32 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
             &nbsp;{entityName}
           </Text>
         </Flex>
-        {showHealth && !readOnly && (
+        {showHealth && (
           <Flex flex="1" alignItems="center" justifyContent={'flex-end'} mr={3}>
-            <Text fontSize="sm">HP:</Text>
-            <Input
-              type="number"
-              textColor="white"
-              fontWeight="800"
-              value={entity.health ?? ''}
-              onChange={(e) => onHealthChange?.(e.target.value)}
-              w="90px"
-              ml={2}
-              fontSize="sm"
-              data-testid={healthTestId ?? `${entity.id}-health`}
-            />
+            {readOnly ? (
+              <Flex alignItems="center" gap={2}>
+                <Text fontSize="sm">HP:</Text>
+                <Text
+                  fontSize="sm"
+                  fontWeight="800"
+                  color="white"
+                  minW="50px"
+                  textAlign="right"
+                  data-testid={healthTestId ?? `${entity.id}-health-label`}
+                >
+                  {entity.health ?? 0}
+                </Text>
+              </Flex>
+            ) : (
+              <DamageHealControls
+                currentHealth={entity.health}
+                onDamage={handleDamage}
+                onHeal={handleHeal}
+                entityName={entityName}
+                entityId={entity.id}
+                size="sm"
+              />
+            )}
           </Flex>
         )}
       </Flex>

@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "The official DM Squire website, built with NextJS and ChakraUI!",
   "main": "home.tsx",
+  "engines": {
+    "node": ">=18.18.0 <21.0.0"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
