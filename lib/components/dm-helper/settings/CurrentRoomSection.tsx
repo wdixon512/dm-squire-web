@@ -22,7 +22,7 @@ import { useFirebaseGoogleAuth } from '../../contexts/FirebaseGoogleAuthContext'
 import { FaDoorOpen } from 'react-icons/fa';
 
 export const CurrentRoomSection: React.FC = () => {
-  const { room, readOnlyRoom, leaveRoom } = useContext(DMHelperContext);
+  const { room, readOnlyRoom, leaveRoom, joinedRoomId } = useContext(DMHelperContext);
   const { signInWithGoogle, signOutOfGoogle } = useFirebaseGoogleAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -56,11 +56,21 @@ export const CurrentRoomSection: React.FC = () => {
           Authentication
         </Text>
         {!auth.currentUser ? (
-          <Button onClick={signInWithGoogle} colorScheme="blue" size={{ base: 'sm', lg: 'md' }} data-testid="sign-in-btn">
+          <Button
+            onClick={signInWithGoogle}
+            colorScheme="blue"
+            size={{ base: 'sm', lg: 'md' }}
+            data-testid="sign-in-btn"
+          >
             Sign In with Google
           </Button>
         ) : (
-          <Button variant="redSolid" onClick={signOutOfGoogle} size={{ base: 'sm', lg: 'md' }} data-testid="sign-out-btn">
+          <Button
+            variant="redSolid"
+            onClick={signOutOfGoogle}
+            size={{ base: 'sm', lg: 'md' }}
+            data-testid="sign-out-btn"
+          >
             Sign Out
           </Button>
         )}
@@ -71,12 +81,13 @@ export const CurrentRoomSection: React.FC = () => {
         )}
         {readOnlyRoom && auth.currentUser && (
           <Text fontSize={{ base: 'xs', lg: 'sm' }} color="gray.500" fontStyle="italic" mt={2}>
-            You are viewing this room as a visitor. Your email ({auth.currentUser.email}) is not listed as an admin for this room.
+            You are viewing this room as a visitor. Your email ({auth.currentUser.email}) is not listed as an admin for
+            this room.
           </Text>
         )}
       </VStack>
 
-      {readOnlyRoom && (
+      {joinedRoomId && (
         <VStack spacing={3} align="stretch">
           <Divider borderColor="gray.600" />
           <Button
@@ -91,7 +102,7 @@ export const CurrentRoomSection: React.FC = () => {
 
           <Modal isOpen={isOpen} onClose={onClose} isCentered>
             <ModalOverlay />
-            <ModalContent bg="blackAlpha.900" borderColor="gray.600" borderWidth="1px">
+            <ModalContent bg="white" borderColor="gray.600" borderWidth="1px">
               <ModalHeader textColor="primary.400">Are you sure you want to leave the room?</ModalHeader>
               <ModalFooter justifyContent="center" gap={2}>
                 <Button variant="redLink" onClick={onClose} data-testid="leave-room-no-btn">
@@ -115,4 +126,3 @@ export const CurrentRoomSection: React.FC = () => {
     </VStack>
   );
 };
-

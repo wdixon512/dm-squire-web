@@ -50,4 +50,5 @@ export interface DMHelperContextType {
   readOnlyRoom: boolean;
   addAdminEmail: (email: string) => Promise<void>;
   removeAdminEmail: (email: string) => Promise<void>;
+  joinedRoomId: string | null | undefined;
 }

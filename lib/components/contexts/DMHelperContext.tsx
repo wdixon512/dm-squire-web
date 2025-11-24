@@ -404,6 +404,7 @@ export const DMHelperContextProvider = ({ children }) => {
         readOnlyRoom,
         addAdminEmail,
         removeAdminEmail,
+        joinedRoomId,
       }}
     >
       {children}
