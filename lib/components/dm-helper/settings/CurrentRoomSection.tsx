@@ -18,20 +18,62 @@ import {
   Divider,
   Image,
   Avatar,
+  Input,
+  FormControl,
+  FormLabel,
+  useToast,
 } from '@chakra-ui/react';
 import { auth } from '@lib/services/firebase';
 import { useFirebaseGoogleAuth } from '../../contexts/FirebaseGoogleAuthContext';
-import { FaDoorOpen } from 'react-icons/fa';
+import { FaDoorOpen, FaGoogle, FaSignInAlt } from 'react-icons/fa';
 import { isRoomOwner } from '@lib/util/room-permissions';
+import { useState } from 'react';
 
 export const CurrentRoomSection: React.FC = () => {
-  const { room, readOnlyRoom, leaveRoom, joinedRoomId } = useContext(DMHelperContext);
+  const { room, readOnlyRoom, leaveRoom, joinedRoomId, joinRoom } = useContext(DMHelperContext);
   const { signInWithGoogle, signOutOfGoogle } = useFirebaseGoogleAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isJoinModalOpen, onOpen: onJoinModalOpen, onClose: onJoinModalClose } = useDisclosure();
+  const [roomIdInput, setRoomIdInput] = useState('');
   const isOwner = isRoomOwner(room);
+  const toast = useToast();
 
   const handleLeaveRoom = () => {
     onOpen();
+  };
+
+  const handleJoinRoom = async () => {
+    if (!roomIdInput.trim()) {
+      return;
+    }
+
+    // Extract room ID from URL if full URL is pasted
+    let roomId = roomIdInput.trim();
+    const urlMatch = roomId.match(/\/join\/([^\/\s]+)/);
+    if (urlMatch) {
+      roomId = urlMatch[1];
+    }
+
+    // Check if user is already in this room
+    if (room?.id === roomId || joinedRoomId === roomId) {
+      toast({
+        title: 'Already in Room',
+        description: "You're already in that room!",
+        status: 'warning',
+        duration: 3000,
+        isClosable: true,
+      });
+      setRoomIdInput('');
+      return;
+    }
+
+    try {
+      await joinRoom(roomId);
+      setRoomIdInput('');
+      onJoinModalClose();
+    } catch (error) {
+      // Error is handled by joinRoom toast
+    }
   };
 
   // Show owner info if viewing someone else's room
@@ -90,6 +132,8 @@ export const CurrentRoomSection: React.FC = () => {
             colorScheme="blue"
             size={{ base: 'sm', lg: 'md' }}
             data-testid="sign-in-btn"
+            leftIcon={<FaGoogle />}
+            w="fit-content"
           >
             Sign In with Google
           </Button>
@@ -99,6 +143,7 @@ export const CurrentRoomSection: React.FC = () => {
             onClick={signOutOfGoogle}
             size={{ base: 'sm', lg: 'md' }}
             data-testid="sign-out-btn"
+            w="fit-content"
           >
             Sign Out
           </Button>
@@ -116,9 +161,20 @@ export const CurrentRoomSection: React.FC = () => {
         )}
       </VStack>
 
-      {joinedRoomId && (
-        <VStack spacing={3} align="stretch">
-          <Divider borderColor="gray.600" />
+      <VStack spacing={3} align="stretch">
+        <Divider borderColor="gray.600" />
+        <Button
+          onClick={onJoinModalOpen}
+          colorScheme="blue"
+          size={{ base: 'sm', lg: 'md' }}
+          w="fit-content"
+          leftIcon={<FaSignInAlt />}
+          data-testid="join-room-btn"
+        >
+          Join Another Room
+        </Button>
+
+        {joinedRoomId && (
           <Button
             variant="redSolid"
             onClick={handleLeaveRoom}
@@ -128,30 +184,84 @@ export const CurrentRoomSection: React.FC = () => {
           >
             Leave Room
           </Button>
+        )}
 
-          <Modal isOpen={isOpen} onClose={onClose} isCentered>
-            <ModalOverlay />
-            <ModalContent bg="white" borderColor="gray.600" borderWidth="1px">
-              <ModalHeader textColor="primary.400">Are you sure you want to leave the room?</ModalHeader>
-              <ModalFooter justifyContent="center" gap={2}>
-                <Button variant="redLink" onClick={onClose} data-testid="leave-room-no-btn">
-                  No
-                </Button>
-                <Button
-                  variant="solid"
-                  onClick={() => {
-                    leaveRoom();
-                    onClose();
+        <Modal isOpen={isJoinModalOpen} onClose={onJoinModalClose} isCentered>
+          <ModalOverlay />
+          <ModalContent bg="blackAlpha.900" borderColor="gray.600" borderWidth="1px" color="white">
+            <ModalHeader color="white" borderBottomWidth="1px" borderColor="gray.600" pb={3}>
+              Join Room
+            </ModalHeader>
+            <Box p={6}>
+              <FormControl>
+                <FormLabel color="gray.300" mb={2}>
+                  Room ID or Join Link
+                </FormLabel>
+                <Input
+                  value={roomIdInput}
+                  onChange={(e) => setRoomIdInput(e.target.value)}
+                  placeholder="Enter room ID or full join link"
+                  bg="blackAlpha.800"
+                  borderColor="gray.600"
+                  color="white"
+                  _placeholder={{ color: 'gray.500' }}
+                  _focus={{ borderColor: 'blue.400', boxShadow: '0 0 0 1px var(--chakra-colors-blue-400)' }}
+                  onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                      handleJoinRoom();
+                    }
                   }}
-                  data-testid="leave-room-yes-btn"
-                >
-                  Yes
-                </Button>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
-        </VStack>
-      )}
+                  data-testid="join-room-input"
+                />
+                <Text fontSize="xs" color="gray.400" mt={2}>
+                  You can paste either the full join link or just the room ID
+                </Text>
+              </FormControl>
+            </Box>
+            <ModalFooter justifyContent="flex-end" gap={3} borderTopWidth="1px" borderColor="gray.600" pt={4}>
+              <Button
+                variant="ghost"
+                onClick={onJoinModalClose}
+                color="gray.300"
+                _hover={{ bg: 'gray.700' }}
+                data-testid="join-room-cancel-btn"
+              >
+                Cancel
+              </Button>
+              <Button
+                colorScheme="blue"
+                onClick={handleJoinRoom}
+                isDisabled={!roomIdInput.trim()}
+                data-testid="join-room-submit-btn"
+              >
+                Join
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+
+        <Modal isOpen={isOpen} onClose={onClose} isCentered>
+          <ModalOverlay />
+          <ModalContent bg="white" borderColor="gray.600" borderWidth="1px">
+            <ModalHeader textColor="primary.400">Are you sure you want to leave the room?</ModalHeader>
+            <ModalFooter justifyContent="center" gap={2}>
+              <Button variant="redLink" onClick={onClose} data-testid="leave-room-no-btn">
+                No
+              </Button>
+              <Button
+                variant="solid"
+                onClick={() => {
+                  leaveRoom();
+                  onClose();
+                }}
+                data-testid="leave-room-yes-btn"
+              >
+                Yes
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      </VStack>
     </VStack>
   );
 };

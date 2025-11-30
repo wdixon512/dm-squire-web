@@ -20,6 +20,7 @@ import UserInfo from './UserInfo';
 import BackgroundSelector from '../global/BackgroundSelector';
 import { AdminManagement } from './AdminManagement';
 import { isRoomOwner } from '@lib/util/room-permissions';
+import { FaGoogle } from 'react-icons/fa';
 
 export const UserRoomSettingsComponent: React.FC = () => {
   const { room, readOnlyRoom, leaveRoom, isClient } = useContext(DMHelperContext);
@@ -33,7 +34,7 @@ export const UserRoomSettingsComponent: React.FC = () => {
 
   return (
     isClient && (
-      <Card bgColor="blackAlpha.900" p={{ base: 2, lg: 4 }} w={{ base: "100%", lg: "auto" }} maxW="100%">
+      <Card bgColor="blackAlpha.900" p={{ base: 2, lg: 4 }} w={{ base: '100%', lg: 'auto' }} maxW="100%">
         <Flex direction={'column'} alignSelf="flex-start" w="100%" gap={4}>
           <BackgroundSelector />
         </Flex>
@@ -44,12 +45,12 @@ export const UserRoomSettingsComponent: React.FC = () => {
           {!readOnlyRoom ? (
             <Flex gap={4}>
               {!auth.currentUser && (
-                <Button onClick={signInWithGoogle} data-testid="sign-in-btn">
-                  Sign In
+                <Button onClick={signInWithGoogle} data-testid="sign-in-btn" leftIcon={<FaGoogle />} w="fit-content">
+                  Sign In with Google
                 </Button>
               )}
               {auth.currentUser && (
-                <Button variant="redSolid" onClick={signOutOfGoogle} data-testid="sign-out-btn">
+                <Button variant="redSolid" onClick={signOutOfGoogle} data-testid="sign-out-btn" w="fit-content">
                   Sign Out
                 </Button>
               )}

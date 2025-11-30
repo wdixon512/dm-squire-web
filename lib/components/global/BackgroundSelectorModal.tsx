@@ -44,7 +44,7 @@ export default function BackgroundSelectorModal({ isOpen, onClose }: BackgroundS
         height="fit-content"
         maxH={{ base: '100%', md: '90%' }}
         py="8"
-        bgColor="primary.700"
+        bgColor="secondary.500"
         sx={{
           '&::-webkit-scrollbar': {
             width: '6px',
