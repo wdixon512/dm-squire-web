@@ -6,6 +6,8 @@ import { Mob } from './Mob';
 export type Room = {
   id?: string;
   ownerUID?: string | null;
+  ownerEmail?: string | null;
+  ownerPhotoURL?: string | null;
   adminEmails?: string[];
   combat: Combat;
   mobFavorites?: Mob[];
@@ -20,6 +22,8 @@ export type RoomResponse = {
 
 export const DEFAULT_ROOM: Room = {
   ownerUID: null,
+  ownerEmail: null,
+  ownerPhotoURL: null,
   adminEmails: [],
   combat: {
     entities: [],

@@ -12,7 +12,8 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest --config jest.config.ts",
-    "monster-migration": "ts-node ./scripts/monster-firebase-migration.ts"
+    "monster-migration": "ts-node ./scripts/monster-firebase-migration.ts",
+    "migrate-room-owner-info": "ts-node -r tsconfig-paths/register ./scripts/migrate-room-owner-info.ts"
   },
   "keywords": [],
   "author": "",

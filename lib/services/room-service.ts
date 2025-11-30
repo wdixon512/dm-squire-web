@@ -23,6 +23,8 @@ export class RoomService {
     let newRoomData = {
       ...room,
       ownerUID: user.uid,
+      ownerEmail: user.email || null,
+      ownerPhotoURL: user.photoURL || null,
       syncWithFirebase: true,
     } as Room;
 
@@ -81,8 +83,17 @@ export class RoomService {
       throw new Error('You do not have permission to update this room');
     }
 
+    // Update owner info if current user is the owner (for existing rooms that don't have it, or if profile changed)
+    const ownerInfo = isRoomOwner(room)
+      ? {
+          ownerEmail: auth.currentUser.email || room.ownerEmail || null,
+          ownerPhotoURL: auth.currentUser.photoURL || room.ownerPhotoURL || null,
+        }
+      : {};
+
     const updatedRoom: Room = {
       ...room,
+      ...ownerInfo,
       combat: {
         ...room.combat,
         entities: entities,

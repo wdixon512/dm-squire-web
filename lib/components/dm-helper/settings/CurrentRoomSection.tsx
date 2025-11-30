@@ -16,19 +16,27 @@ import {
   useDisclosure,
   Heading,
   Divider,
+  Image,
+  Avatar,
 } from '@chakra-ui/react';
 import { auth } from '@lib/services/firebase';
 import { useFirebaseGoogleAuth } from '../../contexts/FirebaseGoogleAuthContext';
 import { FaDoorOpen } from 'react-icons/fa';
+import { isRoomOwner } from '@lib/util/room-permissions';
 
 export const CurrentRoomSection: React.FC = () => {
   const { room, readOnlyRoom, leaveRoom, joinedRoomId } = useContext(DMHelperContext);
   const { signInWithGoogle, signOutOfGoogle } = useFirebaseGoogleAuth();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const isOwner = isRoomOwner(room);
 
   const handleLeaveRoom = () => {
     onOpen();
   };
+
+  // Show owner info if viewing someone else's room
+  // Show if we have either ownerEmail or ownerPhotoURL
+  const showOwnerInfo = joinedRoomId && !isOwner && (room?.ownerEmail || room?.ownerPhotoURL);
 
   return (
     <VStack spacing={4} align="stretch">
@@ -39,6 +47,27 @@ export const CurrentRoomSection: React.FC = () => {
         </Heading>
       </Flex>
       <Divider borderColor="gray.600" />
+
+      {showOwnerInfo && (
+        <Box>
+          <Text fontSize={{ base: 'xs', lg: 'sm' }} color="gray.400" mb={2}>
+            Room Owner
+          </Text>
+          <Flex alignItems="center" gap={3}>
+            <Image
+              src={room.ownerPhotoURL || undefined}
+              alt={room.ownerEmail || 'Room Owner'}
+              borderWidth="2px"
+              borderColor="blue.400"
+            />
+            <Box>
+              <Text fontSize={{ base: 'sm', lg: 'md' }} color="white" fontWeight="600">
+                {room.ownerEmail || 'Unknown'}
+              </Text>
+            </Box>
+          </Flex>
+        </Box>
+      )}
 
       {room?.id && (
         <Box>
