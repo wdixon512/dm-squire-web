@@ -1,6 +1,7 @@
 import { TabList, Tab, Icon, Image, Text } from '@chakra-ui/react';
 import React from 'react';
 import { FaUserCog } from 'react-icons/fa';
+import { RoomIndicatorBadge } from './shared/RoomIndicator';
 
 export default function DMHelperTabList(props: { readOnlyRoom: boolean }) {
   const { readOnlyRoom } = props;
@@ -108,6 +109,7 @@ export default function DMHelperTabList(props: { readOnlyRoom: boolean }) {
           <Text as="span" lineHeight={{ base: '16px', lg: '24px' }}>
             Settings
           </Text>
+          <RoomIndicatorBadge />
         </Tab>
       </TabList>
     </>

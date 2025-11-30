@@ -1,10 +1,11 @@
 'use client';
 
-import { Tabs } from '@chakra-ui/react';
+import { Tabs, Box } from '@chakra-ui/react';
 import { DMHelperContext } from '@lib/components/contexts/DMHelperContext';
 import { useContext, useState } from 'react';
 import DMHelperTabList from './DMHelperTabList';
 import DMHelperTabPanels from './DMHelperTabPanels';
+import { RoomIndicator } from './shared/RoomIndicator';
 
 export const DMHelperComponent = () => {
   const { combatStarted, readOnlyRoom } = useContext(DMHelperContext);
@@ -22,6 +23,9 @@ export const DMHelperComponent = () => {
         index={tabIndex}
         onChange={setTabIndex}
       >
+        <Box px={{ base: 2, lg: 4 }} pt={{ base: 2, lg: 4 }}>
+          <RoomIndicator />
+        </Box>
         <DMHelperTabList readOnlyRoom={readOnlyRoom} />
         <DMHelperTabPanels readOnlyRoom={readOnlyRoom} combatStarted={combatStarted} tabIndex={tabIndex} />
       </Tabs>
