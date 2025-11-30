@@ -65,8 +65,8 @@ export default function CharactersPanel() {
                   '&::-webkit-scrollbar-thumb': { backgroundColor: 'gray.500', borderRadius: '4px' },
                 }}
               >
+                <MobQuickAdd flexShrink={0} />
                 <MobForm />
-                <MobQuickAdd />
               </Box>
               <MobList />
             </Flex>

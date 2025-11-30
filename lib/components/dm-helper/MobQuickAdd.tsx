@@ -64,7 +64,7 @@ export const MobQuickAdd = (props: FlexProps) => {
               <MenuList
                 bgColor="blackAlpha.900"
                 borderColor="gray.600"
-                maxH="60vh"
+                maxH="400px"
                 overflowY="auto"
                 minW={{ base: '180px', lg: '250px' }}
                 w={{ base: '100%', lg: 'auto' }}
