@@ -15,7 +15,7 @@ import {
   IconButton,
   Flex,
 } from '@chakra-ui/react';
-import { FaDoorOpen, FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { FaDoorOpen, FaChevronDown, FaChevronUp, FaTimes } from 'react-icons/fa';
 import { isRoomOwner } from '@lib/util/room-permissions';
 
 /**
@@ -24,10 +24,11 @@ import { isRoomOwner } from '@lib/util/room-permissions';
 export const RoomIndicator: React.FC = () => {
   const { room, joinedRoomId, leaveRoom } = useContext(DMHelperContext);
   const [isExpanded, setIsExpanded] = useState(true);
+  const [isClosed, setIsClosed] = useState(false);
 
   const isInAnotherPersonsRoom = joinedRoomId !== null && !isRoomOwner(room);
 
-  if (!isInAnotherPersonsRoom) {
+  if (!isInAnotherPersonsRoom || isClosed) {
     return null;
   }
 
@@ -69,6 +70,15 @@ export const RoomIndicator: React.FC = () => {
             color="white"
             _hover={{ bg: 'blue.800' }}
             onClick={() => setIsExpanded(!isExpanded)}
+          />
+          <IconButton
+            aria-label="Close banner"
+            icon={<FaTimes />}
+            size={{ base: 'xs', lg: 'sm' }}
+            variant="ghost"
+            color="white"
+            _hover={{ bg: 'blue.800' }}
+            onClick={() => setIsClosed(true)}
           />
         </Flex>
       </Flex>

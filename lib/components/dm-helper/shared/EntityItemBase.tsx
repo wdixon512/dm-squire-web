@@ -205,7 +205,7 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
       {/* Mobile Layout: Menu, Initiative, Image, Name, HP Input */}
       <Flex w="full" minW="0" alignItems="center" gap={2} display={{ base: 'flex', lg: 'none' }}>
         {/* Three-dots Menu - Far Left */}
-        {menuItems.length > 0 && (
+        {(menuItems.length > 0 || showDetails || entity.type === EntityType.MOB) && (
           <Menu>
             <MenuButton
               as={IconButton}
@@ -217,9 +217,42 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
               color="white"
               bg="blackAlpha.600"
               _hover={{ bg: 'whiteAlpha.200' }}
+              isDisabled={
+                entity.type === EntityType.MOB &&
+                menuItems.length === 0 &&
+                (!showDetails || (showDetails && !canViewDetails))
+              }
+              opacity={
+                entity.type === EntityType.MOB &&
+                menuItems.length === 0 &&
+                (!showDetails || (showDetails && !canViewDetails))
+                  ? 0.5
+                  : 1
+              }
+              cursor={
+                entity.type === EntityType.MOB &&
+                menuItems.length === 0 &&
+                (!showDetails || (showDetails && !canViewDetails))
+                  ? 'not-allowed'
+                  : 'pointer'
+              }
+              _disabled={{ opacity: 0.5, cursor: 'not-allowed' }}
             />
             <MenuList bgColor="blackAlpha.900" borderColor="gray.600">
-              {menuItems}
+              {menuItems.length > 0 ? (
+                menuItems
+              ) : showDetails || entity.type === EntityType.MOB ? (
+                <MenuItem
+                  key="details"
+                  isDisabled
+                  bg="blackAlpha.600"
+                  opacity={0.5}
+                  data-testid={detailsButtonTestId ?? `view-details-${entity.id}`}
+                >
+                  <Icon as={FaEyeSlash} mr={2} />
+                  Can't find details
+                </MenuItem>
+              ) : null}
             </MenuList>
           </Menu>
         )}
