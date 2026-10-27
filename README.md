@@ -1,4 +1,4 @@
-# My-Website
+# DM Squire
 
 The official DM Squire website, built with NextJS, ChakraUI, and Firebase!
 
