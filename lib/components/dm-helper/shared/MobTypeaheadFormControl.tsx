@@ -107,8 +107,7 @@ export const MobTypeaheadFormControl: React.FC<MobTypeaheadFormControlProps> = (
       <Input
         type="text"
         value={value}
-        color="white"
-        textFillColor={'whiteAlpha.800'}
+        variant="onDark"
         placeholder={placeholder}
         size={{ base: 'sm', lg: 'md' }}
         onChange={handleInputChange}

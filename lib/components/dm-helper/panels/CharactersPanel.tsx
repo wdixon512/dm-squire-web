@@ -47,7 +47,7 @@ export default function CharactersPanel() {
               w="100%"
               h={{ base: 'auto', lg: '100%' }}
               direction={{ base: 'column', lg: 'row' }}
-              px={{ base: 2, lg: 0 }}
+              px={0}
               minH="0"
               overflow={{ base: 'visible', lg: 'hidden' }}
             >
@@ -84,7 +84,7 @@ export default function CharactersPanel() {
               w="100%"
               h={{ base: 'auto', lg: '100%' }}
               direction={{ base: 'column', lg: 'row' }}
-              px={{ base: 2, lg: 0 }}
+              px={0}
               minH="0"
               overflow={{ base: 'visible', lg: 'hidden' }}
             >
@@ -105,7 +105,7 @@ export default function CharactersPanel() {
               w="100%"
               h={{ base: 'auto', lg: '100%' }}
               direction={{ base: 'column', lg: 'row' }}
-              px={{ base: 2, lg: 0 }}
+              px={0}
               minH="0"
               overflow={{ base: 'visible', lg: 'hidden' }}
             >
@@ -138,7 +138,17 @@ export default function CharactersPanel() {
 function CharacterSheetTab(props: TabProps) {
   const { children, ...rest } = props;
   return (
-    <Tab bgColor="blackAlpha.900" color="white" opacity=".95" borderWidth="2px" py="2" h="fit-content" {...rest}>
+    <Tab
+      bgColor="blackAlpha.900"
+      color="white"
+      opacity=".95"
+      borderWidth="2px"
+      borderColor="whiteAlpha.500"
+      py="2"
+      h="fit-content"
+      _focusVisible={{ zIndex: 1, boxShadow: 'inset 0 0 0 2px #F5F5F5', outline: 'none' }}
+      {...rest}
+    >
       {children}
     </Tab>
   );

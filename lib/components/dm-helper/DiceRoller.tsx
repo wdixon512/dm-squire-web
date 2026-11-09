@@ -32,8 +32,8 @@ export const DiceRoller: React.FC<DiceRollerProps> = ({ mob, rollType, afterRoll
       <Flex direction="column" align="center" justify="center">
         <Button
           onClick={handleDiceRoll}
-          size={'sm'}
-          alignSelf="flex-start"
+          size={{ base: 'sm', lg: 'md' }}
+          flexShrink={0}
           data-testid={`reroll-${toKebabCase(rollType.toLowerCase())}`}
         >
           Re-Roll

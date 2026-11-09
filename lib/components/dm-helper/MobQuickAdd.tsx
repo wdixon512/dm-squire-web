@@ -55,6 +55,11 @@ export const MobQuickAdd = (props: FlexProps) => {
                 _hover={{ bg: 'gray.700', borderColor: 'gray.500' }}
                 _active={{ bg: 'gray.600', borderColor: 'gray.400' }}
                 _focus={{ bg: 'gray.700', borderColor: 'gray.500' }}
+                _focusVisible={{
+                  bg: 'gray.700',
+                  borderColor: 'gray.500',
+                  boxShadow: '0 0 0 2px #1C2833, 0 0 0 4px #F5F5F5',
+                }}
                 justifyContent="space-between"
                 fontWeight="bold"
                 fontSize={{ base: 'xs', lg: 'sm' }}
@@ -120,7 +125,7 @@ export const MobQuickAdd = (props: FlexProps) => {
                         showClearQuickAddForm(e);
                       }}
                       bg="blackAlpha.600"
-                      color="marioRed.700"
+                      color="marioRed.200"
                       fontSize={{ base: 'xs', lg: 'sm' }}
                       _hover={{ bg: 'red.900', color: 'red.100' }}
                       _focus={{

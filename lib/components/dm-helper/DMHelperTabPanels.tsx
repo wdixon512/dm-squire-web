@@ -29,7 +29,7 @@ export default function DMHelperTabPanels(props: { readOnlyRoom: boolean; combat
       {/* Invite Others Tab Panel */}
       {!readOnlyRoom && (
         <DMHelperTabPanel current={2} index={tabIndex} h={{ base: 'auto', lg: '100%' }}>
-          <MotionBox {...fadeVariant} flex="1" h={{ base: 'auto', lg: '100%' }} display="flex" justifyContent="center" alignItems="flex-start" w="100%" px={{ base: 2, lg: 0 }} minH="0" overflow={{ base: 'visible', lg: 'hidden' }}>
+          <MotionBox {...fadeVariant} flex="1" h={{ base: 'auto', lg: '100%' }} display="flex" justifyContent="center" alignItems="flex-start" w="100%" px={0} minH="0" overflow={{ base: 'visible', lg: 'hidden' }}>
             <InviteOthersForm />
           </MotionBox>
         </DMHelperTabPanel>

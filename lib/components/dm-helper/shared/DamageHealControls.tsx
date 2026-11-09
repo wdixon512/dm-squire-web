@@ -93,7 +93,7 @@ export const DamageHealControls: React.FC<DamageHealControlsProps> = ({
         isOpen={isOpen}
         onOpen={() => setIsOpen(true)}
         onClose={() => setIsOpen(false)}
-        placement="top"
+        placement="top-end"
         closeOnBlur={true}
       >
         <PopoverTrigger>
@@ -113,6 +113,7 @@ export const DamageHealControls: React.FC<DamageHealControlsProps> = ({
                 ref={inputRef}
                 type="number"
                 placeholder="Amount"
+                variant="onDark"
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
                 onKeyDown={(e) => {

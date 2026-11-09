@@ -12,7 +12,7 @@ export default function CombatPanel(props: { readOnlyRoom: boolean; combatStarte
       h={{ base: 'auto', lg: '100%' }}
       direction="column"
       gap="4"
-      px={{ base: 2, lg: 0 }}
+      px={0}
       minH="0"
       overflow={{ base: 'visible', lg: 'hidden' }}
     >
@@ -35,7 +35,6 @@ export default function CombatPanel(props: { readOnlyRoom: boolean; combatStarte
         >
           {combatStarted && (
             <Heading
-              variant="redSolid"
               data-testid="combat-started-heading"
               textAlign="center"
               fontSize={{ base: 'md', lg: 'lg' }}

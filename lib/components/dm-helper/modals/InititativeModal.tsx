@@ -174,13 +174,15 @@ export const InitiativeModal: React.FC<InitiativeModalProps> = ({ isOpen, entiti
                 data-testid="initiative-input"
               />
             </ModalBody>
-            <ModalFooter justifyContent="space-between">
+            <ModalFooter justifyContent="space-between" gap={2} flexWrap="wrap">
               {currentEntityIndex > 0 && (
                 <Button
                   leftIcon={<ChevronLeftIcon />}
                   lineHeight={5}
                   onClick={handlePreviousHero}
                   data-testid="init-modal-back-btn"
+                  maxW="100%"
+                  whiteSpace="normal"
                 >
                   Back ({entities[currentEntityIndex - 1]?.name})
                 </Button>
@@ -191,11 +193,19 @@ export const InitiativeModal: React.FC<InitiativeModalProps> = ({ isOpen, entiti
                   lineHeight={5}
                   onClick={handleNextHero}
                   data-testid="init-modal-next-btn"
+                  ml="auto"
+                  maxW="100%"
+                  whiteSpace="normal"
                 >
                   Next ({entities[currentEntityIndex + 1]?.name})
                 </Button>
               ) : (
-                <Button colorScheme="green" onClick={() => handleDone()} data-testid="init-modal-done-btn">
+                <Button
+                  colorScheme="green"
+                  onClick={() => handleDone()}
+                  data-testid="init-modal-done-btn"
+                  ml="auto"
+                >
                   Done
                 </Button>
               )}

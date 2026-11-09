@@ -44,8 +44,7 @@ export const HeroForm = () => {
           type="text"
           value={heroName}
           onChange={(e) => setHeroName(e.target.value)}
-          color="white"
-          textFillColor={'whiteAlpha.800'}
+          variant="onDark"
           placeholder="Enter hero name"
           size={{ base: 'sm', lg: 'md' }}
           required
@@ -68,8 +67,7 @@ export const HeroForm = () => {
           type="text"
           value={profileUrl}
           onChange={(e) => setProfileUrl(e.target.value)}
-          color="white"
-          textFillColor={'whiteAlpha.800'}
+          variant="onDark"
           placeholder="Enter Profile URL"
           size={{ base: 'sm', lg: 'md' }}
           data-testid="profile-input"
