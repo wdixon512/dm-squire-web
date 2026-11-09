@@ -20,10 +20,10 @@ export default function DMHelperTabList(props: { readOnlyRoom: boolean }) {
     <>
       <TabList
         alignSelf="center"
-        justifyContent={{ base: 'flex-start', lg: 'center' }}
+        justifyContent={{ base: 'safe center', lg: 'center' }}
         display="flex"
         py={{ base: '1', lg: '2' }}
-        px={{ base: 1, lg: 0 }}
+        px={{ base: 3, lg: 0 }}
         mt={{ base: 2, lg: 4 }}
         w="100%"
         bgColor="blackAlpha.900"
@@ -32,9 +32,10 @@ export default function DMHelperTabList(props: { readOnlyRoom: boolean }) {
         opacity={0.95}
         clipPath={{ base: 'none', lg: 'polygon(3% 0%, 100% 0%, 97% 100%, 0% 100%)' }}
         flexWrap="nowrap"
-        gap={{ base: 1, lg: 0 }}
+        gap={{ base: 0.5, lg: 0 }}
         overflowX={{ base: 'auto', lg: 'visible' }}
         sx={{
+          scrollPaddingInline: '12px',
           scrollbarWidth: 'thin',
           '&::-webkit-scrollbar': { height: '4px' },
           '&::-webkit-scrollbar-thumb': {
@@ -59,7 +60,7 @@ export default function DMHelperTabList(props: { readOnlyRoom: boolean }) {
             alt="sword-icon"
             w={{ base: '16px', lg: '20px' }}
             h={{ base: '16px', lg: '20px' }}
-            mr={{ base: '0.5', lg: '1' }}
+            mr={{ base: '1px', lg: '1' }}
           />
           <Text as="span" lineHeight={{ base: '16px', lg: '24px' }}>
             Combat
@@ -84,7 +85,7 @@ export default function DMHelperTabList(props: { readOnlyRoom: boolean }) {
                 alt="knight"
                 w={{ base: '16px', lg: '20px' }}
                 h={{ base: '16px', lg: '20px' }}
-                mr={{ base: '0.5', lg: '1' }}
+                mr={{ base: '1px', lg: '1' }}
               />
               <Text as="span" lineHeight={{ base: '16px', lg: '24px' }}>
                 Characters
@@ -107,7 +108,7 @@ export default function DMHelperTabList(props: { readOnlyRoom: boolean }) {
                 alt="knight"
                 w={{ base: '16px', lg: '20px' }}
                 h={{ base: '16px', lg: '20px' }}
-                mr={{ base: '0.5', lg: '1' }}
+                mr={{ base: '1px', lg: '1' }}
               />
               <Text as="span" lineHeight={{ base: '16px', lg: '24px' }}>
                 Invite Others
@@ -127,7 +128,7 @@ export default function DMHelperTabList(props: { readOnlyRoom: boolean }) {
           py={{ base: 1, lg: 2 }}
           {...tabFocus}
         >
-          <Icon as={FaUserCog} w={{ base: 4, lg: 6 }} h={{ base: 4, lg: 6 }} mr={{ base: 1, lg: 2 }} />
+          <Icon as={FaUserCog} w={{ base: 4, lg: 6 }} h={{ base: 4, lg: 6 }} mr={{ base: '1px', lg: 2 }} />
           <Text as="span" lineHeight={{ base: '16px', lg: '24px' }}>
             Settings
           </Text>

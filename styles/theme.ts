@@ -126,10 +126,14 @@ const theme = extendTheme({
         _hover: {
           bg: 'interactive.100',
         },
-        // Off-white ring on a gunmetal gap. Reads on slate, mario red, and the black panels.
-        _focusVisible: {
-          boxShadow: '0 0 0 2px #1C2833, 0 0 0 4px #F5F5F5',
+        // Mouse clicks focus the button but leave it visually quiet.
+        '&:focus:not(:focus-visible)': {
           outline: 'none',
+          boxShadow: 'none',
+        },
+        _focusVisible: {
+          outline: 'none',
+          boxShadow: '0 0 0 2px #1C2833, 0 0 0 4px #F5F5F5',
         },
       },
       variants: {

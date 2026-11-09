@@ -6,7 +6,7 @@ The current face is two ideas stapled together. The shell is a dark slate field,
 
 ## Rough spots, by impact
 
-1. **Phone navigation broke onto two rows.** At 390px the four tabs were centered and allowed to wrap, so Settings sat alone under Combat / Characters / Invite Others. The bar looked unfinished and ate vertical space the tracker needs. Fixed here: one row, no wrap, tabs shrink their padding slightly so Settings stays on screen, and the row can still scroll if a guest badge makes it wider.
+1. **Phone navigation broke onto two rows.** At 390px the four tabs were centered and allowed to wrap, so Settings sat alone under Combat / Characters / Invite Others. The bar looked unfinished and ate vertical space the tracker needs. Fixed here: one row, no wrap. On a phone the icon sits closer to its label, and the row is padded and centered so Settings is not flush with the bar. It can still scroll if a guest badge makes the row wider.
 
 2. **Edit and details were not really buttons.** Those controls asked for a `primarySolid` variant that does not exist, so they rendered as borderless icons. Bench, next to them, is a white outlined square. The row read as three different control languages. Fixed by using the existing outline treatment and giving every icon control the same 40px box, plus a name for the screen reader. Disabled details and “cannot bench” now look inactive instead of identical to the live buttons.
 
