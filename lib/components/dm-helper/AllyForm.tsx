@@ -45,7 +45,7 @@ const AllyForm: React.FC = () => {
   };
 
   return (
-    <EntityBaseForm onFormSubmit={handleAddAlly} addButtonTestId="add-ally-button" flex=".5">
+    <EntityBaseForm onFormSubmit={handleAddAlly} label="Ally" addButtonTestId="add-ally-button" flex=".5">
       <Heading as="h3" size={{ base: 'sm', lg: 'md' }} color="white" mb="0" borderBottom={'2px dotted'}>
         Add an{' '}
         <Box as="span" color="yellow.200">
@@ -60,8 +60,7 @@ const AllyForm: React.FC = () => {
           type="text"
           value={allyName}
           onChange={(e) => setAllyName(e.target.value)}
-          color="white"
-          textFillColor={'whiteAlpha.800'}
+          variant="onDark"
           placeholder="Enter ally name"
           size={{ base: 'sm', lg: 'md' }}
           required
@@ -76,8 +75,7 @@ const AllyForm: React.FC = () => {
           type="number"
           value={health}
           onChange={(e) => setHealth(e.target.value)}
-          color="white"
-          textFillColor={'whiteAlpha.800'}
+          variant="onDark"
           placeholder="Enter health"
           size={{ base: 'sm', lg: 'md' }}
         />
@@ -118,8 +116,7 @@ const AllyForm: React.FC = () => {
           type="text"
           value={profileUrl}
           onChange={(e) => setProfileUrl(e.target.value)}
-          color="white"
-          textFillColor={'whiteAlpha.800'}
+          variant="onDark"
           placeholder="Enter Profile URL"
           size={{ base: 'sm', lg: 'md' }}
           data-testid="profile-input"

@@ -3,6 +3,16 @@ import React from 'react';
 import { FaUserCog } from 'react-icons/fa';
 import { RoomIndicatorBadge } from './shared/RoomIndicator';
 
+const tabFocus = {
+  flexShrink: 0,
+  whiteSpace: 'nowrap' as const,
+  _focusVisible: {
+    zIndex: 1,
+    boxShadow: 'inset 0 0 0 2px #F5F5F5',
+    outline: 'none',
+  },
+};
+
 export default function DMHelperTabList(props: { readOnlyRoom: boolean }) {
   const { readOnlyRoom } = props;
 
@@ -10,10 +20,10 @@ export default function DMHelperTabList(props: { readOnlyRoom: boolean }) {
     <>
       <TabList
         alignSelf="center"
-        justifyContent="center"
+        justifyContent={{ base: 'safe center', lg: 'center' }}
         display="flex"
         py={{ base: '1', lg: '2' }}
-        px={{ base: 1, lg: 0 }}
+        px={{ base: 3, lg: 0 }}
         mt={{ base: 2, lg: 4 }}
         w="100%"
         bgColor="blackAlpha.900"
@@ -21,9 +31,18 @@ export default function DMHelperTabList(props: { readOnlyRoom: boolean }) {
         borderColor="marioRed.500"
         opacity={0.95}
         clipPath={{ base: 'none', lg: 'polygon(3% 0%, 100% 0%, 97% 100%, 0% 100%)' }}
-        flexWrap={{ base: 'wrap', lg: 'nowrap' }}
-        gap={{ base: 1, lg: 0 }}
+        flexWrap="nowrap"
+        gap={{ base: 0.5, lg: 0 }}
         overflowX={{ base: 'auto', lg: 'visible' }}
+        sx={{
+          scrollPaddingInline: '12px',
+          scrollbarWidth: 'thin',
+          '&::-webkit-scrollbar': { height: '4px' },
+          '&::-webkit-scrollbar-thumb': {
+            background: 'rgba(245, 245, 245, 0.45)',
+            borderRadius: '4px',
+          },
+        }}
       >
         {/* Combat Tab*/}
         <Tab
@@ -32,15 +51,16 @@ export default function DMHelperTabList(props: { readOnlyRoom: boolean }) {
           fontWeight="bold"
           data-testid="combat-panel"
           fontSize={{ base: 'xs', lg: 'md' }}
-          px={{ base: 2, lg: 4 }}
+          px={{ base: 1, lg: 4 }}
           py={{ base: 1, lg: 2 }}
+          {...tabFocus}
         >
           <Image
             src="/static/images/sword.png"
             alt="sword-icon"
             w={{ base: '16px', lg: '20px' }}
             h={{ base: '16px', lg: '20px' }}
-            mr={{ base: '0.5', lg: '1' }}
+            mr={{ base: '1px', lg: '1' }}
           />
           <Text as="span" lineHeight={{ base: '16px', lg: '24px' }}>
             Combat
@@ -56,15 +76,16 @@ export default function DMHelperTabList(props: { readOnlyRoom: boolean }) {
               fontWeight="bold"
               data-testid="characters-panel"
               fontSize={{ base: 'xs', lg: 'md' }}
-              px={{ base: 2, lg: 4 }}
+              px={{ base: 1, lg: 4 }}
               py={{ base: 1, lg: 2 }}
+              {...tabFocus}
             >
               <Image
                 src="/static/images/knight.png"
                 alt="knight"
                 w={{ base: '16px', lg: '20px' }}
                 h={{ base: '16px', lg: '20px' }}
-                mr={{ base: '0.5', lg: '1' }}
+                mr={{ base: '1px', lg: '1' }}
               />
               <Text as="span" lineHeight={{ base: '16px', lg: '24px' }}>
                 Characters
@@ -78,15 +99,16 @@ export default function DMHelperTabList(props: { readOnlyRoom: boolean }) {
               fontWeight="bold"
               data-testid="invite-others-panel"
               fontSize={{ base: 'xs', lg: 'md' }}
-              px={{ base: 2, lg: 4 }}
+              px={{ base: 1, lg: 4 }}
               py={{ base: 1, lg: 2 }}
+              {...tabFocus}
             >
               <Image
                 src="/static/images/join-party.png"
                 alt="knight"
                 w={{ base: '16px', lg: '20px' }}
                 h={{ base: '16px', lg: '20px' }}
-                mr={{ base: '0.5', lg: '1' }}
+                mr={{ base: '1px', lg: '1' }}
               />
               <Text as="span" lineHeight={{ base: '16px', lg: '24px' }}>
                 Invite Others
@@ -102,10 +124,11 @@ export default function DMHelperTabList(props: { readOnlyRoom: boolean }) {
           fontWeight="bold"
           data-testid="user-room-settings-panel"
           fontSize={{ base: 'xs', lg: 'md' }}
-          px={{ base: 2, lg: 4 }}
+          px={{ base: 1, lg: 4 }}
           py={{ base: 1, lg: 2 }}
+          {...tabFocus}
         >
-          <Icon as={FaUserCog} w={{ base: 4, lg: 6 }} h={{ base: 4, lg: 6 }} mr={{ base: 1, lg: 2 }} />
+          <Icon as={FaUserCog} w={{ base: 4, lg: 6 }} h={{ base: 4, lg: 6 }} mr={{ base: '1px', lg: 2 }} />
           <Text as="span" lineHeight={{ base: '16px', lg: '24px' }}>
             Settings
           </Text>

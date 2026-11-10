@@ -45,18 +45,24 @@ export default function CombatManagementBar() {
   };
   return (
     <>
-      <Flex direction="row" gap="4" flexShrink={0} flexWrap="wrap">
+      <Flex direction="row" gap="4" flexShrink={0} flexWrap="wrap" alignItems="center">
         {combatStarted ? (
           <Button
             variant="redSolid"
             onClick={() => endCombat()}
             data-testid="end-combat-btn"
+            size={{ base: 'sm', lg: 'md' }}
             fontSize={{ base: 'sm', lg: 'md' }}
           >
             End Combat
           </Button>
         ) : (
-          <Button onClick={() => startCombat()} data-testid="start-combat-button" fontSize={{ base: 'sm', lg: 'md' }}>
+          <Button
+            onClick={() => startCombat()}
+            data-testid="start-combat-button"
+            size={{ base: 'sm', lg: 'md' }}
+            fontSize={{ base: 'sm', lg: 'md' }}
+          >
             Start Combat
           </Button>
         )}
@@ -64,6 +70,7 @@ export default function CombatManagementBar() {
           variant="redSolid"
           onClick={(e) => showClearMobForm(e)}
           data-testid="clear-mobs-button"
+          size={{ base: 'sm', lg: 'md' }}
           fontSize={{ base: 'sm', lg: 'md' }}
         >
           Clear Enemies

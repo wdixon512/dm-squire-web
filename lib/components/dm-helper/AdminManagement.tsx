@@ -98,6 +98,7 @@ export const AdminManagement: React.FC = () => {
               color="white"
               bg="blackAlpha.700"
               borderColor="gray.600"
+              _placeholder={{ color: '#D5D5D5' }}
               _hover={{ borderColor: 'gray.500' }}
               _focus={{ borderColor: 'blue.500', boxShadow: '0 0 0 1px blue.500' }}
               size={{ base: 'sm', lg: 'md' }}

@@ -126,11 +126,22 @@ const theme = extendTheme({
         _hover: {
           bg: 'interactive.100',
         },
+        // Mouse clicks focus the button but leave it visually quiet.
+        '&:focus:not(:focus-visible)': {
+          outline: 'none',
+          boxShadow: 'none',
+        },
+        _focusVisible: {
+          outline: 'none',
+          boxShadow: '0 0 0 2px #1C2833, 0 0 0 4px #F5F5F5',
+        },
       },
       variants: {
         solid: (props) => ({
           bg: props.colorMode === 'dark' ? 'accent.500' : 'primary.500',
           color: 'white',
+          border: '1px solid',
+          borderColor: 'whiteAlpha.500',
           _hover: {
             bg: 'interactive.500',
           },
@@ -185,6 +196,32 @@ const theme = extendTheme({
             bg: props.colorMode === 'dark' ? 'red.700' : 'red.600',
           },
         }),
+      },
+    },
+    Input: {
+      variants: {
+        // Fields that sit on the black panels. Same light stroke as the default
+        // outline, with a placeholder light enough to read on blackAlpha.900.
+        onDark: {
+          field: {
+            bg: 'transparent',
+            border: '1px solid',
+            borderColor: 'gray.200',
+            color: 'white',
+            _placeholder: {
+              color: '#D5D5D5',
+              opacity: 1,
+            },
+            _hover: {
+              borderColor: 'white',
+            },
+            _focusVisible: {
+              zIndex: 1,
+              borderColor: '#339aff',
+              boxShadow: '0 0 0 1px #339aff',
+            },
+          },
+        },
       },
     },
     Tooltip: {

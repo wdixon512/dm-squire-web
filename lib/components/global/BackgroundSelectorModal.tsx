@@ -9,7 +9,7 @@ import {
   GridItem,
   Box,
   Img,
-  Button,
+  IconButton,
 } from '@chakra-ui/react';
 import React, { useContext } from 'react';
 import { BackgroundImageContext } from '../contexts/BackgroundImageContext';
@@ -58,11 +58,17 @@ export default function BackgroundSelectorModal({ isOpen, onClose }: BackgroundS
           },
         }}
       >
-        <ModalHeader color="white">
+        <ModalHeader color="white" display="flex" alignItems="center" justifyContent="space-between" gap={3}>
           Choose a background!
-          <Button w="fit-content" float="right" bg="transparent" _hover={{ bg: 'marioRed.500' }} onClick={onClose}>
-            X
-          </Button>
+          <IconButton
+            aria-label="Close background picker"
+            icon={<span aria-hidden>X</span>}
+            variant="ghost"
+            color="white"
+            bg="transparent"
+            _hover={{ bg: 'marioRed.500' }}
+            onClick={onClose}
+          />
         </ModalHeader>
         <ModalBody>
           <Grid templateColumns="repeat(2, 1fr)" gap={4}>

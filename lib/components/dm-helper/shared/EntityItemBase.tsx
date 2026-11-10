@@ -1,6 +1,7 @@
 import {
   Text,
   Flex,
+  Box,
   Button,
   FlexProps,
   Icon,
@@ -259,8 +260,16 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
 
         {/* Initiative */}
         {showInitiative && entity.initiative && (
-          <Text as="span" fontWeight="800" data-testid={`${entity.id}-initiative`} w="8" fontSize="xs" flexShrink={0}>
-            {entity.initiative < 10 && <span>&nbsp;</span>}
+          <Text
+            as="span"
+            fontWeight="800"
+            data-testid={`${entity.id}-initiative`}
+            minW="2.5rem"
+            fontSize="xs"
+            flexShrink={0}
+            textAlign="right"
+            sx={{ fontVariantNumeric: 'tabular-nums' }}
+          >
             {`(${entity.initiative})`}
           </Text>
         )}
@@ -268,15 +277,17 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
         {/* Profile Picture */}
         {entity.profilePictureUrl ? (
           <Circle size="32px" overflow="hidden" flexShrink={0}>
-            <Image src={entity.profilePictureUrl} alt={`${entity.name} profile pic`} />
+            <Image src={entity.profilePictureUrl} alt={`${entity.name} profile pic`} objectFit="cover" w="100%" h="100%" />
           </Circle>
         ) : (
           <Circle size="32px" overflow="hidden" flexShrink={0}>
             <Img
               src={`/static/images/unknown-profile-pic.png`}
               alt="Unknown profile pic"
-              mx="auto"
+              objectFit="cover"
               objectPosition="center top"
+              w="100%"
+              h="100%"
             />
           </Circle>
         )}
@@ -333,8 +344,16 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
         <Flex alignItems="center" flex="1" gap={2} py={2} minW="0">
           {/* Initiative */}
           {showInitiative && entity.initiative && (
-            <Text as="span" fontWeight="800" data-testid={`${entity.id}-initiative`} w={10} fontSize="sm">
-              {entity.initiative < 10 && <span>&nbsp;</span>}
+            <Text
+              as="span"
+              fontWeight="800"
+              data-testid={`${entity.id}-initiative`}
+              minW="2.75rem"
+              fontSize="sm"
+              textAlign="right"
+              flexShrink={0}
+              sx={{ fontVariantNumeric: 'tabular-nums' }}
+            >
               {`(${entity.initiative})`}
             </Text>
           )}
@@ -342,15 +361,17 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
           {/* Profile Picture */}
           {entity.profilePictureUrl ? (
             <Circle size="32px" overflow="hidden" flexShrink={0}>
-              <Image src={entity.profilePictureUrl} alt={`${entity.name} profile pic`} />
+              <Image src={entity.profilePictureUrl} alt={`${entity.name} profile pic`} objectFit="cover" w="100%" h="100%" />
             </Circle>
           ) : (
             <Circle size="32px" overflow="hidden" flexShrink={0}>
               <Img
                 src={`/static/images/unknown-profile-pic.png`}
                 alt="Unknown profile pic"
-                mx="auto"
+                objectFit="cover"
                 objectPosition="center top"
+                w="100%"
+                h="100%"
               />
             </Circle>
           )}
@@ -366,7 +387,7 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
           </Text>
         </Flex>
         {showHealth && (
-          <Flex flex="1" alignItems="center" justifyContent={'flex-end'} mr={3}>
+          <Flex flex="1" alignItems="center" justifyContent={'flex-end'} mr={2}>
             {readOnly ? (
               <Flex alignItems="center" gap={2}>
                 <Text fontSize="sm">HP:</Text>
@@ -419,10 +440,14 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
         {!readOnly && onEdit && (
           <Tooltip label={editTooltipLabel} aria-label={editTooltipLabel} hasArrow>
             <Button
-              variant="primarySolid"
+              variant="outline"
               onClick={onEdit}
+              aria-label={editTooltipLabel}
               data-testid={editButtonTestId ?? `${entity.id}-edit`}
               size="md"
+              w="40px"
+              minW="40px"
+              px={0}
             >
               <Icon as={FaUserEdit} />
             </Button>
@@ -432,25 +457,34 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
           (canViewDetails ? (
             <Tooltip label="View Details" aria-label="View Details" hasArrow>
               <Button
-                variant="primarySolid"
+                variant="outline"
                 onClick={onDetailsOpen}
+                aria-label={`View details for ${entityName}`}
                 data-testid={detailsButtonTestId ?? `view-details-${entity.id}`}
                 size="md"
+                w="40px"
+                minW="40px"
+                px={0}
               >
                 <Icon as={FaEye} />
               </Button>
             </Tooltip>
           ) : (
             <Tooltip label="Can't find details">
-              <Button
-                disabled
-                variant="primarySolid"
-                _hover={{ bgColor: 'unset' }}
-                data-testid={detailsButtonTestId ?? `view-details-${entity.id}`}
-                size="md"
-              >
-                <Icon as={FaEyeSlash} />
-              </Button>
+              <Box as="span" display="inline-flex">
+                <Button
+                  isDisabled
+                  variant="outline"
+                  aria-label={`No details available for ${entityName}`}
+                  data-testid={detailsButtonTestId ?? `view-details-${entity.id}`}
+                  size="md"
+                  w="40px"
+                  minW="40px"
+                  px={0}
+                >
+                  <Icon as={FaEyeSlash} />
+                </Button>
+              </Box>
             </Tooltip>
           ))}
         {showBench && !entity.skipInCombat && (
@@ -460,15 +494,21 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
             hasArrow
             placement="right"
           >
-            <Button
-              variant="outline"
-              onClick={onBench}
-              data-testid={removeButtonTestId ?? `${entity.id}-unbench`}
-              disabled={entity.type === EntityType.MOB}
-              size="md"
-            >
-              <SiBlockbench />
-            </Button>
+            <Box as="span" display="inline-flex">
+              <Button
+                variant="outline"
+                onClick={onBench}
+                aria-label={entity.type === EntityType.MOB ? `Cannot bench ${entityName}` : `Bench ${entityName}`}
+                data-testid={removeButtonTestId ?? `${entity.id}-unbench`}
+                isDisabled={entity.type === EntityType.MOB}
+                size="md"
+                w="40px"
+                minW="40px"
+                px={0}
+              >
+                <SiBlockbench />
+              </Button>
+            </Box>
           </Tooltip>
         )}
         {showBench && entity.skipInCombat && (
@@ -476,8 +516,12 @@ export const EntityItemBase: React.FC<EntityItemBaseProps> = ({
             <Button
               variant="outline"
               onClick={onUnbench}
+              aria-label={`Unbench ${entityName}`}
               data-testid={removeButtonTestId ?? `${entity.id}-unbench`}
               size="md"
+              w="40px"
+              minW="40px"
+              px={0}
             >
               <FaArrowUp />
             </Button>

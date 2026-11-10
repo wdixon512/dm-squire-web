@@ -41,7 +41,7 @@ const MobForm: React.FC = () => {
   };
 
   return (
-    <EntityBaseForm onFormSubmit={handleAddMob} addButtonTestId="add-mob-button" flex=".5">
+    <EntityBaseForm onFormSubmit={handleAddMob} label="Enemy" addButtonTestId="add-mob-button" flex=".5">
       <Heading as="h3" size={{ base: 'sm', lg: 'md' }} color="white" mb="0" borderBottom={'2px dotted'}>
         Add an{' '}
         <Box as="span" color="marioRed.200">
@@ -61,13 +61,12 @@ const MobForm: React.FC = () => {
         <FormLabel color="white" fontSize={{ base: 'sm', lg: 'md' }}>
           Health
         </FormLabel>
-        <Flex gap={2}>
+        <Flex gap={2} align="center">
           <Input
             type="number"
             value={health}
             onChange={(e) => setHealth(e.target.value)}
-            color="white"
-            textFillColor={'whiteAlpha.800'}
+            variant="onDark"
             placeholder="Enter health"
             size={{ base: 'sm', lg: 'md' }}
             data-testid="mob-health-input"
@@ -83,13 +82,12 @@ const MobForm: React.FC = () => {
         <FormLabel color="white" fontSize={{ base: 'sm', lg: 'md' }}>
           Initiative
         </FormLabel>
-        <Flex gap={2}>
+        <Flex gap={2} align="center">
           <Input
             type="number"
             value={initiative}
             onChange={(e) => setInitiative(e.target.value)}
-            color="white"
-            textFillColor={'whiteAlpha.800'}
+            variant="onDark"
             placeholder="Enter initiative"
             size={{ base: 'sm', lg: 'md' }}
             data-testid="mob-initiative-input"

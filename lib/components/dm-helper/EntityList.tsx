@@ -117,7 +117,7 @@ export const EntityList = () => {
             </List>
           ) : (
             <>
-              <Text fontStyle="italic">When combat starts, intiative order will be shown here.</Text>
+              <Text fontStyle="italic">When combat starts, initiative order will be shown here.</Text>
             </>
           ))}
       </Box>
